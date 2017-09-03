@@ -2,7 +2,7 @@
  * DeviceIndex.hpp
  *
  *  Created on: Sep 3, 2017
- *      Author: bensherman
+ *      Author: Bennett Sherman
  */
 
 #ifndef WRAPPER_DEVICEINDEX_HPP_

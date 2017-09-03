@@ -2,7 +2,7 @@
  * SquelchDelay.cpp
  *
  *  Created on: Sep 3, 2017
- *      Author: bensherman
+ *      Author: Bennett Sherman
  */
 // System Includes
 #include <stdint.h>

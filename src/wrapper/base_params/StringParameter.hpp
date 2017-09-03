@@ -2,7 +2,7 @@
  * StringParameter.hpp
  *
  *  Created on: Sep 3, 2017
- *      Author: bensherman
+ *      Author: Bennett Sherman
  */
 
 #ifndef WRAPPER_STRINGPARAMETER_HPP_

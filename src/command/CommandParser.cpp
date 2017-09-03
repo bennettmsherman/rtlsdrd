@@ -2,7 +2,7 @@
  * CommandParser.cpp
  *
  *  Created on: Jun 30, 2017
- *      Author: bensherman
+ *      Author: Bennett Sherman
  */
 
 //System includes

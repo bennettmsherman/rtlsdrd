@@ -2,7 +2,7 @@
  * CommandParser.hpp
  *
  *  Created on: Jun 30, 2017
- *      Author: bensherman
+ *      Author: Bennett Sherman
  */
 
 #ifndef COMMAND_COMMANDPARSER_HPP_

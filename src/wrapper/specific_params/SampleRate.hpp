@@ -2,7 +2,7 @@
  * SampleRate.hpp
  *
  *  Created on: Sep 2, 2017
- *      Author: bensherman
+ *      Author: Bennett Sherman
  */
 
 #ifndef WRAPPER_SAMPLERATE_HPP_

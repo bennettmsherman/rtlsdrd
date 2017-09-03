@@ -2,7 +2,7 @@
  * Oversampling.hpp
  *
  *  Created on: Sep 2, 2017
- *      Author: bensherman
+ *      Author: Bennett Sherman
  */
 
 #ifndef WRAPPER_OVERSAMPLING_HPP_

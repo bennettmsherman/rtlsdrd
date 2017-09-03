@@ -8,7 +8,6 @@
 
 // System Includes
 #include <stdint.h>
-#include <SquelchLevel.hpp>
 #include <iostream>
 #include <vector>
 
@@ -24,6 +23,7 @@
 #include "NumericParameter.hpp"
 #include "BaseParameter.hpp"
 #include "EnableOption.hpp"
+#include "SquelchLevel.hpp"
 
 int main()
 {
