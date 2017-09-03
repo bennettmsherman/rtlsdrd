@@ -10,6 +10,7 @@
 
 // System Includes
 #include <stdint.h>
+#include <string>
 
 // Project Includes
 #include "NumericParameter.hpp"
@@ -20,6 +21,7 @@ public:
     static bool isValid(const uint32_t value);
 
     static const DeviceIndex create(const uint32_t value=defaultValue);
+    static const DeviceIndex create(const std::string& value);
 
 protected:
     DeviceIndex(uint32_t value) : NumericParameter(value, option, minValid, maxValid) {};

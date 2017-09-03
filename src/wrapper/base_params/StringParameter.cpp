@@ -34,7 +34,7 @@ bool StringParameter::isValid(const std::string& value, const std::vector<std::s
 std::string StringParameter::getInvalidArgExceptionMessage(const std::string& value)
 {
     size_t msgSize = std::strlen(INVALID_ARG_EXCEPTION_MSG_FORMAT_STRING) + value.length() + 1;
-    char buff[msgSize];
+    char buff[msgSize] {};
     std::snprintf(buff, msgSize, INVALID_ARG_EXCEPTION_MSG_FORMAT_STRING, value.c_str());
     buff[msgSize - 1] = 0;
     return std::string(buff);

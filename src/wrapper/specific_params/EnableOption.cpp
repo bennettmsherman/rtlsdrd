@@ -8,6 +8,7 @@
 // System Includes
 #include <stdint.h>
 #include <stdexcept>
+#include <string>
 
 // Project Includes
 #include "EnableOption.hpp"

@@ -8,6 +8,7 @@
 // System Includes
 #include <stdint.h>
 #include <stdexcept>
+#include <string>
 
 // Project Includes
 #include "DeviceIndex.hpp"
@@ -37,4 +38,7 @@ const DeviceIndex DeviceIndex::create(const uint32_t value)
     }
 }
 
-
+const DeviceIndex DeviceIndex::create(const std::string& value)
+{
+    return create(stringToInt(value));
+}

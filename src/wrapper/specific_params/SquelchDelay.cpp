@@ -7,6 +7,7 @@
 // System Includes
 #include <stdint.h>
 #include <stdexcept>
+#include <string>
 
 // Project Includes
 #include "SquelchDelay.hpp"
@@ -36,5 +37,8 @@ const SquelchDelay SquelchDelay::create(const int32_t value)
     }
 }
 
-
+const SquelchDelay SquelchDelay::create(const std::string& value)
+{
+    return create(stringToInt(value));
+}
 

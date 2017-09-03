@@ -27,6 +27,8 @@ protected:
 
     static std::string getOutOfRangeParamExceptionMessage(const T value, const T min, const T max);
 
+    static T stringToInt(const std::string& str);
+
 private:
     // maxValid and minValid represent the maximum and minimum allowable values
     // for this parameter, respectively, inclusive.

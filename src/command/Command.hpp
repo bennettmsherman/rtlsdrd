@@ -9,19 +9,17 @@
 #define COMMAND_COMMAND_HPP_
 
 // Stdlib includes
-#include <cstring>
+#include <string>
 
 // Project includes
-#include "RDA5807M.hpp"
-#include "RDA5807MWrapper.hpp"
+#include "RtlFmWrapper.hpp"
 
-template<typename T>
 class Command
 {
 public:
 
     // Alias declarations to the rescue!
-    using WrapperFunction = T (RDA5807MWrapper::*)(int);
+    using WrapperFunction = void (RtlFmWrapper::*)(const std::string&);
 
     ////////////////////////////////
     // Public interface functions //
@@ -34,9 +32,9 @@ public:
      * wrapRef is used as the object on which cmdFunc is called.
      * The result of the function is returned
      */
-    T exec(int param, RDA5807MWrapper& wrapRef) const
+    void exec(const std::string& param, RtlFmWrapper& wrapRef) const
     {
-        return (wrapRef.*cmdFunc)(param);
+        (wrapRef.*cmdFunc)(param);
     }
 
     const std::string& getCommandString() const

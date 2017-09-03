@@ -8,6 +8,7 @@
 // System Includes
 #include <stdint.h>
 #include <stdexcept>
+#include <string>
 
 // Project Includes
 #include "Frequency.hpp"
@@ -35,4 +36,9 @@ const Frequency Frequency::create(const uint32_t value)
     {
         return Frequency(value);
     }
+}
+
+const Frequency Frequency::create(const std::string& value)
+{
+    return create(stringToInt(value));
 }

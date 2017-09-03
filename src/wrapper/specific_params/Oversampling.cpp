@@ -8,6 +8,7 @@
 // System Includes
 #include <stdint.h>
 #include <stdexcept>
+#include <string>
 
 // Project Includes
 #include "Oversampling.hpp"
@@ -37,5 +38,8 @@ const Oversampling Oversampling::create(const uint32_t value)
     }
 }
 
-
+const Oversampling Oversampling::create(const std::string& value)
+{
+    return create(stringToInt(value));
+}
 

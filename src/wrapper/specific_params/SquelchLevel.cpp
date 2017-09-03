@@ -8,6 +8,7 @@
 // System Includes
 #include <stdint.h>
 #include <stdexcept>
+#include <string>
 
 // Project Includes
 #include "SquelchLevel.hpp"
@@ -37,5 +38,8 @@ const SquelchLevel SquelchLevel::create(const uint32_t value)
     }
 }
 
-
+const SquelchLevel SquelchLevel::create(const std::string& value)
+{
+    return create(stringToInt(value));
+}
 

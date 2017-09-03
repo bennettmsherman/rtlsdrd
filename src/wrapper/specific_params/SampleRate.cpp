@@ -8,6 +8,7 @@
 // System Includes
 #include <stdint.h>
 #include <stdexcept>
+#include <string>
 
 // Project Includes
 #include "SampleRate.hpp"
@@ -37,5 +38,8 @@ const SampleRate SampleRate::create(const uint32_t value)
     }
 }
 
-
+const SampleRate SampleRate::create(const std::string& value)
+{
+    return create(stringToInt(value));
+}
 

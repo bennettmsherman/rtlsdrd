@@ -8,6 +8,7 @@
 // System Includes
 #include <stdint.h>
 #include <stdexcept>
+#include <string>
 
 // Project Includes
 #include "PpmError.hpp"
@@ -35,6 +36,11 @@ const PpmError PpmError::create(const uint32_t value)
     {
         return PpmError(value);
     }
+}
+
+const PpmError PpmError::create(const std::string& value)
+{
+    return create(stringToInt(value));
 }
 
 
