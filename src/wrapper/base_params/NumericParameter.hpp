@@ -18,6 +18,8 @@
 template <typename T>
 class NumericParameter : public BaseParameter<int64_t>
 {
+public:
+    virtual ~NumericParameter() {};
 
 protected:
     NumericParameter(T value, char option, T minValid, T maxValid) :

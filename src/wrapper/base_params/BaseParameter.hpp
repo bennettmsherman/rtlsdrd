@@ -34,11 +34,11 @@ public:
      */
     const std::string getPopulatedCmdLineEntry() const;
 
+    virtual ~BaseParameter() {};
+
 protected:
 
     BaseParameter(T value, char option) : value(value), option(option) {};
-
-    virtual ~BaseParameter() {};
 
 private:
     const T value;

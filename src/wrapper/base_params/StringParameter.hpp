@@ -18,6 +18,8 @@
 
 class StringParameter : public BaseParameter<std::string>
 {
+public:
+    virtual ~StringParameter() {};
 
 protected:
     StringParameter(const std::string& value, const char option, const std::vector<std::string>& validValues) :

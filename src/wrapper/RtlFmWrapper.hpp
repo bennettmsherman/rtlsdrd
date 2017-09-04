@@ -29,9 +29,6 @@ class RtlFmWrapper
 {
 public:
 
-    // TODO move to private once basic testing is complete
-    const std::string generateCommand();
-
     // Parameter setting commands
     void setDeviceIndex(const std::string& deviceIndex);
     void setEnableOption(const std::string& enableOption);
@@ -48,6 +45,7 @@ public:
     void executeRtlFm(const std::string& UNUSED);
 
 private:
+    const std::string generateCommand();
 
     template <typename ParamType, typename VectType>
     static void appendEntriesToCommand(std::string& command, const std::vector<VectType>& vect);
