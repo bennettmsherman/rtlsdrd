@@ -16,7 +16,6 @@
 template class BaseParameter<int32_t>;
 template class BaseParameter<uint32_t>;
 template class BaseParameter<std::string>;
-template class BaseParameter<long>;
 
 /**
  * Returns the command-line form of this parameter.

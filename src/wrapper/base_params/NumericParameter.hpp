@@ -16,14 +16,14 @@
 
 // The type used here should be an arithmetic type.
 template <typename T>
-class NumericParameter : public BaseParameter<int64_t>
+class NumericParameter : public BaseParameter<T>
 {
 public:
     virtual ~NumericParameter() {};
 
 protected:
     NumericParameter(T value, char option, T minValid, T maxValid) :
-        BaseParameter(value, option), minValid(minValid), maxValid(maxValid) {};
+        BaseParameter<T>(value, option), minValid(minValid), maxValid(maxValid) {};
 
     static bool isValid(const T value, const T min, const T max);
 
