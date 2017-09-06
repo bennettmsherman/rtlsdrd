@@ -1,10 +1,9 @@
-//============================================================================
-// Name        : rtlsdrd.cpp
-// Author      : Ben Sherman
-// Version     :
-// Copyright   : 
-// Description : Hello World in C++, Ansi-style
-//============================================================================
+/*
+ * rtlsdrd.cpp
+ *
+ *  Created on: Sep 2, 2017
+ *      Author: Bennett Sherman
+ */
 
 // System Includes
 #include <string>

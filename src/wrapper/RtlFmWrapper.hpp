@@ -13,16 +13,8 @@
 #include <vector>
 
 // Project Includes
-#include "DeviceIndex.hpp"
-#include "EnableOption.hpp"
-#include "Frequency.hpp"
-#include "ModulationMode.hpp"
+#include "BaseParameter.hpp"
 #include "NumericParameter.hpp"
-#include "Oversampling.hpp"
-#include "PpmError.hpp"
-#include "SampleRate.hpp"
-#include "SquelchDelay.hpp"
-#include "SquelchLevel.hpp"
 #include "StringParameter.hpp"
 
 class RtlFmWrapper
@@ -39,6 +31,9 @@ public:
     void setSampleRate(const std::string& sampleRate);
     void setSquelchDelay(const std::string& squelchDelay);
     void setSquelchLevel(const std::string& squelchLevel);
+    void setResampleRate(const std::string& resampleRate);
+    void setAtanMath(const std::string& atanMath);
+
 
     // Special function commands
     void clearParamLists(const std::string& UNUSED);
@@ -59,7 +54,8 @@ private:
     std::vector<NumericParameter<int32_t>> signedParams;
     std::vector<StringParameter> stringParams;
 
-    static const char RTL_FM_NAME[];
+    static const char COMMAND_FORMAT[];
+    static const uint32_t BASE_COMMAND_FORMAT_LENGTH;
 };
 
 

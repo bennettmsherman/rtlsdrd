@@ -27,6 +27,8 @@ const Command CommandParser::PARAMETER_SETTER_COMMANDS[]
     Command { "SAMPLE_RATE", &RtlFmWrapper::setSampleRate, "Sets the sampling rate"},
     Command { "SQUELCH_DELAY", &RtlFmWrapper::setSquelchDelay, "Sets the squelch delay"},
     Command { "SQUELCH_LEVEL", &RtlFmWrapper::setSquelchLevel, "Sets the squelch level"},
+    Command { "RESAMPLE_RATE", &RtlFmWrapper::setResampleRate, "Sets the resampling rate"},
+    Command { "ATAN_MATH", &RtlFmWrapper::setAtanMath, "Sets the archtangent math mode"},
 };
 
 const Command CommandParser::SPECIAL_FUNCTION_COMMANDS[]
