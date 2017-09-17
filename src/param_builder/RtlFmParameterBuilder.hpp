@@ -34,6 +34,7 @@ public:
     void setSquelchLevel(const std::string& squelchLevel);
     void setResampleRate(const std::string& resampleRate);
     void setAtanMath(const std::string& atanMath);
+    void setTunerGain(const std::string& tunerGain);
 
     // Special function commands
     void clearParamLists(const std::string& UNUSED);

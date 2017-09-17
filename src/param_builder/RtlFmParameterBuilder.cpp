@@ -27,6 +27,7 @@
 #include "StringParameter.hpp"
 #include "RtlFmParameterBuilder.hpp"
 #include "RtlFmRunner.hpp"
+#include "TunerGain.hpp"
 
 // Static Initialization
 const char* const RtlFmParameterBuilder::RTL_FM_EXECUTABLE_PATH = "/usr/bin/rtl_fm";
@@ -187,4 +188,9 @@ void RtlFmParameterBuilder::setResampleRate(const std::string& resampleRate)
 void RtlFmParameterBuilder::setAtanMath(const std::string& atanMath)
 {
     stringParams.push_back(AtanMath::create(atanMath));
+}
+
+void RtlFmParameterBuilder::setTunerGain(const std::string& tunerGain)
+{
+    signedParams.push_back(TunerGain::create(tunerGain));
 }

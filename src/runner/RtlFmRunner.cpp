@@ -36,8 +36,10 @@ void RtlFmRunner::execRtlFmCommand(const char* const rtlFmParams[], const char* 
     createRtlFmAplayCommsPipe();
 
     // Execute aplay first so that no output from rtl_fm is missed
+    printCommand("Attempting to execute aplay with cmd: ", aplayParams);
     forkAndExecAplay(aplayParams);
 
+    printCommand("Attempting to execute rtl_fm with cmd: ", rtlFmParams);
     forkAndExecRtlFm(rtlFmParams);
 
     // The proc starting aplay and rtl_fm has no need to access the rtl_fm<->aplay pipe
@@ -265,6 +267,24 @@ void RtlFmRunner::killAplayAndRtlFm()
 {
     killAplay(false);
     killRtlFm(false);
+}
+
+/**
+ * Prints the params array, which is intended to be of the form passed to
+ * execv(). params MUST have a last element of NULL.
+ * prefixString is printed before the command list with no trailing newline
+ */
+void RtlFmRunner::printCommand(const std::string& prefixString, const char* const params[])
+{
+    std::cout << prefixString;
+
+    uint32_t index = 0;
+    while (params[index] != (char *) NULL)
+    {
+        std::cout << params[index] << " ";
+        ++index;
+    }
+    std::cout << std::endl;
 }
 
 

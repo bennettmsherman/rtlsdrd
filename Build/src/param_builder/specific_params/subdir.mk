@@ -14,7 +14,8 @@ CPP_SRCS += \
 ../src/param_builder/specific_params/ResampleRate.cpp \
 ../src/param_builder/specific_params/SampleRate.cpp \
 ../src/param_builder/specific_params/SquelchDelay.cpp \
-../src/param_builder/specific_params/SquelchLevel.cpp 
+../src/param_builder/specific_params/SquelchLevel.cpp \
+../src/param_builder/specific_params/TunerGain.cpp 
 
 OBJS += \
 ./src/param_builder/specific_params/AtanMath.o \
@@ -27,7 +28,8 @@ OBJS += \
 ./src/param_builder/specific_params/ResampleRate.o \
 ./src/param_builder/specific_params/SampleRate.o \
 ./src/param_builder/specific_params/SquelchDelay.o \
-./src/param_builder/specific_params/SquelchLevel.o 
+./src/param_builder/specific_params/SquelchLevel.o \
+./src/param_builder/specific_params/TunerGain.o 
 
 CPP_DEPS += \
 ./src/param_builder/specific_params/AtanMath.d \
@@ -40,7 +42,8 @@ CPP_DEPS += \
 ./src/param_builder/specific_params/ResampleRate.d \
 ./src/param_builder/specific_params/SampleRate.d \
 ./src/param_builder/specific_params/SquelchDelay.d \
-./src/param_builder/specific_params/SquelchLevel.d 
+./src/param_builder/specific_params/SquelchLevel.d \
+./src/param_builder/specific_params/TunerGain.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

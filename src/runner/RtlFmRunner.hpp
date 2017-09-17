@@ -30,6 +30,8 @@ private:
     static void killAplay(bool allowThrow = true);
     static void killRtlFm(bool allowThrow = true);
 
+    static void printCommand(const std::string& prefixString, const char* const params[]);
+
     static pid_t rtlFmPid;
     static pid_t aplayPid;
 

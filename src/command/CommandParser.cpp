@@ -29,6 +29,7 @@ const Command CommandParser::PARAMETER_SETTER_COMMANDS[]
     Command { "SQUELCH_LEVEL", &RtlFmParameterBuilder::setSquelchLevel, "Sets the squelch level"},
     Command { "RESAMPLE_RATE", &RtlFmParameterBuilder::setResampleRate, "Sets the resampling rate"},
     Command { "ATAN_MATH", &RtlFmParameterBuilder::setAtanMath, "Sets the archtangent math mode"},
+    Command { "TUNER_GAIN", &RtlFmParameterBuilder::setTunerGain, "Sets the tuner gain. -100 is automatic"}
 };
 
 const Command CommandParser::SPECIAL_FUNCTION_COMMANDS[]
