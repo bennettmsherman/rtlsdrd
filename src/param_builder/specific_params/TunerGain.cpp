@@ -14,7 +14,7 @@
 #include "TunerGain.hpp"
 
 // Static Initialization
-const char* const TunerGain::OPTION = "-t";
+const char* const TunerGain::OPTION = "-g";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
