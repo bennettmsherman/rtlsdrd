@@ -11,25 +11,31 @@
 // System Includes
 #include <sys/types.h>
 
-// Project Includes
-
 class RtlFmRunner
 {
 public:
     void execRtlFmCommand(const char* const rtlFmParams[], const char* const aplayParams[]);
+    static void killAplayAndRtlFm();
 
 private:
     void forkAndExecAplay(const char* const aplayParams[]);
-    void forkAndExecRtlFm(const char* const rtlFmParams[]);
-    void createRtlFmAplayCommsPipe();
-    void cleanupPreviousExecution();
+    void aplayProcessPreExecOperations(const char* const aplayParams[]);
 
-    pid_t rtlFmPid = 0;
-    pid_t aplayPid = 0;
+    void forkAndExecRtlFm(const char* const rtlFmParams[]);
+    void rtlFmProcessPreExecOperations(const char* const rtlFmParams[]);
+
+    void createRtlFmAplayCommsPipe();
+    void closeRunnerPipeEnds();
+
+    static void killAplay(bool allowThrow = true);
+    static void killRtlFm(bool allowThrow = true);
+
+    static pid_t rtlFmPid;
+    static pid_t aplayPid;
 
     int rtlFmAplayCommsPipe[2];
-    const int & rtlFmAplayCommsPipeReadEndFd = rtlFmAplayCommsPipe[0];
-    const int & rtlFmAplayCommsPipeWriteEndFd = rtlFmAplayCommsPipe[1];
+    const int& rtlFmAplayCommsPipeReadEndFd = rtlFmAplayCommsPipe[0];
+    const int& rtlFmAplayCommsPipeWriteEndFd = rtlFmAplayCommsPipe[1];
 
 };
 
