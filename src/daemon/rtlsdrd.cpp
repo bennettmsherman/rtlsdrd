@@ -10,13 +10,13 @@
 #include <iostream>
 
 // Project Includes
-#include "RtlFmWrapper.hpp"
 #include "CommandParser.hpp"
+#include "RtlFmParameterBuilder.hpp"
 
 int main()
 {
 
-    RtlFmWrapper wrapper;
+    RtlFmParameterBuilder wrapper;
     CommandParser parser { wrapper };
 
     while (true) {

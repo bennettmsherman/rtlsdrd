@@ -21,12 +21,20 @@ public:
     /**
      * Returns the value assigned to this parameter.
      */
-    const T& getValue() const { return value; }
+    const std::string& getValue() const { return value; }
+
+    /**
+     * Returns value.c_str(). Note that this pointer is only
+     * valid while the string hasn't been destroyed
+     * and when no non-const member functions have been called
+     * since calling this function
+     */
+    const char* getValueCharPtr() const { return value.c_str(); }
 
     /**
      * Gets the option representing this parameter.
      */
-    const char getOption() const { return option; }
+    const char* getOption() const { return option; }
 
     /**
      * Returns the command-line form of this parameter.
@@ -38,11 +46,11 @@ public:
 
 protected:
 
-    BaseParameter(T value, char option) : value(value), option(option) {};
+    BaseParameter(const std::string& value, const char* const option) : value(value), option(option) {};
 
 private:
-    const T value;
-    const char option;
+    const std::string value;
+    const char* const option;
 };
 
 #endif /* WRAPPER_BASEPARAMETER_HPP_ */

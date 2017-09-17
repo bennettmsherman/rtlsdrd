@@ -13,6 +13,9 @@
 // Project Includes
 #include "SampleRate.hpp"
 
+// Static Initialization
+const char* const SampleRate::option = "-s";
+
 /**
  * Returns true if value is within the range allowable for this parameter,
  * false otherwise.
@@ -42,4 +45,10 @@ const SampleRate SampleRate::create(const std::string& value)
 {
     return create(stringToInt(value));
 }
+
+const char* SampleRate::getOption()
+{
+    return option;
+}
+
 

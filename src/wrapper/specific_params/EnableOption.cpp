@@ -15,6 +15,7 @@
 
 // Static Initialization
 // TODO is none okay?
+const char* const EnableOption::option = "-E";
 const std::vector<std::string> EnableOption::validValues {"none", "edge", "dc", "deemp", "direct", "offset"};
 const std::string EnableOption::defaultValue = "none";
 

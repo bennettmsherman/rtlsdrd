@@ -16,8 +16,9 @@
 #include "BaseParameter.hpp"
 #include "NumericParameter.hpp"
 #include "StringParameter.hpp"
+#include "RtlFmRunner.hpp"
 
-class RtlFmWrapper
+class RtlFmParameterBuilder
 {
 public:
 
@@ -34,16 +35,16 @@ public:
     void setResampleRate(const std::string& resampleRate);
     void setAtanMath(const std::string& atanMath);
 
-
     // Special function commands
     void clearParamLists(const std::string& UNUSED);
-    void executeRtlFm(const std::string& UNUSED);
+    void executeCommand(const std::string& UNUSED);
 
 private:
-    const std::string generateCommand();
+    uint32_t getNumberOfStoredParameters();
+    void setAplaySampleRate();
 
     template <typename ParamType, typename VectType>
-    static void appendEntriesToCommand(std::string& command, const std::vector<VectType>& vect);
+    static void appendEntriesToCommand(const char* cmdList[], uint32_t& insertionIdx, const std::vector<VectType>& vect);
 
     /*
      * These vectors will contain their respective parameter types.
@@ -54,8 +55,15 @@ private:
     std::vector<NumericParameter<int32_t>> signedParams;
     std::vector<StringParameter> stringParams;
 
-    static const char COMMAND_FORMAT[];
-    static const uint32_t BASE_COMMAND_FORMAT_LENGTH;
+    // Strings needed for rtl_fm and aplay
+    static const char* const RTL_FM_EXECUTABLE_PATH;
+    static const char* APLAY_ARGV[];
+
+    // Since aplay's sample rate is dependent on this the sample/resample rate of rtl_fm,
+    // use this offset into APLAY_ARGV[] to set it
+    static const uint32_t APLAY_SAMPLE_RATE_ARG_IDX = 2;
+
+    RtlFmRunner commandRunner;
 };
 
 

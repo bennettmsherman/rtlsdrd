@@ -12,14 +12,14 @@
 #include <string>
 
 // Project includes
-#include "RtlFmWrapper.hpp"
+#include "RtlFmParameterBuilder.hpp"
 
 class Command
 {
 public:
 
     // Alias declarations to the rescue!
-    using WrapperFunction = void (RtlFmWrapper::*)(const std::string&);
+    using WrapperFunction = void (RtlFmParameterBuilder::*)(const std::string&);
 
     ////////////////////////////////
     // Public interface functions //
@@ -32,7 +32,7 @@ public:
      * wrapRef is used as the object on which cmdFunc is called.
      * The result of the function is returned
      */
-    void exec(const std::string& param, RtlFmWrapper& wrapRef) const
+    void exec(const std::string& param, RtlFmParameterBuilder& wrapRef) const
     {
         (wrapRef.*cmdFunc)(param);
     }

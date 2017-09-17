@@ -27,7 +27,7 @@ protected:
     PpmError(uint32_t value) : NumericParameter(value, option, minValid, maxValid) {};
 
 private:
-    static const char option ='p';
+    static const char* const option;
 
     // TODO find true min and max
     static const uint32_t minValid = 0;

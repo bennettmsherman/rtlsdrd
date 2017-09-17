@@ -13,6 +13,9 @@
 // Project Includes
 #include "PpmError.hpp"
 
+// Static Initialization
+const char* const PpmError::option = "-p";
+
 /**
  * Returns true if value is within the range allowable for this parameter,
  * false otherwise.

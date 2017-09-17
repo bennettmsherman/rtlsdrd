@@ -15,7 +15,7 @@
 
 // Project includes
 #include "Command.hpp"
-#include "RtlFmWrapper.hpp"
+#include "RtlFmParameterBuilder.hpp"
 
 class CommandParser
 {
@@ -23,7 +23,7 @@ public:
     ////////////////////////////////
     // Public interface functions //
     ////////////////////////////////
-    CommandParser(RtlFmWrapper& rtlFmWrapper) :
+    CommandParser(RtlFmParameterBuilder& rtlFmWrapper) :
             rtlFmWrapper(rtlFmWrapper) {};
 
     const std::string execute(std::string& unparsedCommand);
@@ -63,7 +63,7 @@ private:
     //////////////////////////////
     // Private member variables //
     //////////////////////////////
-    RtlFmWrapper& rtlFmWrapper;
+    RtlFmParameterBuilder& rtlFmWrapper;
 };
 
 #endif /* COMMAND_COMMANDPARSER_HPP_ */

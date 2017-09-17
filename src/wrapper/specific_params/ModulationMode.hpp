@@ -26,7 +26,7 @@ protected:
     ModulationMode(const std::string& value) : StringParameter(value, option, validValues) {};
 
 private:
-    static const char option ='M';
+    static const char* const option;
 
     static const std::vector<std::string> validValues;
 

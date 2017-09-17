@@ -22,12 +22,13 @@ public:
 
     static const ResampleRate create(const uint32_t value=defaultValue);
     static const ResampleRate create(const std::string& value);
+    static const char* getOption();
 
 protected:
     ResampleRate(uint32_t value) : NumericParameter(value, option, minValid, maxValid) {};
 
 private:
-    static const char option ='r';
+    static const char* const option;
 
     // TODO find true min and max
     static const uint32_t minValid = 0;

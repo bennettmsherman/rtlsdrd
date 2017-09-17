@@ -27,7 +27,7 @@ protected:
     DeviceIndex(uint32_t value) : NumericParameter(value, option, minValid, maxValid) {};
 
 private:
-    static const char option ='d';
+    static const char* const option;
 
     static const uint32_t minValid = 0;
 

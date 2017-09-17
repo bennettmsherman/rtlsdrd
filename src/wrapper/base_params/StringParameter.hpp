@@ -22,7 +22,7 @@ public:
     virtual ~StringParameter() {};
 
 protected:
-    StringParameter(const std::string& value, const char option, const std::vector<std::string>& validValues) :
+    StringParameter(const std::string& value, const char* const option, const std::vector<std::string>& validValues) :
         BaseParameter(value, option), validValues(validValues) {};
 
     static bool isValid(const std::string& value, const std::vector<std::string>& validValues);

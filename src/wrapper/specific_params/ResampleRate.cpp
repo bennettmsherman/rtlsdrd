@@ -13,6 +13,9 @@
 // Project Includes
 #include "ResampleRate.hpp"
 
+// Static Initialization
+const char* const ResampleRate::option = "-r";
+
 /**
  * Returns true if value is within the range allowable for this parameter,
  * false otherwise.
@@ -41,5 +44,10 @@ const ResampleRate ResampleRate::create(const uint32_t value)
 const ResampleRate ResampleRate::create(const std::string& value)
 {
     return create(stringToInt(value));
+}
+
+const char* ResampleRate::getOption()
+{
+    return option;
 }
 

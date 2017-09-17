@@ -10,6 +10,7 @@
 
 // System Includes
 #include <stdint.h>
+#include <string>
 
 // Project Includes
 #include "BaseParameter.hpp"
@@ -22,8 +23,8 @@ public:
     virtual ~NumericParameter() {};
 
 protected:
-    NumericParameter(T value, char option, T minValid, T maxValid) :
-        BaseParameter<T>(value, option), minValid(minValid), maxValid(maxValid) {};
+    NumericParameter(T value, const char* const option, T minValid, T maxValid) :
+        BaseParameter<T>(std::to_string(value), option), minValid(minValid), maxValid(maxValid) {};
 
     static bool isValid(const T value, const T min, const T max);
 

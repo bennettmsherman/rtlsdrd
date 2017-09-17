@@ -27,7 +27,7 @@ protected:
     SquelchDelay(int32_t value) : NumericParameter(value, option, minValid, maxValid) {};
 
 private:
-    static const char option ='t';
+    static const char* const option;
 
     // TODO find true min and max
     static const int32_t minValid = INT32_MIN;

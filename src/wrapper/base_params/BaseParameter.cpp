@@ -25,22 +25,6 @@ template<typename T>
 const std::string BaseParameter<T>::getPopulatedCmdLineEntry() const
 {
     std::string populated;
-    populated += "-";
-    populated += option;
-    populated += " ";
-    populated += std::to_string(value);
-    return populated;
-}
-
-/**
- * Returns the command-line form of this parameter.
- * That is, the string "-<option> <value" is returned
- */
-template<>
-const std::string BaseParameter<std::string>::getPopulatedCmdLineEntry() const
-{
-    std::string populated;
-    populated += "-";
     populated += option;
     populated += " ";
     populated += value;

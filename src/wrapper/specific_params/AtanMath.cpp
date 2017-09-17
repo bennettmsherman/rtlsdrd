@@ -15,6 +15,7 @@
 
 // Static Initialization
 // TODO is none okay?
+const char* const AtanMath::option = "-A";
 const std::vector<std::string> AtanMath::validValues {"std", "fast", "lut"};
 const std::string AtanMath::defaultValue = "std";
 

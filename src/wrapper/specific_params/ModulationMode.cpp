@@ -14,6 +14,7 @@
 #include "ModulationMode.hpp"
 
 // Static Initialization
+const char* const ModulationMode::option ="-M";
 const std::vector<std::string> ModulationMode::validValues {"fm", "wbfm", "raw", "am", "usb", "lsb"};
 const std::string ModulationMode::defaultValue = "fm";
 

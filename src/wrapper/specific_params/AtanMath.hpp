@@ -26,7 +26,7 @@ protected:
     AtanMath(const std::string& value) : StringParameter(value, option, validValues) {};
 
 private:
-    static const char option ='A';
+    static const char* const option;
 
     static const std::vector<std::string> validValues;
 

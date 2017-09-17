@@ -18,23 +18,23 @@
 // Static initialization
 const Command CommandParser::PARAMETER_SETTER_COMMANDS[]
 {
-    Command { "DEVICE_INDEX", &RtlFmWrapper::setDeviceIndex, "Sets the index of the RTL_SDR dongle to use"},
-    Command { "ENABLE_OPTION", &RtlFmWrapper::setEnableOption, "Enables extra options"},
-    Command { "FREQUENCY", &RtlFmWrapper::setFrequency, "Sets the frequency to tune"},
-    Command { "MODULATION_MODE", &RtlFmWrapper::setModulationMode, "Sets the modulation mode to use"},
-    Command { "OVERSAMPLING", &RtlFmWrapper::setOversampling, "Sets the oversampling level"},
-    Command { "PPM_ERROR", &RtlFmWrapper::setPpmError, "Sets the ppm level"},
-    Command { "SAMPLE_RATE", &RtlFmWrapper::setSampleRate, "Sets the sampling rate"},
-    Command { "SQUELCH_DELAY", &RtlFmWrapper::setSquelchDelay, "Sets the squelch delay"},
-    Command { "SQUELCH_LEVEL", &RtlFmWrapper::setSquelchLevel, "Sets the squelch level"},
-    Command { "RESAMPLE_RATE", &RtlFmWrapper::setResampleRate, "Sets the resampling rate"},
-    Command { "ATAN_MATH", &RtlFmWrapper::setAtanMath, "Sets the archtangent math mode"},
+    Command { "DEVICE_INDEX", &RtlFmParameterBuilder::setDeviceIndex, "Sets the index of the RTL_SDR dongle to use"},
+    Command { "ENABLE_OPTION", &RtlFmParameterBuilder::setEnableOption, "Enables extra options"},
+    Command { "FREQUENCY", &RtlFmParameterBuilder::setFrequency, "Sets the frequency to tune"},
+    Command { "MODULATION_MODE", &RtlFmParameterBuilder::setModulationMode, "Sets the modulation mode to use"},
+    Command { "OVERSAMPLING", &RtlFmParameterBuilder::setOversampling, "Sets the oversampling level"},
+    Command { "PPM_ERROR", &RtlFmParameterBuilder::setPpmError, "Sets the ppm level"},
+    Command { "SAMPLE_RATE", &RtlFmParameterBuilder::setSampleRate, "Sets the sampling rate"},
+    Command { "SQUELCH_DELAY", &RtlFmParameterBuilder::setSquelchDelay, "Sets the squelch delay"},
+    Command { "SQUELCH_LEVEL", &RtlFmParameterBuilder::setSquelchLevel, "Sets the squelch level"},
+    Command { "RESAMPLE_RATE", &RtlFmParameterBuilder::setResampleRate, "Sets the resampling rate"},
+    Command { "ATAN_MATH", &RtlFmParameterBuilder::setAtanMath, "Sets the archtangent math mode"},
 };
 
 const Command CommandParser::SPECIAL_FUNCTION_COMMANDS[]
 {
-    Command { "CLEAR", &RtlFmWrapper::clearParamLists, "No param. Resets the lists of stored commands"},
-    Command { "EXECUTE", &RtlFmWrapper::executeRtlFm, "No param. Executes rtl_fm with the new params"},
+    Command { "CLEAR", &RtlFmParameterBuilder::clearParamLists, "No param. Resets the lists of stored commands"},
+    Command { "EXECUTE", &RtlFmParameterBuilder::executeCommand, "No param. Executes rtl_fm with the new params"},
 };
 
 const size_t CommandParser::PARAMETER_SETTER_COMMANDS_LIST_LENGTH = sizeof(PARAMETER_SETTER_COMMANDS) / sizeof(Command);
