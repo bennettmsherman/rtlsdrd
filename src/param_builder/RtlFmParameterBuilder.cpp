@@ -30,7 +30,7 @@
 #include "TunerGain.hpp"
 
 // Static Initialization
-const char* const RtlFmParameterBuilder::RTL_FM_EXECUTABLE_PATH = "/usr/bin/rtl_fm";
+const char* const RtlFmParameterBuilder::RTL_FM_EXECUTABLE_PATH = "/usr/local/bin/rtl_fm";
 
 // Note that APLAY_ARGV[2], the aplay sample rate, is modified at execution time
 const char* RtlFmParameterBuilder::APLAY_ARGV[] = {"/usr/bin/aplay", "-r", "24000", "-f", "S16_LE", "-t", "raw", "-c", "1", static_cast<char *>(NULL)};
