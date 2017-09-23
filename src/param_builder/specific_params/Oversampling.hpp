@@ -19,10 +19,11 @@ class Oversampling : public NumericParameter<uint32_t>
 {
 public:
     static bool isValid(const uint32_t value);
-
     static const Oversampling create(const uint32_t value=defaultValue);
     static const Oversampling create(const std::string& value);
+    const std::string getCommand();
 
+    static const std::string command;
 protected:
     Oversampling(uint32_t value) : NumericParameter(value, option, minValid, maxValid) {};
 

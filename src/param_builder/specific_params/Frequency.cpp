@@ -15,6 +15,7 @@
 
 // Static Initialization
 const char* const Frequency::option = "-f";
+const std::string Frequency::command = "FREQUENCY";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -44,4 +45,13 @@ const Frequency Frequency::create(const uint32_t value)
 const Frequency Frequency::create(const std::string& value)
 {
     return create(stringToInt(value));
+}
+
+/**
+ * Gets the string passed to the daemon which is used to indicate
+ * that a new parameter of this type should be created.
+ */
+const std::string Frequency::getCommand()
+{
+    return command;
 }

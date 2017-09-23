@@ -19,8 +19,10 @@ class ModulationMode : public StringParameter
 {
 public:
     static bool isValid(const std::string& value);
-
     static const ModulationMode create(const std::string& value=defaultValue);
+    const std::string getCommand();
+
+    static const std::string command;
 
 protected:
     ModulationMode(const std::string& value) : StringParameter(value, option, validValues) {};

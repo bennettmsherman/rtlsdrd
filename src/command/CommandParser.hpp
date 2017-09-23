@@ -24,7 +24,7 @@ public:
     // Public interface functions //
     ////////////////////////////////
     CommandParser(RtlFmParameterBuilder& rtlFmWrapper) :
-            rtlFmWrapper(rtlFmWrapper) {};
+            rtlFmParamBuilder(rtlFmWrapper) {};
 
     const std::string execute(std::string& unparsedCommand);
 
@@ -38,8 +38,7 @@ private:
     /////////////////////////////
     // Private class Constants //
     /////////////////////////////
-    static const Command PARAMETER_SETTER_COMMANDS[];
-    static const Command SPECIAL_FUNCTION_COMMANDS[];
+    static const Command<RtlFmParameterBuilder> RTL_FM_PARAMETER_BUILDER_CMDS[];
 
     // The regex string used to parse commands
     static const std::regex CMD_REGEX;
@@ -51,8 +50,7 @@ private:
     static const std::string LIST_CMDS_COMMAND_STRING;
 
     // Lengths, in terms of the number of elements, in the different command lists
-    static const size_t PARAMETER_SETTER_COMMANDS_LIST_LENGTH;
-    static const size_t SPECIAL_FUNCTION_COMMANDS_LIST_LENGTH;
+    static const size_t RTL_FM_PARAMETER_BUILDER_CMDS_LIST_LENGTH;
 
     // Constant strings representing different parse/execution results
     static const std::string NO_SUCH_COMMAND_EXISTS_STRING;
@@ -63,7 +61,7 @@ private:
     //////////////////////////////
     // Private member variables //
     //////////////////////////////
-    RtlFmParameterBuilder& rtlFmWrapper;
+    RtlFmParameterBuilder& rtlFmParamBuilder;
 };
 
 #endif /* COMMAND_COMMANDPARSER_HPP_ */

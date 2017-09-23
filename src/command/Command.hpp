@@ -14,27 +14,28 @@
 // Project includes
 #include "RtlFmParameterBuilder.hpp"
 
+template <typename Commandable>
 class Command
 {
 public:
 
     // Alias declarations to the rescue!
-    using WrapperFunction = void (RtlFmParameterBuilder::*)(const std::string&);
+    using CommandFunction = void (Commandable::*)(const std::string&);
 
     ////////////////////////////////
     // Public interface functions //
     ////////////////////////////////
-    Command(std::string commandStringParam, WrapperFunction cmdFuncParam, std::string descriptionParam) :
+    Command(std::string commandStringParam, CommandFunction cmdFuncParam, std::string descriptionParam) :
             commandString(commandStringParam), cmdFunc(cmdFuncParam), description(descriptionParam) {};
 
     /**
      * Executes the function pointed to by cmdFunc with the parameter param.
-     * wrapRef is used as the object on which cmdFunc is called.
+     * cmdRef is used as the object on which cmdFunc is called.
      * The result of the function is returned
      */
-    void exec(const std::string& param, RtlFmParameterBuilder& wrapRef) const
+    void exec(const std::string& param, Commandable& cmdRef) const
     {
-        (wrapRef.*cmdFunc)(param);
+        (cmdRef.*cmdFunc)(param);
     }
 
     const std::string& getCommandString() const
@@ -52,7 +53,7 @@ private:
     // Private member variables //
     //////////////////////////////
     const std::string commandString;
-    const WrapperFunction cmdFunc;
+    const CommandFunction cmdFunc;
     const std::string description;
 
 };

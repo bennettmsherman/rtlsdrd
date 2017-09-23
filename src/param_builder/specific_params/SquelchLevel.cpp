@@ -15,6 +15,7 @@
 
 // Static Initialization
 const char* const SquelchLevel::option = "-l";
+const std::string SquelchLevel::command = "SQUELCH_LEVEL";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -46,3 +47,11 @@ const SquelchLevel SquelchLevel::create(const std::string& value)
     return create(stringToInt(value));
 }
 
+/**
+ * Gets the string passed to the daemon which is used to indicate
+ * that a new parameter of this type should be created.
+ */
+const std::string SquelchLevel::getCommand()
+{
+    return command;
+}

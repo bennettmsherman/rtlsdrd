@@ -19,10 +19,12 @@ class SampleRate : public NumericParameter<uint32_t>
 {
 public:
     static bool isValid(const uint32_t value);
-
     static const SampleRate create(const uint32_t value=defaultValue);
     static const SampleRate create(const std::string& value);
     static const char* getOption();
+    const std::string getCommand();
+
+    static const std::string command;
 
 protected:
     SampleRate(uint32_t value) : NumericParameter(value, option, minValid, maxValid) {};

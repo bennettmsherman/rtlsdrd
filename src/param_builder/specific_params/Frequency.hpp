@@ -19,9 +19,11 @@ class Frequency : public NumericParameter<uint32_t>
 {
 public:
     static bool isValid(const uint32_t value);
-
     static const Frequency create(const uint32_t value=defaultValue);
     static const Frequency create(const std::string& value);
+    const std::string getCommand();
+
+    static const std::string command;
 
 protected:
     Frequency(uint32_t value) : NumericParameter(value, option, minValid, maxValid) {};

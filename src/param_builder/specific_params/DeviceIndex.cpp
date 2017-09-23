@@ -15,6 +15,7 @@
 
 // Static Initialization
 const char* const DeviceIndex::option = "-d";
+const std::string DeviceIndex::command = "DEVICE_INDEX";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -44,4 +45,9 @@ const DeviceIndex DeviceIndex::create(const uint32_t value)
 const DeviceIndex DeviceIndex::create(const std::string& value)
 {
     return create(stringToInt(value));
+}
+
+const std::string DeviceIndex::getCommand()
+{
+    return command;
 }

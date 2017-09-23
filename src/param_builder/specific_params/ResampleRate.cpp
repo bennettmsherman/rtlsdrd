@@ -15,6 +15,7 @@
 
 // Static Initialization
 const char* const ResampleRate::option = "-r";
+const std::string ResampleRate::command = "RESAMPLE_RATE";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -46,8 +47,16 @@ const ResampleRate ResampleRate::create(const std::string& value)
     return create(stringToInt(value));
 }
 
+/**
+ * Gets the string passed to the daemon which is used to indicate
+ * that a new parameter of this type should be created.
+ */
+const std::string ResampleRate::getCommand()
+{
+    return command;
+}
+
 const char* ResampleRate::getOption()
 {
     return option;
 }
-

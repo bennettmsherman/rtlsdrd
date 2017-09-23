@@ -15,6 +15,7 @@
 
 // Static Initialization
 const char* const SampleRate::option = "-s";
+const std::string SampleRate::command = "SAMPLE_RATE";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -51,4 +52,11 @@ const char* SampleRate::getOption()
     return option;
 }
 
-
+/**
+ * Gets the string passed to the daemon which is used to indicate
+ * that a new parameter of this type should be created.
+ */
+const std::string SampleRate::getCommand()
+{
+    return command;
+}

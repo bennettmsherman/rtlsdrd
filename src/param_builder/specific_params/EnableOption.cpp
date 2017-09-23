@@ -18,6 +18,7 @@
 const char* const EnableOption::option = "-E";
 const std::vector<std::string> EnableOption::validValues {"none", "edge", "dc", "deemp", "direct", "offset"};
 const std::string EnableOption::defaultValue = "none";
+const std::string EnableOption::command = "ENABLE_OPTION";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -42,4 +43,13 @@ const EnableOption EnableOption::create(const std::string& value)
     {
         return EnableOption(value);
     }
+}
+
+/**
+ * Gets the string passed to the daemon which is used to indicate
+ * that a new parameter of this type should be created.
+ */
+const std::string EnableOption::getCommand()
+{
+    return command;
 }

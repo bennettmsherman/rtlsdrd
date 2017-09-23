@@ -19,9 +19,11 @@ class SquelchDelay : public NumericParameter<int32_t>
 {
 public:
     static bool isValid(const int32_t value);
-
     static const SquelchDelay create(const int32_t value=defaultValue);
     static const SquelchDelay create(const std::string& value);
+    const std::string getCommand();
+
+    static const std::string command;
 
 protected:
     SquelchDelay(int32_t value) : NumericParameter(value, option, minValid, maxValid) {};

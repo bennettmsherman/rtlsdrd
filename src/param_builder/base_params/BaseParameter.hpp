@@ -42,6 +42,13 @@ public:
      */
     const std::string getPopulatedCmdLineEntry() const;
 
+    /**
+     * Returns the string used to address the specified command.
+     * For example, to set the frequency through the daemon,
+     * "FREQUENCY" is used to create a new Frequency parameter.
+     */
+    virtual const std::string getCommand() {return std::string("IMPLEMENT_IN_DERIVED"); }
+
     virtual ~BaseParameter() {};
 
 protected:

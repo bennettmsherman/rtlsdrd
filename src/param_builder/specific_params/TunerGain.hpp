@@ -19,9 +19,11 @@ class TunerGain : public NumericParameter<int32_t>
 {
 public:
     static bool isValid(const int32_t value);
-
     static const TunerGain create(const int32_t value=defaultValue);
     static const TunerGain create(const std::string& value);
+    const std::string getCommand();
+
+    static const std::string command;
 
 protected:
     TunerGain(int32_t value) : NumericParameter(value, OPTION, minValid, maxValid) {};

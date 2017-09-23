@@ -14,32 +14,42 @@
 // Project includes
 #include "Command.hpp"
 #include "CommandParser.hpp"
+#include "AtanMath.hpp"
+#include "DeviceIndex.hpp"
+#include "EnableOption.hpp"
+#include "Frequency.hpp"
+#include "ModulationMode.hpp"
+#include "Oversampling.hpp"
+#include "PpmError.hpp"
+#include "ResampleRate.hpp"
+#include "SampleRate.hpp"
+#include "SquelchDelay.hpp"
+#include "SquelchLevel.hpp"
+#include "RtlFmParameterBuilder.hpp"
+#include "RtlFmRunner.hpp"
+#include "TunerGain.hpp"
+
 
 // Static initialization
-const Command CommandParser::PARAMETER_SETTER_COMMANDS[]
+const Command<RtlFmParameterBuilder> CommandParser::RTL_FM_PARAMETER_BUILDER_CMDS[]
 {
-    Command { "DEVICE_INDEX", &RtlFmParameterBuilder::setDeviceIndex, "Sets the index of the RTL_SDR dongle to use"},
-    Command { "ENABLE_OPTION", &RtlFmParameterBuilder::setEnableOption, "Enables extra options"},
-    Command { "FREQUENCY", &RtlFmParameterBuilder::setFrequency, "Sets the frequency to tune"},
-    Command { "MODULATION_MODE", &RtlFmParameterBuilder::setModulationMode, "Sets the modulation mode to use"},
-    Command { "OVERSAMPLING", &RtlFmParameterBuilder::setOversampling, "Sets the oversampling level"},
-    Command { "PPM_ERROR", &RtlFmParameterBuilder::setPpmError, "Sets the ppm level"},
-    Command { "SAMPLE_RATE", &RtlFmParameterBuilder::setSampleRate, "Sets the sampling rate"},
-    Command { "SQUELCH_DELAY", &RtlFmParameterBuilder::setSquelchDelay, "Sets the squelch delay"},
-    Command { "SQUELCH_LEVEL", &RtlFmParameterBuilder::setSquelchLevel, "Sets the squelch level"},
-    Command { "RESAMPLE_RATE", &RtlFmParameterBuilder::setResampleRate, "Sets the resampling rate"},
-    Command { "ATAN_MATH", &RtlFmParameterBuilder::setAtanMath, "Sets the archtangent math mode"},
-    Command { "TUNER_GAIN", &RtlFmParameterBuilder::setTunerGain, "Sets the tuner gain. -100 is automatic"}
+    Command<RtlFmParameterBuilder> { DeviceIndex::command, &RtlFmParameterBuilder::setDeviceIndex, "Sets the index of the RTL_SDR dongle to use"},
+    Command<RtlFmParameterBuilder> { EnableOption::command, &RtlFmParameterBuilder::setEnableOption, "Enables extra options"},
+    Command<RtlFmParameterBuilder> { Frequency::command, &RtlFmParameterBuilder::setFrequency, "Sets the frequency to tune"},
+    Command<RtlFmParameterBuilder> { ModulationMode::command, &RtlFmParameterBuilder::setModulationMode, "Sets the modulation mode to use"},
+    Command<RtlFmParameterBuilder> { Oversampling::command, &RtlFmParameterBuilder::setOversampling, "Sets the oversampling level"},
+    Command<RtlFmParameterBuilder> { PpmError::command, &RtlFmParameterBuilder::setPpmError, "Sets the ppm level"},
+    Command<RtlFmParameterBuilder> { SampleRate::command, &RtlFmParameterBuilder::setSampleRate, "Sets the sampling rate"},
+    Command<RtlFmParameterBuilder> { SquelchDelay::command, &RtlFmParameterBuilder::setSquelchDelay, "Sets the squelch delay"},
+    Command<RtlFmParameterBuilder> { SquelchLevel::command, &RtlFmParameterBuilder::setSquelchLevel, "Sets the squelch level"},
+    Command<RtlFmParameterBuilder> { ResampleRate::command, &RtlFmParameterBuilder::setResampleRate, "Sets the resampling rate"},
+    Command<RtlFmParameterBuilder> { AtanMath::command, &RtlFmParameterBuilder::setAtanMath, "Sets the archtangent math mode"},
+    Command<RtlFmParameterBuilder> { TunerGain::command, &RtlFmParameterBuilder::setTunerGain, "Sets the tuner gain. -100 is automatic"},
+    Command<RtlFmParameterBuilder> { "CLEAR", &RtlFmParameterBuilder::clearParamLists, "No param. Resets the lists of stored commands"},
+    Command<RtlFmParameterBuilder> { "EXECUTE", &RtlFmParameterBuilder::executeCommand, "No param. Executes rtl_fm with the new params"},
 };
 
-const Command CommandParser::SPECIAL_FUNCTION_COMMANDS[]
-{
-    Command { "CLEAR", &RtlFmParameterBuilder::clearParamLists, "No param. Resets the lists of stored commands"},
-    Command { "EXECUTE", &RtlFmParameterBuilder::executeCommand, "No param. Executes rtl_fm with the new params"},
-};
-
-const size_t CommandParser::PARAMETER_SETTER_COMMANDS_LIST_LENGTH = sizeof(PARAMETER_SETTER_COMMANDS) / sizeof(Command);
-const size_t CommandParser::SPECIAL_FUNCTION_COMMANDS_LIST_LENGTH = sizeof(SPECIAL_FUNCTION_COMMANDS) / sizeof(Command);
+const size_t CommandParser::RTL_FM_PARAMETER_BUILDER_CMDS_LIST_LENGTH = sizeof(RTL_FM_PARAMETER_BUILDER_CMDS) / sizeof(Command<RtlFmParameterBuilder>);
 
 const std::regex CommandParser::CMD_REGEX { "^([A-Z0-9_]+)=?([-]?[0-9]*|[a-zA-Z]*)$"};
 const std::string CommandParser::LIST_CMDS_COMMAND_STRING {"HELP"};
@@ -71,24 +81,13 @@ const std::string CommandParser::execute(std::string& unparsedCommand)
 
     try
     {
-        for (size_t idx = 0; idx < PARAMETER_SETTER_COMMANDS_LIST_LENGTH; ++idx)
+        for (size_t idx = 0; idx < RTL_FM_PARAMETER_BUILDER_CMDS_LIST_LENGTH; ++idx)
         {
-            Command statusResultCmd = PARAMETER_SETTER_COMMANDS[idx];
+            Command<RtlFmParameterBuilder> statusResultCmd = RTL_FM_PARAMETER_BUILDER_CMDS[idx];
             if (cmd.compare(statusResultCmd.getCommandString()) == 0)
             {
                 std::cout << "Executing: " << cmd << "(" << param << ")" << std::endl;
-                statusResultCmd.exec(param, rtlFmWrapper);
-                return EXECUTION_OK_STRING;
-            }
-        }
-
-        for (size_t idx = 0; idx < SPECIAL_FUNCTION_COMMANDS_LIST_LENGTH; ++idx)
-        {
-            Command statusResultCmd = SPECIAL_FUNCTION_COMMANDS[idx];
-            if (cmd.compare(statusResultCmd.getCommandString()) == 0)
-            {
-                std::cout << "Executing: " << cmd << "(" << param << ")" << std::endl;
-                statusResultCmd.exec(param, rtlFmWrapper);
+                statusResultCmd.exec(param, rtlFmParamBuilder);
                 return EXECUTION_OK_STRING;
             }
         }
@@ -108,21 +107,12 @@ std::string CommandParser::getCommandStringList()
 {
     std::string cmdList = "SUPPORTED COMMANDS:\n";
 
-    cmdList.append("OPTION SETTING COMMANDS: \n");
-    for (size_t idx = 0; idx < PARAMETER_SETTER_COMMANDS_LIST_LENGTH; ++idx)
+    cmdList.append("RTL FM PARAMETER BUILDER COMMANDS: \n");
+    for (size_t idx = 0; idx < RTL_FM_PARAMETER_BUILDER_CMDS_LIST_LENGTH; ++idx)
     {
-        cmdList.append(PARAMETER_SETTER_COMMANDS[idx].getCommandString());
+        cmdList.append(RTL_FM_PARAMETER_BUILDER_CMDS[idx].getCommandString());
         cmdList.append(" - ");
-        cmdList.append(PARAMETER_SETTER_COMMANDS[idx].getCommandDescription());
-        cmdList.append("\n");
-    }
-
-    cmdList.append("\nSPECIAL FUNCTION COMMANDS: \n");
-    for (size_t idx = 0; idx < SPECIAL_FUNCTION_COMMANDS_LIST_LENGTH; ++idx)
-    {
-        cmdList.append(SPECIAL_FUNCTION_COMMANDS[idx].getCommandString());
-        cmdList.append(" - ");
-        cmdList.append(SPECIAL_FUNCTION_COMMANDS[idx].getCommandDescription());
+        cmdList.append(RTL_FM_PARAMETER_BUILDER_CMDS[idx].getCommandDescription());
         cmdList.append("\n");
     }
 

@@ -17,6 +17,7 @@
 const char* const ModulationMode::option ="-M";
 const std::vector<std::string> ModulationMode::validValues {"fm", "wbfm", "raw", "am", "usb", "lsb"};
 const std::string ModulationMode::defaultValue = "fm";
+const std::string ModulationMode::command = "MODULATION_MODE";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -43,4 +44,11 @@ const ModulationMode ModulationMode::create(const std::string& value)
     }
 }
 
-
+/**
+ * Gets the string passed to the daemon which is used to indicate
+ * that a new parameter of this type should be created.
+ */
+const std::string ModulationMode::getCommand()
+{
+    return command;
+}

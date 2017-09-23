@@ -18,6 +18,7 @@
 const char* const AtanMath::option = "-A";
 const std::vector<std::string> AtanMath::validValues {"std", "fast", "lut"};
 const std::string AtanMath::defaultValue = "std";
+const std::string AtanMath::command = "ATAN_MATH";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -44,6 +45,11 @@ const AtanMath AtanMath::create(const std::string& value)
     }
 }
 
-
-
-
+/**
+ * Gets the string passed to the daemon which is used to indicate
+ * that a new parameter of this type should be created.
+ */
+const std::string AtanMath::getCommand()
+{
+    return command;
+}

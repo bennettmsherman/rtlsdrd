@@ -22,6 +22,10 @@ public:
 
     static const EnableOption create(const std::string& value=defaultValue);
 
+    const std::string getCommand();
+
+    static const std::string command;
+
 protected:
     EnableOption(const std::string& value) : StringParameter(value, option, validValues) {};
 
