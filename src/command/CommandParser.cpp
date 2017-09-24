@@ -51,7 +51,7 @@ const Command<RtlFmParameterBuilder> CommandParser::RTL_FM_PARAMETER_BUILDER_CMD
 
 const size_t CommandParser::RTL_FM_PARAMETER_BUILDER_CMDS_LIST_LENGTH = sizeof(RTL_FM_PARAMETER_BUILDER_CMDS) / sizeof(Command<RtlFmParameterBuilder>);
 
-const std::regex CommandParser::CMD_REGEX { "^([A-Z0-9_]+)=?([-]?[0-9]*|[a-zA-Z]*)"};
+const std::regex CommandParser::CMD_REGEX { "^([A-Z0-9_]+)=?([-]?[0-9a-zA-Z]*)"};
 const std::string CommandParser::LIST_CMDS_COMMAND_STRING {"HELP"};
 const std::string CommandParser::INVALID_SYNTAX_STRING {"INVALID COMMAND SYNTAX"};
 const std::string CommandParser::NO_SUCH_COMMAND_EXISTS_STRING {"NO SUCH COMMAND EXISTS"};
@@ -139,6 +139,7 @@ bool CommandParser::parse(const std::string& unparsedCommand, std::string& comma
     std::smatch matches;
 
     std::regex_search(unparsedCommand, matches, CMD_REGEX);
+
     if (matches.size() != 3)
     {
         return false;
