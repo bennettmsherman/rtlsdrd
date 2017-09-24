@@ -14,10 +14,28 @@
 class RtlFmRunner
 {
 public:
+    static RtlFmRunner& getInstance();
+
     void execRtlFmCommand(const char* const rtlFmParams[], const char* const aplayParams[]);
     static void killAplayAndRtlFm();
 
 private:
+
+    /**
+     * A private constructor is required for the singleton pattern
+     */
+    RtlFmRunner() = default;
+
+    /**
+     * Delete the default copy constructor
+     */
+    RtlFmRunner(const RtlFmRunner&) = delete;
+
+    /**
+     * Delete the default assignment operator
+     */
+    RtlFmRunner& operator=(const RtlFmRunner&) = delete;
+
     void forkAndExecAplay(const char* const aplayParams[]);
     void aplayProcessPreExecOperations(const char* const aplayParams[]);
 

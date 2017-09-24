@@ -63,8 +63,6 @@ private:
     // Since aplay's sample rate is dependent on this the sample/resample rate of rtl_fm,
     // use this offset into APLAY_ARGV[] to set it
     static const uint32_t APLAY_SAMPLE_RATE_ARG_IDX = 2;
-
-    RtlFmRunner commandRunner;
 };
 
 

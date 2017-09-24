@@ -287,4 +287,12 @@ void RtlFmRunner::printCommand(const std::string& prefixString, const char* cons
     std::cout << std::endl;
 }
 
+/**
+ * Returns a reference to the singleton RtlFmRunner instance
+ */
+RtlFmRunner& RtlFmRunner::getInstance()
+{
+    static RtlFmRunner instance;
+    return instance;
+}
 
