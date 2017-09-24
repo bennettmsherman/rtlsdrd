@@ -51,7 +51,7 @@ const Command<RtlFmParameterBuilder> CommandParser::RTL_FM_PARAMETER_BUILDER_CMD
 
 const size_t CommandParser::RTL_FM_PARAMETER_BUILDER_CMDS_LIST_LENGTH = sizeof(RTL_FM_PARAMETER_BUILDER_CMDS) / sizeof(Command<RtlFmParameterBuilder>);
 
-const std::regex CommandParser::CMD_REGEX { "^([A-Z0-9_]+)=?([-]?[0-9]*|[a-zA-Z]*)$"};
+const std::regex CommandParser::CMD_REGEX { "^([A-Z0-9_]+)=?([-]?[0-9]*|[a-zA-Z]*)"};
 const std::string CommandParser::LIST_CMDS_COMMAND_STRING {"HELP"};
 const std::string CommandParser::INVALID_SYNTAX_STRING {"INVALID COMMAND SYNTAX"};
 const std::string CommandParser::NO_SUCH_COMMAND_EXISTS_STRING {"NO SUCH COMMAND EXISTS"};
@@ -60,10 +60,13 @@ const std::string CommandParser::EXECUTION_OK_STRING {"OK"};
 
 /**
  * The command specified by LIST_CMDS_COMMAND_STRING will result in a list of supported
- * functions being printed. If the entered command is invalid, "COMMAND NOT VALID!" is returned.
- * Otherwise, the result of the execution is returned.
+ * functions being printed. If the command was invalid or there was a parsing error, a
+ * string reporting the error will be returned. If the parse operation was successful,
+ * the result of the execution will be returned.
+ *
+ * TODO: Throw exceptions for bad commands
  */
-const std::string CommandParser::execute(std::string& unparsedCommand)
+std::string CommandParser::execute(std::string& unparsedCommand, RtlFmParameterBuilder& rtlFmParamBuilder) const
 {
     std::string cmd;
     std::string param;
@@ -103,7 +106,7 @@ const std::string CommandParser::execute(std::string& unparsedCommand)
 /**
  * Returns a list of commands supported by this interpreter.
  */
-std::string CommandParser::getCommandStringList()
+std::string CommandParser::getCommandStringList() const
 {
     std::string cmdList = "SUPPORTED COMMANDS:\n";
 
@@ -130,19 +133,20 @@ std::string CommandParser::getCommandStringList()
  *
  * Returns true if a valid command is found, false otherwise
  */
-bool CommandParser::parse(const std::string& unparsedCommand, std::string& command, std::string& param)
+bool CommandParser::parse(const std::string& unparsedCommand, std::string& command, std::string& param) const
 {
     // Find the command and value if they exist
     std::smatch matches;
 
-    std::regex_match(unparsedCommand, matches, CMD_REGEX);
+    std::regex_search(unparsedCommand, matches, CMD_REGEX);
     if (matches.size() != 3)
     {
         return false;
     }
 
-    // matches[0] should be the whole string
-    if (unparsedCommand.compare(matches[0].str()) != 0)
+    // matches[0] should be the whole string, minus any trailing whitespace
+    if (unparsedCommand.substr(0, unparsedCommand.find_first_of("\r\n")).
+            compare(matches[0].str()) != 0)
     {
         return false;
     }
@@ -161,3 +165,13 @@ bool CommandParser::parse(const std::string& unparsedCommand, std::string& comma
 
     return true;
 }
+
+/**
+ * Returns a reference to the singleton CommandParser instance
+ */
+const CommandParser& CommandParser::getInstance()
+{
+    static CommandParser instance{};
+    return instance;
+}
+

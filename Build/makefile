@@ -50,7 +50,7 @@ all: rtlsdrd
 rtlsdrd: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++  -o "rtlsdrd" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -L/usr/lib/x86_64-linux-gnu/libboost -o "rtlsdrd" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

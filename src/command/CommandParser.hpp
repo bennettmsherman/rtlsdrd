@@ -23,17 +23,32 @@ public:
     ////////////////////////////////
     // Public interface functions //
     ////////////////////////////////
-    CommandParser(RtlFmParameterBuilder& rtlFmWrapper) :
-            rtlFmParamBuilder(rtlFmWrapper) {};
+    static const CommandParser& getInstance();
 
-    const std::string execute(std::string& unparsedCommand);
+    std::string execute(std::string& unparsedCommand, RtlFmParameterBuilder& rtlFmParamBuilder) const;
 
 private:
-    /////////////////////////////////
-    // Private interface functions //
-    /////////////////////////////////
-    bool parse(const std::string& unparsedCommand, std::string& command, std::string& param);
-    std::string getCommandStringList();
+    ///////////////////////
+    // Private functions //
+    ///////////////////////
+    /**
+     * A private constructor is required for the singleton pattern
+     */
+    CommandParser() = default;
+
+    /**
+     * Delete the default copy constructor
+     */
+    CommandParser(const CommandParser&) = delete;
+
+    /**
+     * Delete the default assignment operator
+     */
+    CommandParser& operator=(const CommandParser&) = delete;
+
+
+    bool parse(const std::string& unparsedCommand, std::string& command, std::string& param) const;
+    std::string getCommandStringList() const;
 
     /////////////////////////////
     // Private class Constants //
@@ -58,10 +73,6 @@ private:
     static const std::string EXECUTION_OK_STRING;
     static const std::string INVALID_SYNTAX_STRING;
 
-    //////////////////////////////
-    // Private member variables //
-    //////////////////////////////
-    RtlFmParameterBuilder& rtlFmParamBuilder;
 };
 
 #endif /* COMMAND_COMMANDPARSER_HPP_ */
