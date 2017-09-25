@@ -46,10 +46,17 @@ const Command<RtlFmParameterBuilder> CommandParser::RTL_FM_PARAMETER_BUILDER_CMD
     Command<RtlFmParameterBuilder> { AtanMath::command, &RtlFmParameterBuilder::setAtanMath, "Sets the archtangent math mode"},
     Command<RtlFmParameterBuilder> { TunerGain::command, &RtlFmParameterBuilder::setTunerGain, "Sets the tuner gain. -100 is automatic"},
     Command<RtlFmParameterBuilder> { "CLEAR", &RtlFmParameterBuilder::clearParamLists, "No param. Resets the lists of stored commands"},
-    Command<RtlFmParameterBuilder> { "EXECUTE", &RtlFmParameterBuilder::executeCommand, "No param. Executes rtl_fm with the new params"},
+    Command<RtlFmParameterBuilder> { "EXECUTE", &RtlFmParameterBuilder::executeCommand, "No param. Executes rtl_fm with the new params"}
+};
+
+const Command<RtlFmRunner> CommandParser::RTL_FM_RUNNER_CMDS[]
+{
+    Command<RtlFmRunner> { "STOP", &RtlFmRunner::stopCommandHandler, "Kills rtl_fm and aplay. Stops the audio stream."}
 };
 
 const size_t CommandParser::RTL_FM_PARAMETER_BUILDER_CMDS_LIST_LENGTH = sizeof(RTL_FM_PARAMETER_BUILDER_CMDS) / sizeof(Command<RtlFmParameterBuilder>);
+const size_t CommandParser::RTL_FM_RUNNER_CMDS_LIST_LENGTH = sizeof(RTL_FM_RUNNER_CMDS) / sizeof(Command<RtlFmRunner>);
+
 
 const std::regex CommandParser::CMD_REGEX { "^([A-Z0-9_]+)=?([-]?[0-9a-zA-Z]*)"};
 const std::string CommandParser::LIST_CMDS_COMMAND_STRING {"HELP"};
@@ -84,13 +91,25 @@ std::string CommandParser::execute(std::string& unparsedCommand, RtlFmParameterB
 
     try
     {
+        // Parameter builder commands
         for (size_t idx = 0; idx < RTL_FM_PARAMETER_BUILDER_CMDS_LIST_LENGTH; ++idx)
         {
-            Command<RtlFmParameterBuilder> statusResultCmd = RTL_FM_PARAMETER_BUILDER_CMDS[idx];
-            if (cmd.compare(statusResultCmd.getCommandString()) == 0)
+            Command<RtlFmParameterBuilder> rtlFmParamBuilderCmd = RTL_FM_PARAMETER_BUILDER_CMDS[idx];
+            if (cmd.compare(rtlFmParamBuilderCmd.getCommandString()) == 0)
             {
                 std::cout << "Executing: " << cmd << "(" << param << ")" << std::endl;
-                statusResultCmd.exec(param, rtlFmParamBuilder);
+                rtlFmParamBuilderCmd.exec(param, rtlFmParamBuilder);
+                return EXECUTION_OK_STRING;
+            }
+        }
+
+        for (size_t idx = 0; idx < RTL_FM_RUNNER_CMDS_LIST_LENGTH; ++idx)
+        {
+            Command<RtlFmRunner> rtlFmRunnerCmd = RTL_FM_RUNNER_CMDS[idx];
+            if (cmd.compare(rtlFmRunnerCmd.getCommandString()) == 0)
+            {
+                std::cout << "Executing: " << cmd << "(" << param << ")" << std::endl;
+                rtlFmRunnerCmd.exec(param, RtlFmRunner::getInstance());
                 return EXECUTION_OK_STRING;
             }
         }
@@ -116,6 +135,15 @@ std::string CommandParser::getCommandStringList() const
         cmdList.append(RTL_FM_PARAMETER_BUILDER_CMDS[idx].getCommandString());
         cmdList.append(" - ");
         cmdList.append(RTL_FM_PARAMETER_BUILDER_CMDS[idx].getCommandDescription());
+        cmdList.append("\n");
+    }
+
+    cmdList.append("RTL FM RUNNER COMMANDS: \n");
+    for (size_t idx = 0; idx < RTL_FM_RUNNER_CMDS_LIST_LENGTH; ++idx)
+    {
+        cmdList.append(RTL_FM_RUNNER_CMDS[idx].getCommandString());
+        cmdList.append(" - ");
+        cmdList.append(RTL_FM_RUNNER_CMDS[idx].getCommandDescription());
         cmdList.append("\n");
     }
 

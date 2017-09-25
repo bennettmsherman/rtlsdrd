@@ -259,6 +259,16 @@ void RtlFmRunner::createRtlFmAplayCommsPipe()
 }
 
 /**
+ * The function called by the "STOP" command. Terminates aplay
+ * and rtl_fm if they're currently running.
+ */
+void RtlFmRunner::stopCommandHandler(const std::string& UNUSED)
+{
+    (void) UNUSED;
+    killAplayAndRtlFm();
+}
+
+/**
  * Kills aplay and rtl_fm. This is intended to be used as a public function
  * to be called when the main daemon is terminated. If an error occurs,
  * no exceptions are thrown, but the exception messages are displayed to srderr

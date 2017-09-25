@@ -16,6 +16,7 @@
 // Project includes
 #include "Command.hpp"
 #include "RtlFmParameterBuilder.hpp"
+#include "RtlFmRunner.hpp"
 
 class CommandParser
 {
@@ -54,6 +55,7 @@ private:
     // Private class Constants //
     /////////////////////////////
     static const Command<RtlFmParameterBuilder> RTL_FM_PARAMETER_BUILDER_CMDS[];
+    static const Command<RtlFmRunner> RTL_FM_RUNNER_CMDS[];
 
     // The regex string used to parse commands
     static const std::regex CMD_REGEX;
@@ -66,6 +68,7 @@ private:
 
     // Lengths, in terms of the number of elements, in the different command lists
     static const size_t RTL_FM_PARAMETER_BUILDER_CMDS_LIST_LENGTH;
+    static const size_t RTL_FM_RUNNER_CMDS_LIST_LENGTH;
 
     // Constant strings representing different parse/execution results
     static const std::string NO_SUCH_COMMAND_EXISTS_STRING;
