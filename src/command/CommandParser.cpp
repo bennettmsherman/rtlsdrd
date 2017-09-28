@@ -142,7 +142,7 @@ std::string CommandParser::getCommandStringList() const
         cmdList.append("\n");
     }
 
-    cmdList.append("\nxRTL FM RUNNER COMMANDS: \n");
+    cmdList.append("\nRTL FM RUNNER COMMANDS: \n");
     for (size_t idx = 0; idx < RTL_FM_RUNNER_CMDS_LIST_LENGTH; ++idx)
     {
         cmdList.append(RTL_FM_RUNNER_CMDS[idx].getCommandString());
