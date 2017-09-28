@@ -35,6 +35,8 @@ public:
     void setResampleRate(const std::string& resampleRate);
     void setAtanMath(const std::string& atanMath);
     void setTunerGain(const std::string& tunerGain);
+    void broadcastAmStationMacro(const std::string& amFreqInKilohertz);
+    void broadcastFmStationMacro(const std::string& fmFreqInMegahertz);
 
     // Special function commands
     void clearParamLists(const std::string& UNUSED);

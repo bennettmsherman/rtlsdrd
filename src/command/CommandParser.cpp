@@ -45,6 +45,10 @@ const Command<RtlFmParameterBuilder> CommandParser::RTL_FM_PARAMETER_BUILDER_CMD
     Command<RtlFmParameterBuilder> { ResampleRate::command, &RtlFmParameterBuilder::setResampleRate, "Sets the resampling rate"},
     Command<RtlFmParameterBuilder> { AtanMath::command, &RtlFmParameterBuilder::setAtanMath, "Sets the archtangent math mode"},
     Command<RtlFmParameterBuilder> { TunerGain::command, &RtlFmParameterBuilder::setTunerGain, "Sets the tuner gain. -100 is automatic"},
+    Command<RtlFmParameterBuilder> { "BROADCAST_AM", &RtlFmParameterBuilder::broadcastAmStationMacro, "Input: AM broadcast station's freq in kHz."
+                                        " Sets sample rate = 128k, enables: direct sampling, AM demodulation"},
+    Command<RtlFmParameterBuilder> { "BROADCAST_FM", &RtlFmParameterBuilder::broadcastFmStationMacro, "Input: FM broadcast station's freq in MHz."
+                                        " Sets wbfm demodulation."},
     Command<RtlFmParameterBuilder> { "CLEAR", &RtlFmParameterBuilder::clearParamLists, "No param. Resets the lists of stored commands"},
     Command<RtlFmParameterBuilder> { "EXECUTE", &RtlFmParameterBuilder::executeCommand, "No param. Executes rtl_fm with the new params"}
 };
@@ -58,7 +62,7 @@ const size_t CommandParser::RTL_FM_PARAMETER_BUILDER_CMDS_LIST_LENGTH = sizeof(R
 const size_t CommandParser::RTL_FM_RUNNER_CMDS_LIST_LENGTH = sizeof(RTL_FM_RUNNER_CMDS) / sizeof(Command<RtlFmRunner>);
 
 
-const std::regex CommandParser::CMD_REGEX { "^([A-Z0-9_]+)=?([-]?[0-9a-zA-Z]*)"};
+const std::regex CommandParser::CMD_REGEX { "^([A-Z0-9_]+)=?([-]?[0-9a-zA-Z]*\\.?[0-9a-zA-Z]*)"};
 const std::string CommandParser::LIST_CMDS_COMMAND_STRING {"HELP"};
 const std::string CommandParser::INVALID_SYNTAX_STRING {"INVALID COMMAND SYNTAX"};
 const std::string CommandParser::NO_SUCH_COMMAND_EXISTS_STRING {"NO SUCH COMMAND EXISTS"};
@@ -138,7 +142,7 @@ std::string CommandParser::getCommandStringList() const
         cmdList.append("\n");
     }
 
-    cmdList.append("\nRTL FM RUNNER COMMANDS: \n");
+    cmdList.append("\nxRTL FM RUNNER COMMANDS: \n");
     for (size_t idx = 0; idx < RTL_FM_RUNNER_CMDS_LIST_LENGTH; ++idx)
     {
         cmdList.append(RTL_FM_RUNNER_CMDS[idx].getCommandString());

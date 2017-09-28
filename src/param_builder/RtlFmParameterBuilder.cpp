@@ -28,6 +28,7 @@
 #include "RtlFmParameterBuilder.hpp"
 #include "RtlFmRunner.hpp"
 #include "TunerGain.hpp"
+#include "ParamBuilderUtils.hpp"
 
 // Static Initialization
 const char* const RtlFmParameterBuilder::RTL_FM_EXECUTABLE_PATH = "/usr/local/bin/rtl_fm";
@@ -194,3 +195,32 @@ void RtlFmParameterBuilder::setTunerGain(const std::string& tunerGain)
 {
     signedParams.push_back(TunerGain::create(tunerGain));
 }
+
+/**
+ * Convenience function which takes a broadcast AM station's frequency (in kHz)
+ * as a parameter, and sets the:
+ * - Frequency
+ * - Sample rate (to 128K)
+ * - Modulation mode (to AM)
+ * - Direct sampling (enabled)
+ */
+void RtlFmParameterBuilder::broadcastAmStationMacro(const std::string& amFreqInKilohertz)
+{
+    unsignedParams.push_back(Frequency::create(ParamBuilderUtils::broadcastAmKilohertzToHertz(amFreqInKilohertz)));
+    unsignedParams.push_back(SampleRate::create(128000));
+    stringParams.push_back(ModulationMode::create("am"));
+    stringParams.push_back(EnableOption::create("direct"));
+}
+
+/**
+ * Convenience function which takes a broadcast FM station's frequency (in MHz)
+ * as a parameter, and sets the:
+ * - Frequency
+ * - Modulation mode (to wbfm)
+ */
+void RtlFmParameterBuilder::broadcastFmStationMacro(const std::string& fmFreqInMegahertz)
+{
+    unsignedParams.push_back(Frequency::create(ParamBuilderUtils::broadcastFmMegahertzToHertz(fmFreqInMegahertz)));
+    setModulationMode("wbfm");
+}
+
