@@ -25,6 +25,7 @@
 								<option id="gnu.cpp.compiler.exe.debug.option.debugging.level.1027493627" name="Debug Level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.include.paths.1043156791" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../src/param_builder/specific_params"/>
+									<listOptionValue builtIn="false" value="../src/system"/>
 									<listOptionValue builtIn="false" value="/usr/include/boost"/>
 									<listOptionValue builtIn="false" value="../src/runner"/>
 									<listOptionValue builtIn="false" value="../src/network"/>

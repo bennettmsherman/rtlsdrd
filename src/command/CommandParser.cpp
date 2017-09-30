@@ -12,9 +12,9 @@
 #include <stdexcept>
 
 // Project includes
+#include "AtanMath.hpp"
 #include "Command.hpp"
 #include "CommandParser.hpp"
-#include "AtanMath.hpp"
 #include "DeviceIndex.hpp"
 #include "EnableOption.hpp"
 #include "Frequency.hpp"
@@ -22,11 +22,13 @@
 #include "Oversampling.hpp"
 #include "PpmError.hpp"
 #include "ResampleRate.hpp"
+#include "RtlFmParameterBuilder.hpp"
+#include "RtlFmRunner.hpp"
 #include "SampleRate.hpp"
 #include "SquelchDelay.hpp"
 #include "SquelchLevel.hpp"
-#include "RtlFmParameterBuilder.hpp"
-#include "RtlFmRunner.hpp"
+#include "SystemUtils.hpp"
+#include "SystemUtils.hpp"
 #include "TunerGain.hpp"
 
 
@@ -58,8 +60,14 @@ const Command<RtlFmRunner> CommandParser::RTL_FM_RUNNER_CMDS[]
     Command<RtlFmRunner> { "STOP", &RtlFmRunner::stopCommandHandler, "Kills rtl_fm and aplay. Stops the audio stream."}
 };
 
+const Command<SystemUtils> CommandParser::SYSTEM_UTILS_CMDS[]
+{
+    Command<SystemUtils> { "VOLUME", &SystemUtils::setVolumeCommandHandler, "Sets the system volume. Specify as a percentage."}
+};
+
 const size_t CommandParser::RTL_FM_PARAMETER_BUILDER_CMDS_LIST_LENGTH = sizeof(RTL_FM_PARAMETER_BUILDER_CMDS) / sizeof(Command<RtlFmParameterBuilder>);
 const size_t CommandParser::RTL_FM_RUNNER_CMDS_LIST_LENGTH = sizeof(RTL_FM_RUNNER_CMDS) / sizeof(Command<RtlFmRunner>);
+const size_t CommandParser::SYSTEM_UTILS_CMDS_LIST_LENGTH = sizeof(SYSTEM_UTILS_CMDS) / sizeof(Command<SystemUtils>);
 
 
 const std::regex CommandParser::CMD_REGEX { "^([A-Z0-9_]+)=?([-]?[0-9a-zA-Z]*\\.?[0-9a-zA-Z]*)"};
@@ -93,6 +101,7 @@ std::string CommandParser::execute(std::string& unparsedCommand, RtlFmParameterB
         return getCommandStringList();
     }
 
+    // Attempt to find and execute the specified command
     try
     {
         // Parameter builder commands
@@ -107,6 +116,7 @@ std::string CommandParser::execute(std::string& unparsedCommand, RtlFmParameterB
             }
         }
 
+        // RtlFmRunner commands
         for (size_t idx = 0; idx < RTL_FM_RUNNER_CMDS_LIST_LENGTH; ++idx)
         {
             Command<RtlFmRunner> rtlFmRunnerCmd = RTL_FM_RUNNER_CMDS[idx];
@@ -114,6 +124,18 @@ std::string CommandParser::execute(std::string& unparsedCommand, RtlFmParameterB
             {
                 std::cout << "Executing: " << cmd << "(" << param << ")" << std::endl;
                 rtlFmRunnerCmd.exec(param, RtlFmRunner::getInstance());
+                return EXECUTION_OK_STRING;
+            }
+        }
+
+        // SystemUtils commands
+        for (size_t idx = 0; idx < SYSTEM_UTILS_CMDS_LIST_LENGTH; ++idx)
+        {
+            Command<SystemUtils>systemUtilsCmd = SYSTEM_UTILS_CMDS[idx];
+            if (cmd.compare(systemUtilsCmd.getCommandString()) == 0)
+            {
+                std::cout << "Executing: " << cmd << "(" << param << ")" << std::endl;
+                systemUtilsCmd.exec(param, SystemUtils::getInstance());
                 return EXECUTION_OK_STRING;
             }
         }
@@ -151,13 +173,22 @@ std::string CommandParser::getCommandStringList() const
         cmdList.append("\n");
     }
 
+    cmdList.append("\nSYSTEM UTILS COMMANDS: \n");
+    for (size_t idx = 0; idx < SYSTEM_UTILS_CMDS_LIST_LENGTH; ++idx)
+    {
+        cmdList.append(SYSTEM_UTILS_CMDS[idx].getCommandString());
+        cmdList.append(" - ");
+        cmdList.append(SYSTEM_UTILS_CMDS[idx].getCommandDescription());
+        cmdList.append("\n");
+    }
+
     return cmdList;
 }
 
 /**
  * Commands with params are of the form:
- * <COMMAND>=<VAL>, where <VAL> is a positive or negative number,
- * or is a string.
+ * <COMMAND>=<VAL>, where <VAL> is a positive or negative number
+ * (decimal allowed), or is a string.
  *
  * Commands with no params are of the form:
  * <COMMAND>

@@ -8,6 +8,7 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include src/system/subdir.mk
 -include src/runner/subdir.mk
 -include src/param_builder/specific_params/subdir.mk
 -include src/param_builder/base_params/subdir.mk

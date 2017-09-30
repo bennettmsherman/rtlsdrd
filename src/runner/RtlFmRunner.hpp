@@ -18,6 +18,8 @@ public:
 
     void execRtlFmCommand(const char* const rtlFmParams[], const char* const aplayParams[]);
     static void killAplayAndRtlFm();
+
+    // Intended to be executed by the command parser
     void stopCommandHandler(const std::string& UNUSED);
 
 private:

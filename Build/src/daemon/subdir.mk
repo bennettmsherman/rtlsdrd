@@ -17,7 +17,7 @@ CPP_DEPS += \
 src/daemon/%.o: ../src/daemon/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -std=c++14 -I../src/param_builder/specific_params -I/usr/include/boost -I../src/runner -I../src/network -I../src/param_builder/base_params -I../src/param_builder -I../src/command -I../src/daemon -O2 -g -Wall -Wextra -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	g++ -std=c++14 -I../src/param_builder/specific_params -I../src/system -I/usr/include/boost -I../src/runner -I../src/network -I../src/param_builder/base_params -I../src/param_builder -I../src/command -I../src/daemon -O2 -g -Wall -Wextra -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
