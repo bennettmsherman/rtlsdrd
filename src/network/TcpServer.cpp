@@ -64,6 +64,7 @@ void TcpServer::connectionHandler(const TcpSocketSharedPtr& sock)
 {
     std::string clientIp = sock->remote_endpoint().address().to_string();
     uint16_t clientPort = sock->remote_endpoint().port();
+
     // The parameter builder and parser are used for parsing and executing
     // commands sent by the client
     RtlFmParameterBuilder rtlFmWrapper;
@@ -97,7 +98,8 @@ void TcpServer::connectionHandler(const TcpSocketSharedPtr& sock)
     }
     catch (std::exception& exception)
     {
-        std::cout << exception.what() << std::endl;
+        std::cout << "Client: " << clientIp << ":" << clientPort
+                << "-> Exception: " << exception.what() << std::endl;
     }
 }
 
