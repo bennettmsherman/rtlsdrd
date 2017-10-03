@@ -38,8 +38,13 @@ private:
     T minValid;
     T maxValid;
 
+    static std::string getNonNumericCharacterInParamExceptionMessage(const char badChar, const size_t index);
+
     static const char OUT_OF_RANGE_EXCEPTION_MSG_FORMAT_STRING[];
     static const size_t OUT_OF_RANGE_EXCEPTION_MSG_MAX_SIZE = 100;
+
+    static const char NON_NUMERIC_CHAR_IN_PARAM_EXCEPTION_MSG_FORMAT_STRING[];
+    static const size_t NON_NUMERIC_CHAR_IN_PARAM_EXCEPTION_MSG_MAX_SIZE = 100;
 };
 
 

@@ -70,7 +70,7 @@ const size_t CommandParser::RTL_FM_RUNNER_CMDS_LIST_LENGTH = sizeof(RTL_FM_RUNNE
 const size_t CommandParser::SYSTEM_UTILS_CMDS_LIST_LENGTH = sizeof(SYSTEM_UTILS_CMDS) / sizeof(Command<SystemUtils>);
 
 
-const std::regex CommandParser::CMD_REGEX { "^([A-Z0-9_]+)=?([-]?[0-9a-zA-Z]*\\.?[0-9a-zA-Z]*)"};
+const std::regex CommandParser::CMD_REGEX { "^([A-Z0-9_]+)=?([-]?[0-9a-zA-Z:]*\\.?[0-9a-zA-Z:]*)"};
 const std::string CommandParser::LIST_CMDS_COMMAND_STRING {"HELP"};
 const std::string CommandParser::INVALID_SYNTAX_STRING {"INVALID COMMAND SYNTAX"};
 const std::string CommandParser::NO_SUCH_COMMAND_EXISTS_STRING {"NO SUCH COMMAND EXISTS"};
