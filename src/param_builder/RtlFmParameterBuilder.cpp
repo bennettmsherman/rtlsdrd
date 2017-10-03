@@ -19,16 +19,17 @@
 #include "ModulationMode.hpp"
 #include "NumericParameter.hpp"
 #include "Oversampling.hpp"
+#include "ParamBuilderUtils.hpp"
 #include "PpmError.hpp"
 #include "ResampleRate.hpp"
+#include "RtlFmParameterBuilder.hpp"
+#include "RtlFmRunner.hpp"
 #include "SampleRate.hpp"
+#include "ScannableFrequency.hpp"
 #include "SquelchDelay.hpp"
 #include "SquelchLevel.hpp"
 #include "StringParameter.hpp"
-#include "RtlFmParameterBuilder.hpp"
-#include "RtlFmRunner.hpp"
 #include "TunerGain.hpp"
-#include "ParamBuilderUtils.hpp"
 
 // Static Initialization
 const char* const RtlFmParameterBuilder::RTL_FM_EXECUTABLE_PATH = "/usr/local/bin/rtl_fm";
@@ -223,4 +224,10 @@ void RtlFmParameterBuilder::broadcastFmStationMacro(const std::string& fmFreqInM
     unsignedParams.push_back(Frequency::create(ParamBuilderUtils::broadcastFmMegahertzToHertz(fmFreqInMegahertz)));
     setModulationMode("wbfm");
 }
+
+void RtlFmParameterBuilder::setScannableFrequency(const std::string& scannableFrequency)
+{
+    stringParams.push_back(ScannableFrequency::create(scannableFrequency));
+}
+
 

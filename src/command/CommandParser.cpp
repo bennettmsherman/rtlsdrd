@@ -25,6 +25,7 @@
 #include "RtlFmParameterBuilder.hpp"
 #include "RtlFmRunner.hpp"
 #include "SampleRate.hpp"
+#include "ScannableFrequency.hpp"
 #include "SquelchDelay.hpp"
 #include "SquelchLevel.hpp"
 #include "SystemUtils.hpp"
@@ -35,22 +36,24 @@
 // Static initialization
 const Command<RtlFmParameterBuilder> CommandParser::RTL_FM_PARAMETER_BUILDER_CMDS[]
 {
-    Command<RtlFmParameterBuilder> { DeviceIndex::command, &RtlFmParameterBuilder::setDeviceIndex, "Sets the index of the RTL_SDR dongle to use"},
-    Command<RtlFmParameterBuilder> { EnableOption::command, &RtlFmParameterBuilder::setEnableOption, "Enables extra options"},
-    Command<RtlFmParameterBuilder> { Frequency::command, &RtlFmParameterBuilder::setFrequency, "Sets the frequency to tune"},
-    Command<RtlFmParameterBuilder> { ModulationMode::command, &RtlFmParameterBuilder::setModulationMode, "Sets the modulation mode to use"},
-    Command<RtlFmParameterBuilder> { Oversampling::command, &RtlFmParameterBuilder::setOversampling, "Sets the oversampling level"},
-    Command<RtlFmParameterBuilder> { PpmError::command, &RtlFmParameterBuilder::setPpmError, "Sets the ppm level"},
-    Command<RtlFmParameterBuilder> { SampleRate::command, &RtlFmParameterBuilder::setSampleRate, "Sets the sampling rate"},
-    Command<RtlFmParameterBuilder> { SquelchDelay::command, &RtlFmParameterBuilder::setSquelchDelay, "Sets the squelch delay"},
-    Command<RtlFmParameterBuilder> { SquelchLevel::command, &RtlFmParameterBuilder::setSquelchLevel, "Sets the squelch level"},
-    Command<RtlFmParameterBuilder> { ResampleRate::command, &RtlFmParameterBuilder::setResampleRate, "Sets the resampling rate"},
-    Command<RtlFmParameterBuilder> { AtanMath::command, &RtlFmParameterBuilder::setAtanMath, "Sets the archtangent math mode"},
-    Command<RtlFmParameterBuilder> { TunerGain::command, &RtlFmParameterBuilder::setTunerGain, "Sets the tuner gain. -100 is automatic"},
+    Command<RtlFmParameterBuilder> { DeviceIndex::COMMAND, &RtlFmParameterBuilder::setDeviceIndex, "Sets the index of the RTL_SDR dongle to use"},
+    Command<RtlFmParameterBuilder> { EnableOption::COMMAND, &RtlFmParameterBuilder::setEnableOption, "Enables extra options"},
+    Command<RtlFmParameterBuilder> { Frequency::COMMAND, &RtlFmParameterBuilder::setFrequency, "Sets the frequency to tune"},
+    Command<RtlFmParameterBuilder> { ModulationMode::COMMAND, &RtlFmParameterBuilder::setModulationMode, "Sets the modulation mode to use"},
+    Command<RtlFmParameterBuilder> { Oversampling::COMMAND, &RtlFmParameterBuilder::setOversampling, "Sets the oversampling level"},
+    Command<RtlFmParameterBuilder> { PpmError::COMMAND, &RtlFmParameterBuilder::setPpmError, "Sets the ppm level"},
+    Command<RtlFmParameterBuilder> { SampleRate::COMMAND, &RtlFmParameterBuilder::setSampleRate, "Sets the sampling rate"},
+    Command<RtlFmParameterBuilder> { SquelchDelay::COMMAND, &RtlFmParameterBuilder::setSquelchDelay, "Sets the squelch delay"},
+    Command<RtlFmParameterBuilder> { SquelchLevel::COMMAND, &RtlFmParameterBuilder::setSquelchLevel, "Sets the squelch level"},
+    Command<RtlFmParameterBuilder> { ResampleRate::COMMAND, &RtlFmParameterBuilder::setResampleRate, "Sets the resampling rate"},
+    Command<RtlFmParameterBuilder> { AtanMath::COMMAND, &RtlFmParameterBuilder::setAtanMath, "Sets the archtangent math mode"},
+    Command<RtlFmParameterBuilder> { TunerGain::COMMAND, &RtlFmParameterBuilder::setTunerGain, "Sets the tuner gain. -100 is automatic"},
     Command<RtlFmParameterBuilder> { "BROADCAST_AM", &RtlFmParameterBuilder::broadcastAmStationMacro, "Input: AM broadcast station's freq in kHz."
                                         " Sets sample rate = 128k, enables: direct sampling, AM demodulation"},
     Command<RtlFmParameterBuilder> { "BROADCAST_FM", &RtlFmParameterBuilder::broadcastFmStationMacro, "Input: FM broadcast station's freq in MHz."
                                         " Sets wbfm demodulation."},
+    Command<RtlFmParameterBuilder> { ScannableFrequency::COMMAND, &RtlFmParameterBuilder::setScannableFrequency,
+                                            "Scans a frequency range. Format is START:END:INCREMENT. SquelchLevel must be set to use this"},
     Command<RtlFmParameterBuilder> { "CLEAR", &RtlFmParameterBuilder::clearParamLists, "No param. Resets the lists of stored commands"},
     Command<RtlFmParameterBuilder> { "EXECUTE", &RtlFmParameterBuilder::executeCommand, "No param. Executes rtl_fm with the new params"}
 };

@@ -14,10 +14,10 @@
 #include "ModulationMode.hpp"
 
 // Static Initialization
-const char* const ModulationMode::option ="-M";
-const std::vector<std::string> ModulationMode::validValues {"fm", "wbfm", "raw", "am", "usb", "lsb"};
-const std::string ModulationMode::defaultValue = "fm";
-const std::string ModulationMode::command = "MODULATION_MODE";
+const char* const ModulationMode::OPTION ="-M";
+const std::vector<std::string> ModulationMode::VALID_VALUES {"fm", "wbfm", "raw", "am", "usb", "lsb"};
+const std::string ModulationMode::DEFAULT_VALUE = "fm";
+const std::string ModulationMode::COMMAND = "MODULATION_MODE";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -25,7 +25,7 @@ const std::string ModulationMode::command = "MODULATION_MODE";
  */
 bool ModulationMode::isValid(const std::string& value)
 {
-    return StringParameter::isValid(value, validValues);
+    return StringParameter::isValid(value, VALID_VALUES);
 }
 
 /**
@@ -50,5 +50,5 @@ const ModulationMode ModulationMode::create(const std::string& value)
  */
 const std::string ModulationMode::getCommand()
 {
-    return command;
+    return COMMAND;
 }

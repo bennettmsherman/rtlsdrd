@@ -14,8 +14,8 @@
 #include "PpmError.hpp"
 
 // Static Initialization
-const char* const PpmError::option = "-p";
-const std::string PpmError::command = "PPM_ERROR";
+const char* const PpmError::OPTION = "-p";
+const std::string PpmError::COMMAND = "PPM_ERROR";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -23,7 +23,7 @@ const std::string PpmError::command = "PPM_ERROR";
  */
 bool PpmError::isValid(const uint32_t value)
 {
-    return NumericParameter<uint32_t>::isValid(value, minValid, maxValid);
+    return NumericParameter<uint32_t>::isValid(value, MIN_VALID, MAX_VALID);
 }
 
 /**
@@ -34,7 +34,7 @@ const PpmError PpmError::create(const uint32_t value)
 {
     if (!isValid(value))
     {
-        throw std::invalid_argument(NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(value, minValid, maxValid));
+        throw std::invalid_argument(NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(value, MIN_VALID, MAX_VALID));
     }
     else
     {
@@ -48,7 +48,7 @@ const PpmError PpmError::create(const uint32_t value)
  */
 const std::string PpmError::getCommand()
 {
-    return command;
+    return COMMAND;
 }
 
 const PpmError PpmError::create(const std::string& value)

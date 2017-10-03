@@ -15,10 +15,10 @@
 
 // Static Initialization
 // TODO is none okay?
-const char* const EnableOption::option = "-E";
-const std::vector<std::string> EnableOption::validValues {"none", "edge", "dc", "deemp", "direct", "offset"};
-const std::string EnableOption::defaultValue = "none";
-const std::string EnableOption::command = "ENABLE_OPTION";
+const char* const EnableOption::OPTION = "-E";
+const std::vector<std::string> EnableOption::VALID_VALUES {"none", "edge", "dc", "deemp", "direct", "offset"};
+const std::string EnableOption::DEFAULT_VALUE = "none";
+const std::string EnableOption::COMMAND = "ENABLE_OPTION";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -26,7 +26,7 @@ const std::string EnableOption::command = "ENABLE_OPTION";
  */
 bool EnableOption::isValid(const std::string& value)
 {
-    return StringParameter::isValid(value, validValues);
+    return StringParameter::isValid(value, VALID_VALUES);
 }
 
 /**
@@ -51,5 +51,5 @@ const EnableOption EnableOption::create(const std::string& value)
  */
 const std::string EnableOption::getCommand()
 {
-    return command;
+    return COMMAND;
 }

@@ -20,21 +20,21 @@ class EnableOption : public StringParameter
 public:
     static bool isValid(const std::string& value);
 
-    static const EnableOption create(const std::string& value=defaultValue);
+    static const EnableOption create(const std::string& value=DEFAULT_VALUE);
 
     const std::string getCommand();
 
-    static const std::string command;
+    static const std::string COMMAND;
 
 protected:
-    EnableOption(const std::string& value) : StringParameter(value, option, validValues) {};
+    EnableOption(const std::string& value) : StringParameter(value, OPTION) {};
 
 private:
-    static const char* const option;
+    static const char* const OPTION;
 
-    static const std::vector<std::string> validValues;
+    static const std::vector<std::string> VALID_VALUES;
 
-    static const std::string defaultValue;
+    static const std::string DEFAULT_VALUE;
 };
 
 #endif /* WRAPPER_ENABLEOPTION_HPP_ */

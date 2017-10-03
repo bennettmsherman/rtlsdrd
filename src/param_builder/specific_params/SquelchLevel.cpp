@@ -14,8 +14,8 @@
 #include "SquelchLevel.hpp"
 
 // Static Initialization
-const char* const SquelchLevel::option = "-l";
-const std::string SquelchLevel::command = "SQUELCH_LEVEL";
+const char* const SquelchLevel::OPTION = "-l";
+const std::string SquelchLevel::COMMAND = "SQUELCH_LEVEL";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -23,7 +23,7 @@ const std::string SquelchLevel::command = "SQUELCH_LEVEL";
  */
 bool SquelchLevel::isValid(const uint32_t value)
 {
-    return NumericParameter<uint32_t>::isValid(value, minValid, maxValid);
+    return NumericParameter<uint32_t>::isValid(value, MIN_VALID, MAX_VALID);
 }
 
 /**
@@ -34,7 +34,7 @@ const SquelchLevel SquelchLevel::create(const uint32_t value)
 {
     if (!isValid(value))
     {
-        throw std::out_of_range(NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(value, minValid, maxValid));
+        throw std::out_of_range(NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(value, MIN_VALID, MAX_VALID));
     }
     else
     {
@@ -53,5 +53,5 @@ const SquelchLevel SquelchLevel::create(const std::string& value)
  */
 const std::string SquelchLevel::getCommand()
 {
-    return command;
+    return COMMAND;
 }

@@ -19,26 +19,26 @@ class Frequency : public NumericParameter<uint32_t>
 {
 public:
     static bool isValid(const uint32_t value);
-    static const Frequency create(const uint32_t value=defaultValue);
+    static const Frequency create(const uint32_t value=DEFAULT_VALUE);
     static const Frequency create(const std::string& value);
     const std::string getCommand();
 
-    static const std::string command;
+    static const std::string COMMAND;
 
 protected:
-    Frequency(uint32_t value) : NumericParameter(value, option, minValid, maxValid) {};
+    Frequency(uint32_t value) : NumericParameter(value, OPTION, MIN_VALID, MAX_VALID) {};
 
 private:
-    static const char* const option;
+    static const char* const OPTION;
 
     // TODO find true min and max
-    static const uint32_t minValid = 0;
+    static const uint32_t MIN_VALID = 0;
 
     // 2GHz
-    static const uint32_t maxValid = 2000000000;
+    static const uint32_t MAX_VALID = 2000000000;
 
     // 91.1MHz
-    static const uint32_t defaultValue = 91100000;
+    static const uint32_t DEFAULT_VALUE = 91100000;
 };
 
 #endif /* WRAPPER_FREQUENCY_HPP_ */

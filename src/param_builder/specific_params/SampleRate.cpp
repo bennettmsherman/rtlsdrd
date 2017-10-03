@@ -14,8 +14,8 @@
 #include "SampleRate.hpp"
 
 // Static Initialization
-const char* const SampleRate::option = "-s";
-const std::string SampleRate::command = "SAMPLE_RATE";
+const char* const SampleRate::OPTION = "-s";
+const std::string SampleRate::COMMAND = "SAMPLE_RATE";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -23,7 +23,7 @@ const std::string SampleRate::command = "SAMPLE_RATE";
  */
 bool SampleRate::isValid(const uint32_t value)
 {
-    return NumericParameter<uint32_t>::isValid(value, minValid, maxValid);
+    return NumericParameter<uint32_t>::isValid(value, MIN_VALID, MAX_VALID);
 }
 
 /**
@@ -34,7 +34,7 @@ const SampleRate SampleRate::create(const uint32_t value)
 {
     if (!isValid(value))
     {
-        throw std::out_of_range(NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(value, minValid, maxValid));
+        throw std::out_of_range(NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(value, MIN_VALID, MAX_VALID));
     }
     else
     {
@@ -49,7 +49,7 @@ const SampleRate SampleRate::create(const std::string& value)
 
 const char* SampleRate::getOption()
 {
-    return option;
+    return OPTION;
 }
 
 /**
@@ -58,5 +58,5 @@ const char* SampleRate::getOption()
  */
 const std::string SampleRate::getCommand()
 {
-    return command;
+    return COMMAND;
 }

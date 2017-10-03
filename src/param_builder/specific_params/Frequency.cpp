@@ -14,8 +14,8 @@
 #include "Frequency.hpp"
 
 // Static Initialization
-const char* const Frequency::option = "-f";
-const std::string Frequency::command = "FREQUENCY";
+const char* const Frequency::OPTION = "-f";
+const std::string Frequency::COMMAND = "FREQUENCY";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -23,7 +23,7 @@ const std::string Frequency::command = "FREQUENCY";
  */
 bool Frequency::isValid(const uint32_t value)
 {
-    return NumericParameter<uint32_t>::isValid(value, minValid, maxValid);
+    return NumericParameter<uint32_t>::isValid(value, MIN_VALID, MAX_VALID);
 }
 
 /**
@@ -34,7 +34,7 @@ const Frequency Frequency::create(const uint32_t value)
 {
     if (!isValid(value))
     {
-        throw std::out_of_range(NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(value, minValid, maxValid));
+        throw std::out_of_range(NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(value, MIN_VALID, MAX_VALID));
     }
     else
     {
@@ -53,5 +53,5 @@ const Frequency Frequency::create(const std::string& value)
  */
 const std::string Frequency::getCommand()
 {
-    return command;
+    return COMMAND;
 }

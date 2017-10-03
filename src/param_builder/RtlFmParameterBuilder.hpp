@@ -37,6 +37,7 @@ public:
     void setTunerGain(const std::string& tunerGain);
     void broadcastAmStationMacro(const std::string& amFreqInKilohertz);
     void broadcastFmStationMacro(const std::string& fmFreqInMegahertz);
+    void setScannableFrequency(const std::string& scannableFrequency);
 
     // Special function commands
     void clearParamLists(const std::string& UNUSED);

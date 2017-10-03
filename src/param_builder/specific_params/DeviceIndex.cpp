@@ -14,8 +14,8 @@
 #include "DeviceIndex.hpp"
 
 // Static Initialization
-const char* const DeviceIndex::option = "-d";
-const std::string DeviceIndex::command = "DEVICE_INDEX";
+const char* const DeviceIndex::OPTION = "-d";
+const std::string DeviceIndex::COMMAND = "DEVICE_INDEX";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -23,7 +23,7 @@ const std::string DeviceIndex::command = "DEVICE_INDEX";
  */
 bool DeviceIndex::isValid(const uint32_t value)
 {
-    return NumericParameter<uint32_t>::isValid(value, minValid, maxValid);
+    return NumericParameter<uint32_t>::isValid(value, MIN_VALID, MAX_VALID);
 }
 
 /**
@@ -34,7 +34,7 @@ const DeviceIndex DeviceIndex::create(const uint32_t value)
 {
     if (!isValid(value))
     {
-        throw std::out_of_range(NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(value, minValid, maxValid));
+        throw std::out_of_range(NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(value, MIN_VALID, MAX_VALID));
     }
     else
     {
@@ -49,5 +49,5 @@ const DeviceIndex DeviceIndex::create(const std::string& value)
 
 const std::string DeviceIndex::getCommand()
 {
-    return command;
+    return COMMAND;
 }

@@ -57,6 +57,10 @@ std::string NumericParameter<T>::getNonNumericCharacterInParamExceptionMessage(c
     return std::string(buff);
 }
 
+/**
+ * Converts the string parameter to a uint32_t. Throws std::invalid_argument
+ * if the string contains any characters outside of 0 through 9
+ */
 template <>
 uint32_t NumericParameter<uint32_t>::stringToInt(const std::string& str)
 {
@@ -70,6 +74,11 @@ uint32_t NumericParameter<uint32_t>::stringToInt(const std::string& str)
     return (std::stoull(str));
 }
 
+/**
+ * Converts the string parameter to an int32_t. Throws std::invalid_argument
+ * if the string contains any characters outside of 0 through 9, including the
+ * negative symbol.
+ */
 template <>
 int32_t NumericParameter<int32_t>::stringToInt(const std::string& str)
 {

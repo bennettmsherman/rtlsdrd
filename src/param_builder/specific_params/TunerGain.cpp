@@ -15,7 +15,7 @@
 
 // Static Initialization
 const char* const TunerGain::OPTION = "-g";
-const std::string TunerGain::command = "TUNER_GAIN";
+const std::string TunerGain::COMMAND = "TUNER_GAIN";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -23,7 +23,7 @@ const std::string TunerGain::command = "TUNER_GAIN";
  */
 bool TunerGain::isValid(const int32_t value)
 {
-    return NumericParameter<int32_t>::isValid(value, minValid, maxValid);
+    return NumericParameter<int32_t>::isValid(value, MIN_VALID, MAX_VALID);
 }
 
 /**
@@ -34,7 +34,7 @@ const TunerGain TunerGain::create(const int32_t value)
 {
     if (!isValid(value))
     {
-        throw std::out_of_range(NumericParameter<int32_t>::getOutOfRangeParamExceptionMessage(value, minValid, maxValid));
+        throw std::out_of_range(NumericParameter<int32_t>::getOutOfRangeParamExceptionMessage(value, MIN_VALID, MAX_VALID));
     }
     else
     {
@@ -53,5 +53,5 @@ const TunerGain TunerGain::create(const std::string& value)
  */
 const std::string TunerGain::getCommand()
 {
-    return command;
+    return COMMAND;
 }

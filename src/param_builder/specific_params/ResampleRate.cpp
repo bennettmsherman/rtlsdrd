@@ -14,8 +14,8 @@
 #include "ResampleRate.hpp"
 
 // Static Initialization
-const char* const ResampleRate::option = "-r";
-const std::string ResampleRate::command = "RESAMPLE_RATE";
+const char* const ResampleRate::OPTION = "-r";
+const std::string ResampleRate::COMMAND = "RESAMPLE_RATE";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -23,7 +23,7 @@ const std::string ResampleRate::command = "RESAMPLE_RATE";
  */
 bool ResampleRate::isValid(const uint32_t value)
 {
-    return NumericParameter<uint32_t>::isValid(value, minValid, maxValid);
+    return NumericParameter<uint32_t>::isValid(value, MIN_VALID, MAX_VALID);
 }
 
 /**
@@ -34,7 +34,7 @@ const ResampleRate ResampleRate::create(const uint32_t value)
 {
     if (!isValid(value))
     {
-        throw std::out_of_range(NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(value, minValid, maxValid));
+        throw std::out_of_range(NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(value, MIN_VALID, MAX_VALID));
     }
     else
     {
@@ -53,10 +53,10 @@ const ResampleRate ResampleRate::create(const std::string& value)
  */
 const std::string ResampleRate::getCommand()
 {
-    return command;
+    return COMMAND;
 }
 
 const char* ResampleRate::getOption()
 {
-    return option;
+    return OPTION;
 }

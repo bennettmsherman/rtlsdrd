@@ -15,10 +15,10 @@
 
 // Static Initialization
 // TODO is none okay?
-const char* const AtanMath::option = "-A";
-const std::vector<std::string> AtanMath::validValues {"std", "fast", "lut"};
-const std::string AtanMath::defaultValue = "std";
-const std::string AtanMath::command = "ATAN_MATH";
+const char* const AtanMath::OPTION = "-A";
+const std::vector<std::string> AtanMath::VALID_VALUES {"std", "fast", "lut"};
+const std::string AtanMath::DEFAULT_VALUE = "std";
+const std::string AtanMath::COMMAND = "ATAN_MATH";
 
 /**
  * Returns true if value is within the range allowable for this parameter,
@@ -26,7 +26,7 @@ const std::string AtanMath::command = "ATAN_MATH";
  */
 bool AtanMath::isValid(const std::string& value)
 {
-    return StringParameter::isValid(value, validValues);
+    return StringParameter::isValid(value, VALID_VALUES);
 }
 
 /**
@@ -51,5 +51,5 @@ const AtanMath AtanMath::create(const std::string& value)
  */
 const std::string AtanMath::getCommand()
 {
-    return command;
+    return COMMAND;
 }

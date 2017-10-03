@@ -19,27 +19,27 @@ class ResampleRate : public NumericParameter<uint32_t>
 {
 public:
     static bool isValid(const uint32_t value);
-    static const ResampleRate create(const uint32_t value=defaultValue);
+    static const ResampleRate create(const uint32_t value=DEFAULT_VALUE);
     static const ResampleRate create(const std::string& value);
     static const char* getOption();
     const std::string getCommand();
 
-    static const std::string command;
+    static const std::string COMMAND;
 
 protected:
-    ResampleRate(uint32_t value) : NumericParameter(value, option, minValid, maxValid) {};
+    ResampleRate(uint32_t value) : NumericParameter(value, OPTION, MIN_VALID, MAX_VALID) {};
 
 private:
-    static const char* const option;
+    static const char* const OPTION;
 
     // TODO find true min and max
-    static const uint32_t minValid = 0;
+    static const uint32_t MIN_VALID = 0;
 
     // 3.2 MS/s
-    static const uint32_t maxValid = 3200000;
+    static const uint32_t MAX_VALID = 3200000;
 
     // 24 kS/s
-    static const uint32_t defaultValue = 24000;
+    static const uint32_t DEFAULT_VALUE = 24000;
 };
 
 #endif /* WRAPPER_SPECIFIC_PARAMS_RESAMPLERATE_HPP_ */

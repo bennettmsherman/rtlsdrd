@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
+#include <regex>
 
 // Project Includes
 #include "BaseParameter.hpp"
@@ -22,16 +23,15 @@ public:
     virtual ~StringParameter() {};
 
 protected:
-    StringParameter(const std::string& value, const char* const option, const std::vector<std::string>& validValues) :
-        BaseParameter(value, option), validValues(validValues) {};
+    StringParameter(const std::string& value, const char* const option) :
+        BaseParameter(value, option) {};
 
     static bool isValid(const std::string& value, const std::vector<std::string>& validValues);
+    static bool isValid(const std::string& value, const std::regex& validFormat);
 
     static std::string getInvalidArgExceptionMessage(const std::string& value);
 
 private:
-    const std::vector<std::string>& validValues;
-
     static const char INVALID_ARG_EXCEPTION_MSG_FORMAT_STRING[];
 };
 

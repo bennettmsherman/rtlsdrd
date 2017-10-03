@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <regex>
 
 // Project Includes
 #include "StringParameter.hpp"
@@ -20,7 +21,17 @@
 const char StringParameter::INVALID_ARG_EXCEPTION_MSG_FORMAT_STRING[] = "ERROR! %s is not a valid choice!";
 
 /**
- * Returns true if value <= min <= max, false otherwise.
+ * Returns true if the value can be matched to the validFormat regex, false otherwise.
+ */
+bool StringParameter::isValid(const std::string& value, const std::regex& validFormat)
+{
+    std::smatch sMatches;
+    std::regex_match(value, sMatches, validFormat);
+    return !sMatches.empty();
+}
+
+/**
+ * Returns true if value is contained in validValues, false otherwise
  */
 bool StringParameter::isValid(const std::string& value, const std::vector<std::string>& validValues)
 {
