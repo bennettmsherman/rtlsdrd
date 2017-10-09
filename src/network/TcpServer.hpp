@@ -30,7 +30,7 @@ public:
 
 private:
 
-    std::string getLocalIpAddresses();
+    std::vector<std::string> getLocalIpAddresses();
     size_t sendData(const TcpSocketSharedPtr& sock, const std::string& dataToSend);
     size_t receiveData(const TcpSocketSharedPtr& sock, std::string& receivedData);
     void connectionHandler(const TcpSocketSharedPtr& sock);

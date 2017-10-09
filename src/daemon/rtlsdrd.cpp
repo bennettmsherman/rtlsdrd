@@ -13,6 +13,7 @@
 // Project Includes
 #include "CommandParser.hpp"
 #include "RtlFmParameterBuilder.hpp"
+#include "SystemUtils.hpp"
 #include "TcpServer.hpp"
 
 static TcpServer server{};

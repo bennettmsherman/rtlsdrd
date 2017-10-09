@@ -6,17 +6,22 @@
  */
 
 // System Includes
-#include <cstdint>
-#include <string>
-#include <iostream>
 #include <boost/asio.hpp>
-#include <boost/thread.hpp>
 #include <boost/bind.hpp>
-#include <boost/smart_ptr.hpp>
 #include <boost/phoenix/bind/bind_member_function.hpp>
+#include <boost/smart_ptr.hpp>
+#include <boost/thread.hpp>
+#include <cstdint>
+#include <ifaddrs.h>
+#include <iostream>
+#include <netdb.h>
+#include <string>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <system_error>
 
 // Project Includes
-#include <TcpServer.hpp>
+#include "TcpServer.hpp"
 #include "RtlFmParameterBuilder.hpp"
 #include "CommandParser.hpp"
 
@@ -29,30 +34,91 @@ TcpServer::TcpServer(const uint16_t port) : port(port), ioService(),
 
 void TcpServer::printServerInfo()
 {
+    // Retrieve local network interfaces by name and IP
+    std::vector<std::string> interfacesAndIpsStrings = getLocalIpAddresses();
+
     std::cout << "Rtlsdrd server started on: " <<
-            "\n\tIPs: " << getLocalIpAddresses() <<
-            "\n\tHost: " << boost::asio::ip::host_name() <<
-            "\n\tPort: " << port << std::endl;
+            "\n\tIPs: ";
+
+    for (std::string interfaceAndIp : interfacesAndIpsStrings)
+    {
+        std::cout << "\n\t  " << interfaceAndIp;
+    }
+
+    std::cout << "\n\tHost: " << boost::asio::ip::host_name() <<
+                 "\n\tPort: " << port << std::endl;
 }
 
 /**
- * Returns a space-separated list of the ip addresses of this machine
- * TODO fix showing of localhost
+ * Returns a vector of strings where each entry contains an interface name and
+ * its IP in the form "<interface>:<ip>". IPv4 and IPv6 IPs included.
+ * Throws std::system_error if the call to getifaddrs() fails.
+ * Throws std::runtime_error if the call to getnameinfo() fails.
  */
-std::string TcpServer::getLocalIpAddresses()
+std::vector<std::string> TcpServer::getLocalIpAddresses()
 {
-    BoostTcp::resolver resolver(ioService);
-    BoostTcp::resolver::query query(boost::asio::ip::host_name(), "");
-    BoostTcp::resolver::iterator iter = resolver.resolve(query);
+    ifaddrs * interfaces = nullptr;
+    std::vector<std::string> interfacesAndIpStringsVect;
 
-    std::string ipAddrs;
-    while (iter != BoostTcp::resolver::iterator{})
+    if (!getifaddrs(&interfaces))
     {
-        BoostTcp::endpoint endpoint = *iter++;
-        ipAddrs.append(endpoint.address().to_string());
-        ipAddrs.append(" ");
+        // Have a second pointer so that the original reference to the list
+        // head can be used with freeifaddrs()
+        ifaddrs * currentInterface = interfaces;
+        for (; currentInterface != nullptr; currentInterface = currentInterface->ifa_next)
+        {
+            char ipAsStr[NI_MAXHOST] = {};
+            int getNameInfoRetVal = 0;
+
+            // IPv4
+            if (currentInterface->ifa_addr->sa_family == AF_INET)
+            {
+                getNameInfoRetVal = getnameinfo(currentInterface->ifa_addr,
+                                                sizeof(sockaddr_in), ipAsStr,
+                                                NI_MAXHOST, nullptr, 0,
+                                                NI_NUMERICHOST);
+            }
+            // IPv6
+            else if (currentInterface->ifa_addr->sa_family == AF_INET6)
+            {
+                getNameInfoRetVal = getnameinfo(currentInterface->ifa_addr,
+                                                sizeof(sockaddr_in6), ipAsStr,
+                                                NI_MAXHOST, nullptr, 0,
+                                                NI_NUMERICHOST);
+            }
+            // Ignore other interface types
+            else
+            {
+                continue;
+            }
+
+            // If an error occurred when executing getnameinfo() throw a
+            // std::runtime_error
+            if (getNameInfoRetVal)
+            {
+                freeifaddrs(interfaces);
+                std::string exceptionMsg("Error retrieving interface IP with code: ");
+                exceptionMsg += std::to_string(getNameInfoRetVal);
+                exceptionMsg += " and msg: ";
+                exceptionMsg += gai_strerror(getNameInfoRetVal);
+                throw std::runtime_error(exceptionMsg);
+            }
+
+            // Generate the string and add it to the vector
+            std::string interfaceAndIpString(currentInterface->ifa_name);
+            interfaceAndIpString += ":";
+            interfaceAndIpString += ipAsStr;
+            interfacesAndIpStringsVect.push_back(interfaceAndIpString);
+        }
+
+        freeifaddrs(interfaces);
     }
-    return ipAddrs;
+    else
+    {
+        throw std::system_error(errno, std::system_category(), "Error retrieving this machine's network interfaces");
+    }
+
+    return interfacesAndIpStringsVect;
 }
 
 /**
