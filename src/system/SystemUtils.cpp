@@ -20,7 +20,7 @@
 
 // %s refers to the audio control (audioControlName), and %u is the percentage
 // to set
-const char SystemUtils::VOLUME_SETTER_FORMAT[] = "amixer set %s %u%%";
+const char SystemUtils::VOLUME_SETTER_FORMAT[] = "amixer set %s %u%% -M";
 
 // Use "Master" as the default control
 const char * SystemUtils::audioControlName = "Master";
