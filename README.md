@@ -35,8 +35,30 @@ make clean
 ```
 
 ## To run:
+The first parameter of rtlsdrd is the name of the audio control which the VOLUME command will control.
+If no parameter is specified "Master" is used.
+### With "Master" as the audio control controled by VOLUME:
 ```bash
 (Build first)
 ./rtlsdrd
-HELP shows available commands
 ```
+
+### With a specified audio control to be controlled by VOLUME:
+```bash
+(Build first)
+./rtlsdrd <audio control name>
+```
+## To connect to the daemon
+### If the daemon is running on the same machine
+Run:
+```bash
+telnet localhost 2832
+```
+### If the daemon is running on a different machine
+Run:
+```bash
+telnet <IP of machine running daemon> 2832
+```
+
+### Once you're connected to the daemon:
+The **HELP** command shows the commands available to use
