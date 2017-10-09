@@ -29,12 +29,21 @@ void terminationSignalHandler(int sigNum)
     exit(EXIT_SUCCESS);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
+    // Execute terminationSignalHandler() in the event that any of the signals
+    // below are caught
     signal(SIGTERM, terminationSignalHandler);
     signal(SIGABRT, terminationSignalHandler);
     signal(SIGINT, terminationSignalHandler);
     signal(SIGKILL, terminationSignalHandler);
+
+    // If argc == 2, use the second argument as the audio device to be
+    // controlled
+    if (argc == 2)
+    {
+        SystemUtils::setAudioControlName(argv[1]);
+    }
 
     // Have the server wait for, accept, and process connections
     server.run();

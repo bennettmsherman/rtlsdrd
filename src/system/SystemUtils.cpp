@@ -7,6 +7,7 @@
 
 // System Includes
 #include <cstring>
+#include <exception>
 #include <iostream>
 #include <stdlib.h>
 #include <string>
@@ -16,7 +17,13 @@
 #include "SystemUtils.hpp"
 
 // Static Initialization
-const char SystemUtils::VOLUME_SETTER_FORMAT[] = "amixer set Master %u%%";
+
+// %s refers to the audio control (audioControlName), and %u is the percentage
+// to set
+const char SystemUtils::VOLUME_SETTER_FORMAT[] = "amixer set %s %u%%";
+
+// Use "Master" as the default control
+const char * SystemUtils::audioControlName = "Master";
 
 /**
  * Sets the system volume to the percentage specified by the volume parameter.
@@ -30,10 +37,10 @@ void SystemUtils::setVolume(const uint8_t vol)
     }
 
     // The 3 accounts for the int value to be substituted
-    static char volumeSetCommandBuff[sizeof(VOLUME_SETTER_FORMAT) + 3] = {};
+    static char volumeSetCommandBuff[sizeof(VOLUME_SETTER_FORMAT) + sizeof(audioControlName) + 3] = {};
 
     // Substitute the new volume into the volume set command
-    (void) std::sprintf(volumeSetCommandBuff, VOLUME_SETTER_FORMAT, vol);
+    (void) std::sprintf(volumeSetCommandBuff, VOLUME_SETTER_FORMAT, audioControlName, vol);
 
     std::cout << "Executing volume set command: " << volumeSetCommandBuff << std::endl;
 
@@ -53,6 +60,22 @@ void SystemUtils::setVolume(const uint8_t vol)
 void SystemUtils::setVolumeCommandHandler(const std::string& vol)
 {
     setVolume(static_cast<uint8_t>(std::stoul(vol)));
+}
+
+/**
+ * Sets the audio control name to be used when changing the output volume
+ * through the daemon. Throws std::invalid_argument and doesn't change the
+ * class's pointer value if the parameter is null.
+ */
+void SystemUtils::setAudioControlName(const char * audioControlName)
+{
+    if (audioControlName == nullptr)
+    {
+        throw std::invalid_argument("ERROR! A null pointer has been provided"
+                "as the audio control name!");
+    }
+
+    SystemUtils::audioControlName = audioControlName;
 }
 
 /**

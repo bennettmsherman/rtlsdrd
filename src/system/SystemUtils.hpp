@@ -21,6 +21,8 @@ public:
 
     static void setVolume(const uint8_t vol);
 
+    static void setAudioControlName(const char * audioControlName);
+
     // Meant only to be called by the command parser
     void setVolumeCommandHandler(const std::string& vol);
 
@@ -42,6 +44,9 @@ private:
     SystemUtils& operator=(const SystemUtils&) = delete;
 
     static const char VOLUME_SETTER_FORMAT[];
+
+    // The name of the audio control to be used when changing the volume
+    static const char * audioControlName;
 };
 
 #endif /* SYSTEM_SYSTEMUTILS_HPP_ */
