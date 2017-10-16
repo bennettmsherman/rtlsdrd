@@ -93,8 +93,8 @@ void RtlFmRunner::killAplay(bool allowThrow)
                 std::cerr << exception.what() << "; Code: " << exception.code()  << std::endl;
             }
         }
-        waitPid(aplayPid, allowThrow);
         std::cout << "Killed aplay with PID: " << aplayPid << std::endl;
+        waitPid(aplayPid, allowThrow);
         aplayPid = 0;
     }
 }
@@ -150,8 +150,8 @@ void RtlFmRunner::killRtlFm(bool allowThrow)
                 std::cerr << exception.what() << "; Code: " << exception.code()  << std::endl;
             }
         }
-        waitPid(rtlFmPid, allowThrow);
         std::cout << "Killed rtl_fm with PID: " << rtlFmPid << std::endl;
+        waitPid(rtlFmPid, allowThrow);
         rtlFmPid = 0;
     }
 }
