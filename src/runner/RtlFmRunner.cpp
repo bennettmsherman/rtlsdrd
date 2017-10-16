@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include <system_error>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 // Project Includes
 #include "RtlFmRunner.hpp"
@@ -68,9 +70,10 @@ void RtlFmRunner::closeRunnerPipeEnds()
 }
 
 /**
- * Attempts to kill aplay if aplayPid is nonzero.
- * std::system_error is thrown if there was an error killing aplay AND
- * allowThrow is true.
+ * Attempts to kill aplay if aplayPid is nonzero. Then, waits for the process
+ * to terminate.
+ * std::system_error is thrown if there was an error killing aplay or waitinf
+ * for it to terminate AND allowThrow is true.
  * If allowThrow is false and an error occurs, the exception message is printed
  * but no exception is thrown.
  */
@@ -90,15 +93,44 @@ void RtlFmRunner::killAplay(bool allowThrow)
                 std::cerr << exception.what() << "; Code: " << exception.code()  << std::endl;
             }
         }
+        waitPid(aplayPid, allowThrow);
         std::cout << "Killed aplay with PID: " << aplayPid << std::endl;
         aplayPid = 0;
     }
 }
 
 /**
- * Attempts to kill rtl_fm if rtlFmPid is nonzero.
- * std::system_error is thrown if there was an error killing rtl_fm AND
+ * Waits for the PID specified by pidToWaitFor to change state (terminate).
+ * std::system_error is thrown if there was an error calling waitpid() AND
  * allowThrow is true.
+ * If allowThrow is false and an error occurs, the exception message is printed
+ * but no exception is thrown.
+ */
+void RtlFmRunner::waitPid(pid_t pidToWaitFor, bool allowThrow)
+{
+    std::cout << "Waiting for PID: " << std::to_string(pidToWaitFor) << std::endl;
+    if (waitpid(pidToWaitFor, NULL, 0) < 0)
+    {
+        std::string errMsg = "Error waiting on PID";
+        errMsg += std::to_string(pidToWaitFor);
+
+        std::system_error exception(errno, std::system_category(), errMsg.c_str());
+        if (allowThrow)
+        {
+            throw exception;
+        }
+        else
+        {
+            std::cerr << exception.what() << "; Code: " << exception.code()  << std::endl;
+        }
+    }
+}
+
+/**
+ * Attempts to kill rtl_fm if rtlFmPid is nonzero. Then, waits for the process
+ * to terminate.
+ * std::system_error is thrown if there was an error killing rtl_fm or waiting
+ * for it to terminate AND allowThrow is true.
  * If allowThrow is false and an error occurs, the exception message is printed
  * but no exception is thrown.
  */
@@ -118,6 +150,7 @@ void RtlFmRunner::killRtlFm(bool allowThrow)
                 std::cerr << exception.what() << "; Code: " << exception.code()  << std::endl;
             }
         }
+        waitPid(rtlFmPid, allowThrow);
         std::cout << "Killed rtl_fm with PID: " << rtlFmPid << std::endl;
         rtlFmPid = 0;
     }
