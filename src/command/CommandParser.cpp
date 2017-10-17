@@ -56,13 +56,15 @@ const Command<RtlFmParameterBuilder> CommandParser::RTL_FM_PARAMETER_BUILDER_CMD
                                             "Scans a frequency range. Format is START:END:INCREMENT. SquelchLevel must be set to use this"},
     Command<RtlFmParameterBuilder> { "CLEAR", &RtlFmParameterBuilder::clearParamLists, "No param. Resets the lists of stored commands"},
     Command<RtlFmParameterBuilder> { "EXECUTE", &RtlFmParameterBuilder::executeCommand, "No param. Executes rtl_fm with the new params"},
-    Command<RtlFmParameterBuilder> { "STORED_CMDS", &RtlFmParameterBuilder::getUserProvidedCommands, "Returns all of the commands entered by this user after "
+    Command<RtlFmParameterBuilder> { "MY_STORED_CMDS", &RtlFmParameterBuilder::getUserProvidedCommands, "Returns all of the commands entered by this user after "
                                         "having executed CLEAR or EXECUTE"}
 };
 
 const Command<RtlFmRunner> CommandParser::RTL_FM_RUNNER_CMDS[]
 {
-    Command<RtlFmRunner> { "STOP", &RtlFmRunner::stopCommandHandler, "Kills rtl_fm and aplay. Stops the audio stream."}
+    Command<RtlFmRunner> { "STOP", &RtlFmRunner::stopCommandHandler, "Kills rtl_fm and aplay. Stops the audio stream."},
+    Command<RtlFmRunner> { "CMDS_IN_USE", &RtlFmRunner::getUserProvidedCommandsInUse, "Returns all user provided commands in use for the current invocation of"
+                                "rtl_fm and aplay"}
 };
 
 const Command<SystemUtils> CommandParser::SYSTEM_UTILS_CMDS[]
@@ -91,7 +93,7 @@ const std::string CommandParser::UNUSED_PARAM_VALUE = " ";
  *
  * TODO: Throw exceptions for bad commands
  */
-std::string CommandParser::execute(std::string& unparsedCommand, RtlFmParameterBuilder& rtlFmParamBuilder) const
+std::string CommandParser::execute(const std::string& unparsedCommand, RtlFmParameterBuilder& rtlFmParamBuilder) const
 {
     std::string cmd;
     std::string param;
@@ -120,6 +122,8 @@ std::string CommandParser::execute(std::string& unparsedCommand, RtlFmParameterB
                 std::cout << "Executing: " << cmd << "(" << param << ")" << std::endl;
                 rtlFmParamBuilderCmd.exec(param, &funcUpdatableString, rtlFmParamBuilder);
 
+                // RtlFmParamBuilder commands w/o parameters are not added
+                // to this list
                 if (param != UNUSED_PARAM_VALUE)
                 {
                     rtlFmParamBuilder.storeUserEnteredCommand(cmd, FUNCTION_AND_PARAM_SEPARATOR, param);

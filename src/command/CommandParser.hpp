@@ -27,7 +27,7 @@ public:
     ////////////////////////////////
     static const CommandParser& getInstance();
 
-    std::string execute(std::string& unparsedCommand, RtlFmParameterBuilder& rtlFmParamBuilder) const;
+    std::string execute(const std::string& unparsedCommand, RtlFmParameterBuilder& rtlFmParamBuilder) const;
 
 private:
     ///////////////////////
@@ -47,7 +47,6 @@ private:
      * Delete the default assignment operator
      */
     CommandParser& operator=(const CommandParser&) = delete;
-
 
     bool parse(const std::string& unparsedCommand, std::string& command, std::string& param) const;
     std::string getCommandStringList() const;

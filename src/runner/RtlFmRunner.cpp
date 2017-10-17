@@ -18,17 +18,16 @@
 // Project Includes
 #include "RtlFmRunner.hpp"
 
-// Static Initialization
-pid_t RtlFmRunner::rtlFmPid = 0;
-pid_t RtlFmRunner::aplayPid = 0;
-
 /**
  * Executes rtl_fm and aplay with the command strings specified by rtlFmParams
  * and aplayParas, respectively. If aplay or rtl_fm are being executed when
  * this function is called, the previous executions are terminated.
+ * The userProvidedParamStrings vector will replace the current version of
+ * userProvidedParamsInUse.
  * An system_error exception is thrown if any internal error occurs.
  */
-void RtlFmRunner::execRtlFmCommand(const char* const rtlFmParams[], const char* const aplayParams[])
+void RtlFmRunner::execRtlFmCommand(const char* const rtlFmParams[], const char* const aplayParams[],
+        const std::vector<std::string>& userProvidedParamStrings)
 {
     // Kill previous execution of aplay and rtl_fm
     killAplay();
@@ -46,6 +45,10 @@ void RtlFmRunner::execRtlFmCommand(const char* const rtlFmParams[], const char* 
 
     // The proc starting aplay and rtl_fm has no need to access the rtl_fm<->aplay pipe
     closeRunnerPipeEnds();
+
+    // Update the list of user provided parameter strings used to execute
+    // rtl_fm and aplay
+    userProvidedParamStringsInUse = userProvidedParamStrings;
 }
 
 /**
@@ -309,8 +312,8 @@ void RtlFmRunner::stopCommandHandler(const std::string& UNUSED, std::string* upd
  */
 void RtlFmRunner::killAplayAndRtlFm()
 {
-    killAplay(false);
-    killRtlFm(false);
+    getInstance().killAplay(false);
+    getInstance().killRtlFm(false);
 }
 
 /**
@@ -338,5 +341,19 @@ RtlFmRunner& RtlFmRunner::getInstance()
 {
     static RtlFmRunner instance;
     return instance;
+}
+
+/**
+ * Appends to updatableMessage the list of valid user supplied commands which
+ * are in use for the current rtl_fm/aplay execution.
+ */
+void RtlFmRunner::getUserProvidedCommandsInUse(const std::string& UNUSED, std::string* updatableMessage)
+{
+    (void) UNUSED;
+    for (std::string userCmd : userProvidedParamStringsInUse)
+    {
+        updatableMessage->append(userCmd);
+        updatableMessage->append("\n");
+    }
 }
 

@@ -128,7 +128,7 @@ void RtlFmParameterBuilder::executeCommand(const std::string& UNUSED, std::strin
     appendEntriesToCommand<int32_t, NumericParameter<int32_t>>(rtlFmCmdList, insertionIdx, signedParams);
     appendEntriesToCommand<std::string, StringParameter>(rtlFmCmdList, insertionIdx, stringParams);
 
-    RtlFmRunner::getInstance().execRtlFmCommand(rtlFmCmdList, APLAY_ARGV);
+    RtlFmRunner::getInstance().execRtlFmCommand(rtlFmCmdList, APLAY_ARGV, userProvidedCommands);
 
     clearParamLists(UNUSED);
 }

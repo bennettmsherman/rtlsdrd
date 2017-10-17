@@ -9,18 +9,23 @@
 #define WRAPPER_RTLFMRUNNER_HPP_
 
 // System Includes
+#include <string>
 #include <sys/types.h>
+#include <vector>
 
 class RtlFmRunner
 {
 public:
     static RtlFmRunner& getInstance();
 
-    void execRtlFmCommand(const char* const rtlFmParams[], const char* const aplayParams[]);
+    void execRtlFmCommand(const char* const rtlFmParams[], const char* const aplayParams[],
+            const std::vector<std::string>& userProvidedParamStrings);
+
     static void killAplayAndRtlFm();
 
     // Intended to be executed by the command parser
     void stopCommandHandler(const std::string& UNUSED, std::string* updatableMessage);
+    void getUserProvidedCommandsInUse(const std::string& UNUSED, std::string* updatableMessage);
 
 private:
 
@@ -48,15 +53,21 @@ private:
     void createRtlFmAplayCommsPipe();
     void closeRunnerPipeEnds();
 
-    static void killAplay(bool allowThrow = true);
-    static void killRtlFm(bool allowThrow = true);
+    void killAplay(bool allowThrow = true);
+    void killRtlFm(bool allowThrow = true);
 
-    static void waitPid(pid_t pidToWaitFor, bool allowThrow=true);
+    void waitPid(pid_t pidToWaitFor, bool allowThrow=true);
 
-    static void printCommand(const std::string& prefixString, const char* const params[]);
+    void printCommand(const std::string& prefixString, const char* const params[]);
 
-    static pid_t rtlFmPid;
-    static pid_t aplayPid;
+    // This vector will contain all of the user-provided parameters which
+    // are currently being used to run rtl_fm and aplay. These commands
+    // are in the form "FUNCTION=PARAMETER", and are assumed valid.
+    std::vector<std::string> userProvidedParamStringsInUse;
+
+    // Pids for the aplay and rtl_fm processes. 0 if the program isn't running
+    pid_t rtlFmPid = 0;
+    pid_t aplayPid = 0;
 
     int rtlFmAplayCommsPipe[2];
     const int& rtlFmAplayCommsPipeReadEndFd = rtlFmAplayCommsPipe[0];
