@@ -57,8 +57,9 @@ void SystemUtils::setVolume(const uint8_t vol)
  * Wrapper for setVolume(). Intended to be called by the command interpreter.
  * The vol param should be a percentage representing the new system volume.
  */
-void SystemUtils::setVolumeCommandHandler(const std::string& vol)
+void SystemUtils::setVolumeCommandHandler(const std::string& vol, std::string* updatableMessage)
 {
+    (void) updatableMessage;
     setVolume(static_cast<uint8_t>(std::stoul(vol)));
 }
 

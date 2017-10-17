@@ -24,7 +24,7 @@ public:
     static void setAudioControlName(const char * audioControlName);
 
     // Meant only to be called by the command parser
-    void setVolumeCommandHandler(const std::string& vol);
+    void setVolumeCommandHandler(const std::string& vol, std::string* updatableMessage);
 
 private:
 

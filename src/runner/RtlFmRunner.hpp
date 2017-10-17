@@ -20,7 +20,7 @@ public:
     static void killAplayAndRtlFm();
 
     // Intended to be executed by the command parser
-    void stopCommandHandler(const std::string& UNUSED);
+    void stopCommandHandler(const std::string& UNUSED, std::string* updatableMessage);
 
 private:
 

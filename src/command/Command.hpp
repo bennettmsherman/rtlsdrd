@@ -20,7 +20,7 @@ class Command
 public:
 
     // Alias declarations to the rescue!
-    using CommandFunction = void (Commandable::*)(const std::string&);
+    using CommandFunction = void (Commandable::*)(const std::string&, std::string*);
 
     ////////////////////////////////
     // Public interface functions //
@@ -29,21 +29,22 @@ public:
             commandString(commandStringParam), cmdFunc(cmdFuncParam), description(descriptionParam) {};
 
     /**
-     * Executes the function pointed to by cmdFunc with the parameter param.
+     * Executes the function pointed to by cmdFunc with the parameter funcParam.
      * cmdRef is used as the object on which cmdFunc is called.
-     * The result of the function is returned
+     * updatableMsg is a string intended to be updated by the client if it wants to
+     * return information to the caller.
      */
-    void exec(const std::string& param, Commandable& cmdRef) const
+    void exec(const std::string& funcParam, std::string* updatableMsg, Commandable& cmdRef) const
     {
-        (cmdRef.*cmdFunc)(param);
+        (cmdRef.*cmdFunc)(funcParam, updatableMsg);
     }
 
-    const std::string& getCommandString() const
+    std::string getCommandString() const
     {
         return commandString;
     }
 
-    const std::string& getCommandDescription() const
+    std::string getCommandDescription() const
     {
         return description;
     }

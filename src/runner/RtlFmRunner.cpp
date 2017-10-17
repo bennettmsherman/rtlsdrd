@@ -295,9 +295,10 @@ void RtlFmRunner::createRtlFmAplayCommsPipe()
  * The function called by the "STOP" command. Terminates aplay
  * and rtl_fm if they're currently running.
  */
-void RtlFmRunner::stopCommandHandler(const std::string& UNUSED)
+void RtlFmRunner::stopCommandHandler(const std::string& UNUSED, std::string* updatableMessage)
 {
     (void) UNUSED;
+    (void) updatableMessage;
     killAplayAndRtlFm();
 }
 

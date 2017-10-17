@@ -23,25 +23,25 @@ class RtlFmParameterBuilder
 public:
 
     // Parameter setting commands
-    void setDeviceIndex(const std::string& deviceIndex);
-    void setEnableOption(const std::string& enableOption);
-    void setFrequency(const std::string& frequency);
-    void setModulationMode(const std::string& modulationMode);
-    void setOversampling(const std::string& oversampling);
-    void setPpmError(const std::string& ppmError);
-    void setSampleRate(const std::string& sampleRate);
-    void setSquelchDelay(const std::string& squelchDelay);
-    void setSquelchLevel(const std::string& squelchLevel);
-    void setResampleRate(const std::string& resampleRate);
-    void setAtanMath(const std::string& atanMath);
-    void setTunerGain(const std::string& tunerGain);
-    void broadcastAmStationMacro(const std::string& amFreqInKilohertz);
-    void broadcastFmStationMacro(const std::string& fmFreqInMegahertz);
-    void setScannableFrequency(const std::string& scannableFrequency);
+    void setDeviceIndex(const std::string& deviceIndex, std::string* updatableMessage=nullptr);
+    void setEnableOption(const std::string& enableOption, std::string* updatableMessage=nullptr);
+    void setFrequency(const std::string& frequency, std::string* updatableMessage=nullptr);
+    void setModulationMode(const std::string& modulationMode, std::string* updatableMessage=nullptr);
+    void setOversampling(const std::string& oversampling, std::string* updatableMessage=nullptr);
+    void setPpmError(const std::string& ppmError, std::string* updatableMessage=nullptr);
+    void setSampleRate(const std::string& sampleRate, std::string* updatableMessage=nullptr);
+    void setSquelchDelay(const std::string& squelchDelay, std::string* updatableMessage=nullptr);
+    void setSquelchLevel(const std::string& squelchLevel, std::string* updatableMessage=nullptr);
+    void setResampleRate(const std::string& resampleRate, std::string* updatableMessage=nullptr);
+    void setAtanMath(const std::string& atanMath, std::string* updatableMessage=nullptr);
+    void setTunerGain(const std::string& tunerGain, std::string* updatableMessage=nullptr);
+    void broadcastAmStationMacro(const std::string& amFreqInKilohertz, std::string* updatableMessage=nullptr);
+    void broadcastFmStationMacro(const std::string& fmFreqInMegahertz, std::string* updatableMessage=nullptr);
+    void setScannableFrequency(const std::string& scannableFrequency, std::string* updatableMessage=nullptr);
 
     // Special function commands
-    void clearParamLists(const std::string& UNUSED);
-    void executeCommand(const std::string& UNUSED);
+    void clearParamLists(const std::string& UNUSED, std::string* updatableMessage=nullptr);
+    void executeCommand(const std::string& UNUSED, std::string* updatableMessage=nullptr);
 
 private:
     uint32_t getNumberOfStoredParameters();

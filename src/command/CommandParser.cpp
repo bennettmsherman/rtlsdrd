@@ -78,7 +78,7 @@ const std::string CommandParser::LIST_CMDS_COMMAND_STRING {"HELP"};
 const std::string CommandParser::INVALID_SYNTAX_STRING {"INVALID COMMAND SYNTAX"};
 const std::string CommandParser::NO_SUCH_COMMAND_EXISTS_STRING {"NO SUCH COMMAND EXISTS"};
 const std::string CommandParser::INVALID_PARAMETER_STRING {"INVALID PARAMETER"};
-const std::string CommandParser::EXECUTION_OK_STRING {"OK"};
+const std::string CommandParser::EXECUTION_OK_STRING {"OK\n"};
 
 /**
  * The command specified by LIST_CMDS_COMMAND_STRING will result in a list of supported
@@ -101,12 +101,13 @@ std::string CommandParser::execute(std::string& unparsedCommand, RtlFmParameterB
 
     if (cmd.compare(LIST_CMDS_COMMAND_STRING) == 0)
     {
-        return getCommandStringList();
+        return EXECUTION_OK_STRING + getCommandStringList();
     }
 
     // Attempt to find and execute the specified command
     try
     {
+        std::string funcUpdatableString = EXECUTION_OK_STRING;
         // Parameter builder commands
         for (size_t idx = 0; idx < RTL_FM_PARAMETER_BUILDER_CMDS_LIST_LENGTH; ++idx)
         {
@@ -114,8 +115,8 @@ std::string CommandParser::execute(std::string& unparsedCommand, RtlFmParameterB
             if (cmd.compare(rtlFmParamBuilderCmd.getCommandString()) == 0)
             {
                 std::cout << "Executing: " << cmd << "(" << param << ")" << std::endl;
-                rtlFmParamBuilderCmd.exec(param, rtlFmParamBuilder);
-                return EXECUTION_OK_STRING;
+                rtlFmParamBuilderCmd.exec(param, &funcUpdatableString, rtlFmParamBuilder);
+                return funcUpdatableString;
             }
         }
 
@@ -126,8 +127,8 @@ std::string CommandParser::execute(std::string& unparsedCommand, RtlFmParameterB
             if (cmd.compare(rtlFmRunnerCmd.getCommandString()) == 0)
             {
                 std::cout << "Executing: " << cmd << "(" << param << ")" << std::endl;
-                rtlFmRunnerCmd.exec(param, RtlFmRunner::getInstance());
-                return EXECUTION_OK_STRING;
+                rtlFmRunnerCmd.exec(param, &funcUpdatableString, RtlFmRunner::getInstance());
+                return funcUpdatableString;
             }
         }
 
@@ -138,8 +139,8 @@ std::string CommandParser::execute(std::string& unparsedCommand, RtlFmParameterB
             if (cmd.compare(systemUtilsCmd.getCommandString()) == 0)
             {
                 std::cout << "Executing: " << cmd << "(" << param << ")" << std::endl;
-                systemUtilsCmd.exec(param, SystemUtils::getInstance());
-                return EXECUTION_OK_STRING;
+                systemUtilsCmd.exec(param, &funcUpdatableString, SystemUtils::getInstance());
+                return funcUpdatableString;
             }
         }
     }
