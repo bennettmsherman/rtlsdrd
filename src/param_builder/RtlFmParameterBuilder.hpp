@@ -42,7 +42,10 @@ public:
     // Special function commands
     void clearParamLists(const std::string& UNUSED, std::string* updatableMessage=nullptr);
     void executeCommand(const std::string& UNUSED, std::string* updatableMessage=nullptr);
+    void getUserProvidedCommands(const std::string& UNUSED, std::string* updatableMessage=nullptr);
 
+    // Commands not callable by the interepreter
+    void storeUserEnteredCommand(const std::string& function, const std::string& separator, const std::string& param);
 private:
     uint32_t getNumberOfStoredParameters();
     void setAplaySampleRate();
@@ -58,6 +61,14 @@ private:
     std::vector<NumericParameter<uint32_t>> unsignedParams;
     std::vector<NumericParameter<int32_t>> signedParams;
     std::vector<StringParameter> stringParams;
+
+    /**
+     * Contains all *valid* functions supplied by the user in the form
+     * "FUNCTION=PARAM". The command interpreter is tasked with add to this,
+     * but the RtlFmParameterBuilder ensures that it gets cleaned out when the
+     * user used the EXECUTE or CLEAR command
+     */
+    std::vector<std::string> userProvidedCommands;
 
     // Strings needed for rtl_fm and aplay
     static const char* const RTL_FM_EXECUTABLE_PATH;

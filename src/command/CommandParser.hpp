@@ -62,8 +62,11 @@ private:
     // The regex string used to parse commands
     static const std::regex CMD_REGEX;
 
+    // The character used to separate functions from parameters
+    static const std::string FUNCTION_AND_PARAM_SEPARATOR;
+
     // When no parameter is specified for a command, this value is used
-    static const char UNUSED_PARAM_VALUE = ' ';
+    static const std::string UNUSED_PARAM_VALUE;
 
     // When this command is entered, a list of commands is returned
     static const std::string LIST_CMDS_COMMAND_STRING;

@@ -86,6 +86,10 @@ void RtlFmParameterBuilder::setDeviceIndex(const std::string& deviceIndex, std::
     unsignedParams.push_back(DeviceIndex::create(std::stoul(deviceIndex)));
 }
 
+/**
+ * Clears each of the internal lists which store the state of the parameter
+ * builder.
+ */
 void RtlFmParameterBuilder::clearParamLists(const std::string& UNUSED, std::string* updatableMessage)
 {
     (void) UNUSED;
@@ -93,6 +97,7 @@ void RtlFmParameterBuilder::clearParamLists(const std::string& UNUSED, std::stri
     unsignedParams.clear();
     signedParams.clear();
     stringParams.clear();
+    userProvidedCommands.clear();
 }
 
 uint32_t RtlFmParameterBuilder::getNumberOfStoredParameters()
@@ -245,6 +250,32 @@ void RtlFmParameterBuilder::setScannableFrequency(const std::string& scannableFr
 {
     (void) updatableMessage;
     stringParams.push_back(ScannableFrequency::create(scannableFrequency));
+}
+
+/**
+ * Adds the command in the form function + separator + param to
+ * userProvidedCommands. This command is assumed to be valid,
+ * and is expected to be called by the parser.
+ */
+void RtlFmParameterBuilder::storeUserEnteredCommand(const std::string& function,
+                                                    const std::string& separator,
+                                                    const std::string& param)
+{
+    userProvidedCommands.push_back(function + separator + param);
+}
+
+/**
+ * Appends to updatableMessage the list of valid user supplied commands which
+ * have been entered since the last call to EXECUTE or CLEAR.
+ */
+void RtlFmParameterBuilder::getUserProvidedCommands(const std::string& UNUSED, std::string* updatableMessage)
+{
+    (void) UNUSED;
+    for (std::string userCmd : userProvidedCommands)
+    {
+        updatableMessage->append(userCmd);
+        updatableMessage->append("\n");
+    }
 }
 
 
