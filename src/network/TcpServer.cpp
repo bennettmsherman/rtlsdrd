@@ -174,8 +174,7 @@ void TcpServer::connectionHandler(const TcpSocketSharedPtr& sock)
  */
 size_t TcpServer::sendData(const TcpSocketSharedPtr& sock, const std::string& dataToSend)
 {
-    return boost::asio::write(*sock,
-            boost::asio::buffer(dataToSend.c_str(), dataToSend.length()));
+    return boost::asio::write(*sock, boost::asio::buffer(dataToSend));
 }
 
 /**
