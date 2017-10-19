@@ -66,5 +66,5 @@ std::mutex& SocketWrapper::getWriteMutex()
  */
 bool SocketWrapper::operator==(const SocketWrapper& other)
 {
-    return socketPtr == base.socketPtr;
+    return socketPtr == other.socketPtr;
 }
