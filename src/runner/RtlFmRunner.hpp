@@ -12,6 +12,7 @@
 #include <string>
 #include <sys/types.h>
 #include <vector>
+#include <atomic>
 
 class RtlFmRunner
 {
@@ -66,8 +67,8 @@ private:
     std::vector<std::string> userProvidedParamStringsInUse;
 
     // Pids for the aplay and rtl_fm processes. 0 if the program isn't running
-    pid_t rtlFmPid = 0;
-    pid_t aplayPid = 0;
+    std::atomic<pid_t> rtlFmPid{0};
+    std::atomic<pid_t> aplayPid{0};
 
     int rtlFmAplayCommsPipe[2];
     const int& rtlFmAplayCommsPipeReadEndFd = rtlFmAplayCommsPipe[0];
