@@ -9,10 +9,11 @@
 #define WRAPPER_RTLFMRUNNER_HPP_
 
 // System Includes
+#include <atomic>
+#include <mutex>
 #include <string>
 #include <sys/types.h>
 #include <vector>
-#include <atomic>
 
 class RtlFmRunner
 {
@@ -22,7 +23,7 @@ public:
     void execRtlFmCommand(const char* const rtlFmParams[], const char* const aplayParams[],
             const std::vector<std::string>& userProvidedParamStrings);
 
-    static void killAplayAndRtlFm();
+    void killAplayAndRtlFm();
 
     // Intended to be executed by the command parser
     void stopCommandHandler(const std::string& UNUSED, std::string* updatableMessage);
@@ -69,6 +70,10 @@ private:
     // Pids for the aplay and rtl_fm processes. 0 if the program isn't running
     std::atomic<pid_t> rtlFmPid{0};
     std::atomic<pid_t> aplayPid{0};
+
+    // Used for preventing multiple clients from executing or killing (or both)
+    // aplay and rtl_fm simultaneously
+    std::mutex runnerMutex;
 
     int rtlFmAplayCommsPipe[2];
     const int& rtlFmAplayCommsPipeReadEndFd = rtlFmAplayCommsPipe[0];

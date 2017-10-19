@@ -8,12 +8,13 @@
 // System Includes
 #include <errno.h>
 #include <iostream>
+#include <mutex>
 #include <signal.h>
 #include <stdlib.h>
-#include <system_error>
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <system_error>
+#include <unistd.h>
 
 // Project Includes
 #include "RtlFmRunner.hpp"
@@ -25,10 +26,13 @@
  * The userProvidedParamStrings vector will replace the current version of
  * userProvidedParamsInUse.
  * An system_error exception is thrown if any internal error occurs.
+ * This execution is MT protected using the runnerMutex.
  */
 void RtlFmRunner::execRtlFmCommand(const char* const rtlFmParams[], const char* const aplayParams[],
         const std::vector<std::string>& userProvidedParamStrings)
 {
+    std::lock_guard<std::mutex> executeCommandGuard{runnerMutex};
+
     // Kill previous execution of aplay and rtl_fm
     killAplay();
     killRtlFm();
@@ -308,12 +312,14 @@ void RtlFmRunner::stopCommandHandler(const std::string& UNUSED, std::string* upd
 /**
  * Kills aplay and rtl_fm. This is intended to be used as a public function
  * to be called when the main daemon is terminated. If an error occurs,
- * no exceptions are thrown, but the exception messages are displayed to srderr
+ * no exceptions are thrown, but the exception messages are displayed to srderr.
+ * This execution is MT protected using runnerMutex.
  */
 void RtlFmRunner::killAplayAndRtlFm()
 {
-    getInstance().killAplay(false);
-    getInstance().killRtlFm(false);
+    std::lock_guard<std::mutex> killProcessGuard{runnerMutex};
+    killAplay(false);
+    killRtlFm(false);
 }
 
 /**

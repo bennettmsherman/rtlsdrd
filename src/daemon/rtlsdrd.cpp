@@ -20,7 +20,7 @@ void terminationSignalHandler(int sigNum)
 {
     std::cout << "Received signal: " << sigNum << std::endl;
     std::cout << "Attempting to kill aplay and rtl_fm" << std::endl;
-    RtlFmRunner::killAplayAndRtlFm();
+    RtlFmRunner::getInstance().killAplayAndRtlFm();
 
     TcpServer::getInstance().terminate();
 
