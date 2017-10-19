@@ -4,12 +4,15 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/network/SocketWrapper.cpp \
 ../src/network/TcpServer.cpp 
 
 OBJS += \
+./src/network/SocketWrapper.o \
 ./src/network/TcpServer.o 
 
 CPP_DEPS += \
+./src/network/SocketWrapper.d \
 ./src/network/TcpServer.d 
 
 

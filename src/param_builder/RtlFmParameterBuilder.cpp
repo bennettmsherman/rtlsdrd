@@ -29,6 +29,7 @@
 #include "SquelchDelay.hpp"
 #include "SquelchLevel.hpp"
 #include "StringParameter.hpp"
+#include "TcpServer.hpp"
 #include "TunerGain.hpp"
 
 // Static Initialization
@@ -105,6 +106,13 @@ uint32_t RtlFmParameterBuilder::getNumberOfStoredParameters()
     return unsignedParams.size() + signedParams.size() + stringParams.size();
 }
 
+/**
+ * Launches aplay and rtl_fm using the Parameters stored in each of the typed
+ * vectors. Once the execution of both processes is complete, all clients
+ * connected to this server are informed that a new execution of rtl_fm has
+ * occurred, and that the parameters which reflect the new system state can be
+ * retrieved.
+ */
 void RtlFmParameterBuilder::executeCommand(const std::string& UNUSED, std::string* updatableMessage)
 {
     (void) UNUSED;
@@ -131,6 +139,9 @@ void RtlFmParameterBuilder::executeCommand(const std::string& UNUSED, std::strin
     RtlFmRunner::getInstance().execRtlFmCommand(rtlFmCmdList, APLAY_ARGV, userProvidedCommands);
 
     clearParamLists(UNUSED);
+
+    // Inform each client that a new execution of rtl_fm and aplay has occurred
+    TcpServer::getInstance().informAllClientsOfStateChange();
 }
 
 void RtlFmParameterBuilder::setEnableOption(const std::string& enableOption, std::string* updatableMessage)

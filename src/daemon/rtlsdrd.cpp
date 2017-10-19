@@ -16,15 +16,13 @@
 #include "SystemUtils.hpp"
 #include "TcpServer.hpp"
 
-static TcpServer server{};
-
 void terminationSignalHandler(int sigNum)
 {
     std::cout << "Received signal: " << sigNum << std::endl;
     std::cout << "Attempting to kill aplay and rtl_fm" << std::endl;
     RtlFmRunner::killAplayAndRtlFm();
 
-    server.terminate();
+    TcpServer::getInstance().terminate();
 
     std::cout << "Exiting!" << std::endl;
     exit(EXIT_SUCCESS);
@@ -47,5 +45,5 @@ int main(int argc, char *argv[])
     }
 
     // Have the server wait for, accept, and process connections
-    server.run();
+    TcpServer::getInstance().run();
 }

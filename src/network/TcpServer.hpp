@@ -11,30 +11,52 @@
 // System Includes
 #include <cstdint>
 #include <boost/asio.hpp>
+#include <boost/thread.hpp>
+#include <vector>
 
 // Project Includes
-// <none>
+#include "SocketWrapper.hpp"
 
 // Using statements
 using BoostTcp = boost::asio::ip::tcp;
 using BoostIoService = boost::asio::io_service;
 using TcpSocketSharedPtr = std::shared_ptr<BoostTcp::socket>;
+using TcpSocket = boost::asio::ip::tcp::socket;
 
 class TcpServer
 {
 public:
+    static TcpServer& getInstance(uint16_t port=2832);
+
+    void informAllClientsOfStateChange();
     void run();
     void terminate();
 
+private:
+    // A private constructor is required for the singleton pattern
     TcpServer(const uint16_t port=DEFAULT_PORT);
 
-private:
+    // Delete the default copy constructor
+    TcpServer(const TcpServer&) = delete;
 
-    std::vector<std::string> getLocalIpAddresses();
-    size_t sendData(const TcpSocketSharedPtr& sock, const std::string& dataToSend);
-    size_t receiveData(const TcpSocketSharedPtr& sock, std::string& receivedData);
-    void connectionHandler(const TcpSocketSharedPtr& sock);
+    // Delete the default assignment operator
+    TcpServer& operator=(const TcpServer&) = delete;
+
+    // General info retrieval and print functions
     void printServerInfo();
+    std::vector<std::string> getLocalIpAddresses();
+
+    // Socket interface functions
+    static size_t sendData(SocketWrapper& sockWrap, const std::string& dataToSend);
+    static size_t receiveData(TcpSocket& sock, std::string& receivedData);
+    static void sendDataVoidReturn(SocketWrapper& sockWrap, const std::string& dataToSend);
+
+    // Thread to be executed for each client
+    void connectionHandler(SocketWrapper& sockWrap);
+
+    // Locked mutators for socketWrappersInUse
+    SocketWrapper& appendToSocketWrappersInUse(TcpSocketSharedPtr& newSocket);
+    void removeFromSocketWrappersInUse(const SocketWrapper& sockWrapper);
 
     // The port which this server is associated with
     uint16_t port;
@@ -43,6 +65,14 @@ private:
 
     BoostTcp::acceptor acceptor;
 
+    // List of sockets and associated mutexes
+    std::vector<SocketWrapper> socketWrappersInUse;
+
+    // Used to synchronize addition and deletion operations
+    // on the socketWrappersInUse vector
+    std::mutex socketWrappersInUseMutex;
+
+    static const std::string UPDATED_PARAMETERS_AVAILABLE_STRING;
     static const uint16_t DEFAULT_PORT = 2832;
     static const uint16_t RECEIVE_BUFFER_SIZE = 256;
 };
