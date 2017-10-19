@@ -14,6 +14,7 @@
 #include <cstdint>
 #include <ifaddrs.h>
 #include <iostream>
+#include <list>
 #include <mutex>
 #include <netdb.h>
 #include <stdexcept>
@@ -22,7 +23,6 @@
 #include <sys/types.h>
 #include <system_error>
 #include <thread>
-#include <vector>
 
 // Project Includes
 #include "CommandParser.hpp"
@@ -46,7 +46,7 @@ TcpServer::TcpServer(const uint16_t port) : port(port), ioService(),
 void TcpServer::printServerInfo()
 {
     // Retrieve local network interfaces by name and IP
-    std::vector<std::string> interfacesAndIpsStrings = getLocalIpAddresses();
+    const std::vector<std::string>& interfacesAndIpsStrings = getLocalIpAddresses();
 
     std::cout << "Rtlsdrd server started on: " <<
             "\n\tIPs: ";
@@ -138,7 +138,7 @@ std::vector<std::string> TcpServer::getLocalIpAddresses()
  * a thread which is dedicated to a single client. It will receive and parse
  * strings from the client, and will return status information to it.
  * When this function terminates, the SocketWrapper parameter is removed
- * from the socketWrappersInUse vector.
+ * from the socketWrappersInUse list.
  */
 void TcpServer::connectionHandler(SocketWrapper& sockWrap)
 {
@@ -230,14 +230,14 @@ void TcpServer::run()
     printServerInfo();
     while (true)
     {
-      TcpSocketSharedPtr sock(new BoostTcp::socket(ioService));
-      acceptor.accept(*sock);
+      TcpSocketSharedPtr tcpSocketPtr(new TcpSocket(ioService));
+      acceptor.accept(*tcpSocketPtr);
 
       // Create a new SocketWrapper for this client, add it to
       // socketWrappersInUse, and send its reference as a param to the client
       // thread.
-      boost::thread peerHandler(boost::bind(&TcpServer::connectionHandler, this,
-              boost::ref(appendToSocketWrappersInUse(sock))));
+      boost::thread clientHandler(boost::bind(&TcpServer::connectionHandler, this,
+              boost::ref(appendToSocketWrappersInUse(tcpSocketPtr))));
     }
 }
 
@@ -253,9 +253,9 @@ void TcpServer::terminate()
 /**
  * Creates a new SocketWrapper instance containing the TcpSocketSharedPointer
  * parameter as a member. Then, this new SocketWrapper is appended to the
- * socketWrappersInUse vector. This access to socketWrappersInUse is locked
+ * socketWrappersInUse list. This access to socketWrappersInUse is locked
  * with the socketWrappersInUseMutex mutex. A reference to the newly created
- * SocketWrapper, within the vector, is returned.
+ * SocketWrapper, within the list, is returned.
  */
 SocketWrapper& TcpServer::appendToSocketWrappersInUse(TcpSocketSharedPtr& newSocket)
 {
@@ -268,12 +268,10 @@ SocketWrapper& TcpServer::appendToSocketWrappersInUse(TcpSocketSharedPtr& newSoc
 }
 
 /**
- * Removes the socketWrapper parameter from the socketWrappersInUse vector.
- * The socketWrappersInUseMutex is used to lock this access to the vector.
- * If the parameter specified is not an element in the vector, a
- * std::out_of_range exception is thrown. If there was any other error such
- * that the socketWrapper wasn't actually deleted from the vector, a
- * std::runtime_error is thrown.
+ * Removes the socketWrapper parameter from the socketWrappersInUse list.
+ * The socketWrappersInUseMutex is used to lock this access to the list.
+ * If the SocketWrapper parameter wasn't actually deleted from the list,
+ * a std::runtime_error is thrown.
  */
 void TcpServer::removeFromSocketWrappersInUse(const SocketWrapper& socketWrapper)
 {
@@ -282,24 +280,15 @@ void TcpServer::removeFromSocketWrappersInUse(const SocketWrapper& socketWrapper
 
     auto preDeleteSize = socketWrappersInUse.size();
 
-    // Find which index in the vector the socketWrapper param is located at
-    int socketWrapperToDeleteIndex = (&socketWrapper - &(*socketWrappersInUse.begin()));
-
-    if (socketWrapperToDeleteIndex < 0 ||
-            socketWrapperToDeleteIndex >= static_cast<int>(socketWrappersInUse.size()))
-    {
-        throw std::out_of_range("Blocked attempt to remove an element from"
-                " socketWrappersInUse outside its valid index range");
-    }
-
     // Remove the socketWrapper param
-    socketWrappersInUse.erase(socketWrappersInUse.begin() + socketWrapperToDeleteIndex);
+    socketWrappersInUse.remove(socketWrapper);
 
     // If the size hasn't changed, then there must've been an error deleting the value
-    if (socketWrappersInUse.size() - preDeleteSize != 1)
+    if (preDeleteSize-socketWrappersInUse.size() != 1)
     {
         throw std::runtime_error("Attempt to remove socket from"
-                " socketWrappersInUse resulted in nonchanging vector size");
+                " socketWrappersInUse resulted in nonchanging list size;"
+                " socketWrapper not deleted successfully");
     }
 }
 
@@ -318,9 +307,9 @@ void TcpServer::sendDataVoidReturn(SocketWrapper& sockWrap, const std::string& d
 }
 
 /**
- * Iterates over the socketWrappersInUse vector and writes the string contained
+ * Iterates over the socketWrappersInUse list and writes the string contained
  * in UPDATED_PARAMETERS_AVAILABLE_STRING to the socket corresponding to each
- * element in the vector. Each socket's write operation is performed in a new
+ * element in the list. Each socket's write operation is performed in a new
  * thread.
  */
 void TcpServer::informAllClientsOfStateChange()

@@ -60,4 +60,11 @@ std::mutex& SocketWrapper::getWriteMutex()
     return writeMutex;
 }
 
-
+/**
+ * Equality operator overload, primarily needed for list.remove().
+ * Note that THIS ONLY CHECKS EQUALITY AGAINST THE socketPtr VALUES
+ */
+bool SocketWrapper::operator==(const SocketWrapper& base)
+{
+    return socketPtr == base.socketPtr;
+}

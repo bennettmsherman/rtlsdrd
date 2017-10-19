@@ -22,6 +22,7 @@ public:
     SocketWrapper(TcpSocketSharedPtr& socketPtr);
     SocketWrapper(const SocketWrapper& toCopy);
     SocketWrapper& operator=(const SocketWrapper& base);
+    bool operator==(const SocketWrapper& base);
 
     TcpSocket& getSocket();
     std::mutex& getWriteMutex();

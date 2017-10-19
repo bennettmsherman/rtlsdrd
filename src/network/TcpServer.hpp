@@ -9,10 +9,11 @@
 #define NETWORK_TCPSERVER_HPP_
 
 // System Includes
-#include <cstdint>
 #include <boost/asio.hpp>
-#include <boost/thread.hpp>
+#include <cstdint>
+#include <list>
 #include <vector>
+#include <string>
 
 // Project Includes
 #include "SocketWrapper.hpp"
@@ -20,8 +21,6 @@
 // Using statements
 using BoostTcp = boost::asio::ip::tcp;
 using BoostIoService = boost::asio::io_service;
-using TcpSocketSharedPtr = std::shared_ptr<BoostTcp::socket>;
-using TcpSocket = boost::asio::ip::tcp::socket;
 
 class TcpServer
 {
@@ -66,7 +65,7 @@ private:
     BoostTcp::acceptor acceptor;
 
     // List of sockets and associated mutexes
-    std::vector<SocketWrapper> socketWrappersInUse;
+    std::list<SocketWrapper> socketWrappersInUse;
 
     // Used to synchronize addition and deletion operations
     // on the socketWrappersInUse vector
