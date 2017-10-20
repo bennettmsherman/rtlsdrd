@@ -159,7 +159,7 @@ void RtlFmParameterBuilder::setFrequency(const std::string& frequency, std::stri
 /**
  * "-M wbfm" actually translates to "-M fm -s 170k -A fast -r 32k -l 0 -E deemp"
  * which sounds terrible. As such, we'll make our own version of wbfm
- * which translates to "-M fm -s 1M -A fast -r 128k -l 0 -E deemp"
+ * which translates to "-M fm -s 2.4M -A fast -r 44.1k -l 0 -E deemp"
  */
 void RtlFmParameterBuilder::setModulationMode(const std::string& modulationMode, std::string* updatableMessage)
 {
@@ -167,8 +167,8 @@ void RtlFmParameterBuilder::setModulationMode(const std::string& modulationMode,
     if (!modulationMode.compare("wbfm"))
     {
         stringParams.push_back(ModulationMode::create("fm"));
-        unsignedParams.push_back(SampleRate::create(1000000));
-        unsignedParams.push_back(ResampleRate::create(192000));
+        unsignedParams.push_back(SampleRate::create(2400000));
+        unsignedParams.push_back(ResampleRate::create(44100));
         unsignedParams.push_back(SquelchLevel::create(0));
         stringParams.push_back(EnableOption::create("deemp"));
         stringParams.push_back(AtanMath::create("fast"));
@@ -231,15 +231,17 @@ void RtlFmParameterBuilder::setTunerGain(const std::string& tunerGain, std::stri
  * Convenience function which takes a broadcast AM station's frequency (in kHz)
  * as a parameter, and sets the:
  * - Frequency
- * - Sample rate (to 128K)
+ * - Sample rate (to 2.4M)
  * - Modulation mode (to AM)
  * - Direct sampling (enabled)
+ * - Resample rate (to 44.1k)
  */
 void RtlFmParameterBuilder::broadcastAmStationMacro(const std::string& amFreqInKilohertz, std::string* updatableMessage)
 {
     (void) updatableMessage;
     unsignedParams.push_back(Frequency::create(ParamBuilderUtils::broadcastAmKilohertzToHertz(amFreqInKilohertz)));
-    unsignedParams.push_back(SampleRate::create(128000));
+    unsignedParams.push_back(SampleRate::create(2400000));
+    unsignedParams.push_back(ResampleRate::create(44100));
     stringParams.push_back(ModulationMode::create("am"));
     stringParams.push_back(EnableOption::create("direct"));
 }
