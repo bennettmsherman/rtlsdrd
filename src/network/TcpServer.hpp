@@ -31,6 +31,10 @@ public:
     void run();
     void terminate();
 
+    // Interpreter-executable commands
+    void getAddressInfoHandler(const std::string& UNUSED, std::string* clientReturnableInfo);
+    void getClientsInfoHandler(const std::string& UNUSED, std::string* clientReturnableInfo);
+
 private:
     // A private constructor is required for the singleton pattern
     TcpServer(const uint16_t port=DEFAULT_PORT);
@@ -42,7 +46,7 @@ private:
     TcpServer& operator=(const TcpServer&) = delete;
 
     // General info retrieval and print functions
-    void printServerInfo();
+    std::string getServerInfo();
     std::vector<std::string> getLocalIpAddresses();
 
     // Socket interface functions
@@ -75,7 +79,5 @@ private:
     static const uint16_t DEFAULT_PORT = 2832;
     static const uint16_t RECEIVE_BUFFER_SIZE = 256;
 };
-
-
 
 #endif /* NETWORK_TCPSERVER_HPP_ */

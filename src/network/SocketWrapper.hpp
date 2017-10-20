@@ -11,6 +11,7 @@
 // System Includes
 #include <boost/asio.hpp>
 #include <mutex>
+#include <stdint.h>
 
 // Typedef/using statements for convenience
 using TcpSocketSharedPtr = std::shared_ptr<boost::asio::ip::tcp::socket>;
@@ -26,10 +27,14 @@ public:
 
     TcpSocket& getSocket();
     std::mutex& getWriteMutex();
+    const std::string& getIpAddress();
+    uint16_t getPortNumber();
 
 private:
     TcpSocketSharedPtr socketPtr;
     std::mutex writeMutex;
+    std::string ipAddr;
+    uint16_t portNum;
 };
 
 #endif /* NETWORK_SOCKETWRAPPER_HPP_ */

@@ -31,7 +31,7 @@
 #include "SystemUtils.hpp"
 #include "SystemUtils.hpp"
 #include "TunerGain.hpp"
-
+#include "TcpServer.hpp"
 
 // Static initialization
 const Command<RtlFmParameterBuilder> CommandParser::RTL_FM_PARAMETER_BUILDER_CMDS[]
@@ -72,9 +72,16 @@ const Command<SystemUtils> CommandParser::SYSTEM_UTILS_CMDS[]
     Command<SystemUtils> { "VOLUME", &SystemUtils::setVolumeCommandHandler, "Sets the system volume. Specify as a percentage."}
 };
 
+const Command<TcpServer> CommandParser::SERVER_CMDS[]
+{
+    Command<TcpServer> { "SVR_ADDR", &TcpServer::getAddressInfoHandler, "Gets the server's networking information"},
+    Command<TcpServer> { "CLIENTS_INFO", &TcpServer::getClientsInfoHandler, "Gets the IP and port #s of connected clients"}
+};
+
 const size_t CommandParser::RTL_FM_PARAMETER_BUILDER_CMDS_LIST_LENGTH = sizeof(RTL_FM_PARAMETER_BUILDER_CMDS) / sizeof(Command<RtlFmParameterBuilder>);
 const size_t CommandParser::RTL_FM_RUNNER_CMDS_LIST_LENGTH = sizeof(RTL_FM_RUNNER_CMDS) / sizeof(Command<RtlFmRunner>);
 const size_t CommandParser::SYSTEM_UTILS_CMDS_LIST_LENGTH = sizeof(SYSTEM_UTILS_CMDS) / sizeof(Command<SystemUtils>);
+const size_t CommandParser::SERVER_CMDS_LIST_LENGTH = sizeof(SERVER_CMDS) / sizeof(Command<TcpServer>);
 
 const std::string CommandParser::FUNCTION_AND_PARAM_SEPARATOR = "=";
 const std::regex CommandParser::CMD_REGEX { "^([A-Z0-9_]+)" + FUNCTION_AND_PARAM_SEPARATOR + "?([-]?[0-9a-zA-Z:]*\\.?[0-9a-zA-Z:]*)"};
@@ -156,6 +163,18 @@ std::string CommandParser::execute(const std::string& unparsedCommand, RtlFmPara
                 return funcUpdatableString;
             }
         }
+
+        // Server commands
+        for (size_t idx = 0; idx < SERVER_CMDS_LIST_LENGTH; ++idx)
+        {
+            Command<TcpServer>serverCmd = SERVER_CMDS[idx];
+            if (cmd.compare(serverCmd.getCommandString()) == 0)
+            {
+                std::cout << "Executing: " << cmd << "(" << param << ")" << std::endl;
+                serverCmd.exec(param, &funcUpdatableString, TcpServer::getInstance());
+                return funcUpdatableString;
+            }
+        }
     }
     catch (const std::logic_error& err)
     {
@@ -196,6 +215,15 @@ std::string CommandParser::getCommandStringList() const
         cmdList.append(SYSTEM_UTILS_CMDS[idx].getCommandString());
         cmdList.append(" - ");
         cmdList.append(SYSTEM_UTILS_CMDS[idx].getCommandDescription());
+        cmdList.append("\n");
+    }
+
+    cmdList.append("\nSERVER COMMANDS: \n");
+    for (size_t idx = 0; idx < SERVER_CMDS_LIST_LENGTH; ++idx)
+    {
+        cmdList.append(SERVER_CMDS[idx].getCommandString());
+        cmdList.append(" - ");
+        cmdList.append(SERVER_CMDS[idx].getCommandDescription());
         cmdList.append("\n");
     }
 

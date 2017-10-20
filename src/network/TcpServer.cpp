@@ -12,6 +12,7 @@
 #include <boost/smart_ptr.hpp>
 #include <boost/thread.hpp>
 #include <cstdint>
+#include <ctime>
 #include <ifaddrs.h>
 #include <iostream>
 #include <list>
@@ -31,8 +32,7 @@
 #include "TcpServer.hpp"
 
 // Static Initialization
-const std::string TcpServer::UPDATED_PARAMETERS_AVAILABLE_STRING = "%UPDATE_AVAILABLE\n";
-
+const std::string TcpServer::UPDATED_PARAMETERS_AVAILABLE_STRING = "%UPDATE_AVAILABLE: ";
 
 TcpServer::TcpServer(const uint16_t port) : port(port), ioService(),
             acceptor(ioService, BoostTcp::endpoint(BoostTcp::v4(), port), true)
@@ -40,25 +40,22 @@ TcpServer::TcpServer(const uint16_t port) : port(port), ioService(),
 };
 
 /**
- * Prints this machine's hostname, the port this server is running on, and a
- * list of all NICs in this machine and their IP addresses (IPv4 and IPv6)
+ * Builds a string with this machine's hostname, the port this server is
+ * running on, and a list of all NICs in this machine and their IP addresses
+ * (IPv4 and IPv6)
  */
-void TcpServer::printServerInfo()
+std::string TcpServer::getServerInfo()
 {
+    std::string netInfo = "IPs: ";
     // Retrieve local network interfaces by name and IP
-    const std::vector<std::string>& interfacesAndIpsStrings = getLocalIpAddresses();
-
-    std::cout << "Rtlsdrd server started on: " <<
-            "\n\tIPs: ";
-
-    // Print each NIC's info on a newline
-    for (std::string interfaceAndIp : interfacesAndIpsStrings)
+    for (std::string interfaceAndIp : getLocalIpAddresses())
     {
-        std::cout << "\n\t  " << interfaceAndIp;
+        netInfo.append("\n\t" + interfaceAndIp);
     }
+    netInfo.append("\nHost: "  + boost::asio::ip::host_name());
+    netInfo.append("\nPort: " + std::to_string(port));
 
-    std::cout << "\n\tHost: " << boost::asio::ip::host_name() <<
-                 "\n\tPort: " << port << std::endl;
+    return netInfo;
 }
 
 /**
@@ -142,8 +139,8 @@ std::vector<std::string> TcpServer::getLocalIpAddresses()
  */
 void TcpServer::connectionHandler(SocketWrapper& sockWrap)
 {
-    std::string clientIp = sockWrap.getSocket().remote_endpoint().address().to_string();
-    uint16_t clientPort = sockWrap.getSocket().remote_endpoint().port();
+    const std::string& clientIp = sockWrap.getIpAddress();
+    uint16_t clientPort = sockWrap.getPortNumber();
 
     // The parameter builder and parser are used for parsing and executing
     // commands sent by the client
@@ -227,7 +224,8 @@ size_t TcpServer::receiveData(TcpSocket& sock, std::string& receivedData)
  */
 void TcpServer::run()
 {
-    printServerInfo();
+    std::cout << "Rtlsdrd server started on:\n" << getServerInfo() << std::endl;
+
     while (true)
     {
       TcpSocketSharedPtr tcpSocketPtr(new TcpSocket(ioService));
@@ -308,16 +306,22 @@ void TcpServer::sendDataVoidReturn(SocketWrapper& sockWrap, const std::string& d
 
 /**
  * Iterates over the socketWrappersInUse list and writes the string contained
- * in UPDATED_PARAMETERS_AVAILABLE_STRING to the socket corresponding to each
- * element in the list. Each socket's write operation is performed in a new
- * thread.
+ * in UPDATED_PARAMETERS_AVAILABLE_STRING, with an additional timestamp, to the
+ * socket corresponding to each element in the list. Each socket's write
+ * operation is performed in a new thread.
  */
 void TcpServer::informAllClientsOfStateChange()
 {
+    std::time_t currTime = std::time(nullptr);
+
+    // Send out the update message string + a timestamp
+    std::string updateMsg = UPDATED_PARAMETERS_AVAILABLE_STRING +
+            std::asctime(std::localtime(&currTime)) + "\n";
+
     for (SocketWrapper& socketWrapper : socketWrappersInUse)
     {
         boost::thread sendMsgThread(&sendDataVoidReturn,std::ref(socketWrapper),
-                UPDATED_PARAMETERS_AVAILABLE_STRING);
+                updateMsg);
     }
 }
 
@@ -332,3 +336,37 @@ TcpServer& TcpServer::getInstance(uint16_t port)
     static TcpServer server(port);
     return server;
 }
+
+/**
+ * For the SVR_ADDR command, retrieve a list of this server's NICs (and their
+ * IPs), hostname, and port, and append them to clientReturnableInfo
+ */
+void TcpServer::getAddressInfoHandler(const std::string& UNUSED, std::string* clientReturnableInfo)
+{
+    (void) UNUSED;
+    clientReturnableInfo->append(getServerInfo());
+    clientReturnableInfo->append("\n");
+}
+
+/**
+ * Appends to clientReturnableInfo each connected client's IP address and
+ * port number. Access to socketWrappersInUse is locked using the
+ * socketWrappersInUseMutex.
+ */
+void TcpServer::getClientsInfoHandler(const std::string& UNUSED,
+        std::string* clientReturnableInfo)
+{
+    (void) UNUSED;
+
+    // Lock access to socketWrappersInUse
+    std::lock_guard<std::mutex> lock{socketWrappersInUseMutex};
+
+    for (SocketWrapper socketWrapper : socketWrappersInUse)
+    {
+        clientReturnableInfo->append("IP: " + socketWrapper.getIpAddress());
+        clientReturnableInfo->append("; Port: " + std::to_string(socketWrapper.getPortNumber()));
+        clientReturnableInfo->append("\n");
+    }
+}
+
+
