@@ -317,7 +317,7 @@ void TcpServer::informAllClientsOfStateChange()
 
     // Send out the update message string + a timestamp
     std::string updateMsg = UPDATED_PARAMETERS_AVAILABLE_STRING +
-            std::asctime(std::localtime(&currTime)) + "\n";
+            std::asctime(std::localtime(&currTime));
 
     for (SocketWrapper& socketWrapper : socketWrappersInUse)
     {
