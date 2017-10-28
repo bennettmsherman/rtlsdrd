@@ -89,7 +89,7 @@ const std::string CommandParser::LIST_CMDS_COMMAND_STRING {"HELP"};
 const std::string CommandParser::INVALID_SYNTAX_STRING {"INVALID COMMAND SYNTAX"};
 const std::string CommandParser::NO_SUCH_COMMAND_EXISTS_STRING {"NO SUCH COMMAND EXISTS"};
 const std::string CommandParser::INVALID_PARAMETER_STRING {"INVALID PARAMETER"};
-const std::string CommandParser::EXECUTION_OK_STRING {"OK\n"};
+const std::string CommandParser::EXECUTION_OK_STRING {"OK"};
 const std::string CommandParser::UNUSED_PARAM_VALUE = " ";
 
 /**
@@ -189,7 +189,7 @@ std::string CommandParser::execute(const std::string& unparsedCommand, RtlFmPara
  */
 std::string CommandParser::getCommandStringList() const
 {
-    std::string cmdList = "SUPPORTED COMMANDS:\n";
+    std::string cmdList = "\nSUPPORTED COMMANDS:\n";
 
     cmdList.append("RTL FM PARAMETER BUILDER COMMANDS: \n");
     for (size_t idx = 0; idx < RTL_FM_PARAMETER_BUILDER_CMDS_LIST_LENGTH; ++idx)

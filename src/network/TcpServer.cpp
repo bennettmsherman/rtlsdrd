@@ -163,7 +163,7 @@ void TcpServer::connectionHandler(SocketWrapper& sockWrap)
 
           // Parse and execute the command/data from the client
           std::string parseResult = parser.execute(receivedData, rtlFmWrapper);
-          parseResult.append("\n");
+          parseResult.append("\n~EOR\n");
 
           // Send the data back to the client
           size_t bytesSent = sendData(sockWrap, parseResult);
