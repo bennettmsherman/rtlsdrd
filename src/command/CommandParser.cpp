@@ -86,10 +86,10 @@ const size_t CommandParser::SERVER_CMDS_LIST_LENGTH = sizeof(SERVER_CMDS) / size
 const std::string CommandParser::FUNCTION_AND_PARAM_SEPARATOR = "=";
 const std::regex CommandParser::CMD_REGEX { "^([A-Z0-9_]+)" + FUNCTION_AND_PARAM_SEPARATOR + "?([-]?[0-9a-zA-Z:]*\\.?[0-9a-zA-Z:]*)"};
 const std::string CommandParser::LIST_CMDS_COMMAND_STRING {"HELP"};
-const std::string CommandParser::INVALID_SYNTAX_STRING {"INVALID COMMAND SYNTAX"};
-const std::string CommandParser::NO_SUCH_COMMAND_EXISTS_STRING {"NO SUCH COMMAND EXISTS"};
-const std::string CommandParser::INVALID_PARAMETER_STRING {"INVALID PARAMETER"};
-const std::string CommandParser::EXECUTION_OK_STRING {"OK"};
+const std::string CommandParser::INVALID_SYNTAX_STRING {"~INVALID COMMAND SYNTAX"};
+const std::string CommandParser::NO_SUCH_COMMAND_EXISTS_STRING {"~NO SUCH COMMAND EXISTS"};
+const std::string CommandParser::INVALID_PARAMETER_STRING {"~INVALID PARAMETER"};
+const std::string CommandParser::EXECUTION_OK_STRING {"~OK"};
 const std::string CommandParser::UNUSED_PARAM_VALUE = " ";
 
 /**

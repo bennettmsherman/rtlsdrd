@@ -76,6 +76,7 @@ private:
     std::mutex socketWrappersInUseMutex;
 
     static const std::string UPDATED_PARAMETERS_AVAILABLE_STRING;
+    static const std::string END_OF_RESPONSE_STRING;
     static const uint16_t DEFAULT_PORT = 2832;
     static const uint16_t RECEIVE_BUFFER_SIZE = 256;
 };

@@ -32,7 +32,8 @@
 #include "TcpServer.hpp"
 
 // Static Initialization
-const std::string TcpServer::UPDATED_PARAMETERS_AVAILABLE_STRING = "%UPDATE_AVAILABLE: ";
+const std::string TcpServer::UPDATED_PARAMETERS_AVAILABLE_STRING = "~UPDATE_AVAILABLE: ";
+const std::string TcpServer::END_OF_RESPONSE_STRING = "~EOR";
 
 TcpServer::TcpServer(const uint16_t port) : port(port), ioService(),
             acceptor(ioService, BoostTcp::endpoint(BoostTcp::v4(), port), true)
@@ -163,7 +164,7 @@ void TcpServer::connectionHandler(SocketWrapper& sockWrap)
 
           // Parse and execute the command/data from the client
           std::string parseResult = parser.execute(receivedData, rtlFmWrapper);
-          parseResult.append("\n~EOR\n");
+          parseResult.append("\n" + END_OF_RESPONSE_STRING + "\n");
 
           // Send the data back to the client
           size_t bytesSent = sendData(sockWrap, parseResult);
