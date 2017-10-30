@@ -32,8 +32,22 @@
 #include "TcpServer.hpp"
 
 // Static Initialization
+
+/**
+ * When a client has run EXECUTE, this string followed by a datestamp will be
+ * sent to the client
+ */
 const std::string TcpServer::UPDATED_PARAMETERS_AVAILABLE_STRING = "~UPDATE_AVAILABLE: ";
+
+/**
+ * All responses sent from the server end with this string
+ */
 const std::string TcpServer::END_OF_RESPONSE_STRING = "~EOR";
+
+/**
+ * Each socket read operation will read up to the newline specifier
+ */
+const char TcpServer::SOCKET_READ_UNTIL_END_SPECIFIER = '\n';
 
 TcpServer::TcpServer(const uint16_t port) : port(port), ioService(),
             acceptor(ioService, BoostTcp::endpoint(BoostTcp::v4(), port), true)
@@ -143,12 +157,15 @@ void TcpServer::connectionHandler(SocketWrapper& sockWrap)
     const std::string& clientIp = sockWrap.getIpAddress();
     uint16_t clientPort = sockWrap.getPortNumber();
 
+    std::cout << "New client: " << clientIp << ":" << clientPort << std::endl;
+
     // The parameter builder and parser are used for parsing and executing
     // commands sent by the client
     RtlFmParameterBuilder rtlFmWrapper;
     const CommandParser& parser = CommandParser::getInstance();
 
-    std::cout << "New client: " << clientIp << ":" << clientPort << std::endl;
+    // Used by receivedData to buffer data from the socket
+    BoostStreamBuff socketReadStreamBuff;
 
     try
     {
@@ -156,7 +173,8 @@ void TcpServer::connectionHandler(SocketWrapper& sockWrap)
       {
           // Receive data from the client
           std::string receivedData;
-          uint32_t bytesReceived = receiveData(sockWrap.getSocket(), receivedData);
+          uint32_t bytesReceived = receiveData(sockWrap.getSocket(), receivedData,
+                                      socketReadStreamBuff);
 
           std::cout << "Received " << bytesReceived << " bytes from: "
                   << clientIp << ":" << clientPort
@@ -200,19 +218,29 @@ size_t TcpServer::sendData(SocketWrapper& sockWrap, const std::string& dataToSen
 }
 
 /**
- * Waits for data to be received on sock. Once received, the receivedData is updated
- * with the new data, and the number of bytes received is returned.
+ * Reads data from the socket until a newline (\n) character, specified by
+ * SOCKET_READ_UNTIL_END_SPECIFIER, is read, and stores the data in readBuff.
+ * Note that during the read_until() call, it's possible that more characters
+ * than just up to and including the newline will be received and stored in
+ * readBuff. In such a case, bytesReceived contains only the number of bytes
+ * read in the data up to and including the newline, although the excess data
+ * will remain in the buffer. When this function is called, if readBuff
+ * contains <some data>\n, it will return immediately.
+ * The data up to and including the newline is then stored in receivedData
+ * and removed from readBuff, and this number of bytes is returned.
  */
-size_t TcpServer::receiveData(TcpSocket& sock, std::string& receivedData)
+size_t TcpServer::receiveData(TcpSocket& sock, std::string& receivedData,
+        BoostStreamBuff& readBuff)
 {
-    // Buffers to store data off the line
-    char buffData[RECEIVE_BUFFER_SIZE];
+    // Read until a newline has been reached
+    size_t bytesReceived = boost::asio::read_until(sock, readBuff, SOCKET_READ_UNTIL_END_SPECIFIER);
 
-    // Wait for data from the client
-    size_t bytesReceived = sock.receive(boost::asio::buffer(buffData, RECEIVE_BUFFER_SIZE));
-    buffData[bytesReceived] = '\0';
+    // Create a stream to read data out of the buffer
+    std::istream readBuffInputStream(&readBuff);
 
-    receivedData = std::string(buffData);
+    // Pull the newlined message out of the buffer and store it in receivedData
+    // (including the newline)
+    std::getline(readBuffInputStream, receivedData);
 
     return bytesReceived;
 }
