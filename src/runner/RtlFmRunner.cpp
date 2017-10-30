@@ -358,8 +358,8 @@ void RtlFmRunner::getUserProvidedCommandsInUse(const std::string& UNUSED, std::s
     (void) UNUSED;
     for (std::string userCmd : userProvidedParamStringsInUse)
     {
-        updatableMessage->append(userCmd);
         updatableMessage->append("\n");
+    	updatableMessage->append(userCmd);
     }
 }
 
