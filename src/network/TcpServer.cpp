@@ -61,7 +61,7 @@ TcpServer::TcpServer(const uint16_t port) : port(port), ioService(),
  */
 std::string TcpServer::getServerInfo()
 {
-    std::string netInfo = "IPs: ";
+    std::string netInfo = "\nIPs: ";
     // Retrieve local network interfaces by name and IP
     for (std::string interfaceAndIp : getLocalIpAddresses())
     {
@@ -253,7 +253,7 @@ size_t TcpServer::receiveData(TcpSocket& sock, std::string& receivedData,
  */
 void TcpServer::run()
 {
-    std::cout << "Rtlsdrd server started on:\n" << getServerInfo() << std::endl;
+    std::cout << "Rtlsdrd server started on:" << getServerInfo() << std::endl;
 
     while (true)
     {
@@ -392,9 +392,8 @@ void TcpServer::getClientsInfoHandler(const std::string& UNUSED,
 
     for (SocketWrapper socketWrapper : socketWrappersInUse)
     {
-        clientReturnableInfo->append("IP: " + socketWrapper.getIpAddress());
+        clientReturnableInfo->append("\nIP: " + socketWrapper.getIpAddress());
         clientReturnableInfo->append("; Port: " + std::to_string(socketWrapper.getPortNumber()));
-        clientReturnableInfo->append("\n");
     }
 }
 
