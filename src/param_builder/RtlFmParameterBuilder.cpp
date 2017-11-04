@@ -279,7 +279,8 @@ void RtlFmParameterBuilder::storeUserEnteredCommand(const std::string& function,
 
 /**
  * Appends to updatableMessage the list of valid user supplied commands which
- * have been entered since the last call to EXECUTE or CLEAR.
+ * have been entered since the last call to EXECUTE or CLEAR. This does NOT
+ * include the volume command.
  */
 void RtlFmParameterBuilder::getUserProvidedCommands(const std::string& UNUSED, std::string* updatableMessage)
 {

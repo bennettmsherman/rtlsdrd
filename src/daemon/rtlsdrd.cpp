@@ -38,10 +38,10 @@ int main(int argc, char *argv[])
     signal(SIGKILL, terminationSignalHandler);
 
     // If argc == 2, use the second argument as the audio device to be
-    // controlled
+    // controlled. Then, set the system volume to 0.
     if (argc == 2)
     {
-        SystemUtils::setAudioControlName(argv[1]);
+        SystemUtils::getInstance(argv[1]).setVolume(0);
     }
 
     // Have the server wait for, accept, and process connections

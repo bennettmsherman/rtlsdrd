@@ -69,7 +69,7 @@ const Command<RtlFmRunner> CommandParser::RTL_FM_RUNNER_CMDS[]
 
 const Command<SystemUtils> CommandParser::SYSTEM_UTILS_CMDS[]
 {
-    Command<SystemUtils> { "VOLUME", &SystemUtils::setVolumeCommandHandler, "Sets the system volume. Specify as a percentage."}
+    Command<SystemUtils> { SystemUtils::VOLUME_SETTER_COMMAND, &SystemUtils::setVolumeCommandHandler, "Sets the system volume. Specify as a percentage."}
 };
 
 const Command<TcpServer> CommandParser::SERVER_CMDS[]

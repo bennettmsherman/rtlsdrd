@@ -6,6 +6,7 @@
  */
 
 // System Includes
+#include <cstdlib>
 #include <errno.h>
 #include <iostream>
 #include <mutex>
@@ -18,6 +19,7 @@
 
 // Project Includes
 #include "RtlFmRunner.hpp"
+#include "SystemUtils.hpp"
 
 /**
  * Executes rtl_fm and aplay with the command strings specified by rtlFmParams
@@ -352,6 +354,8 @@ RtlFmRunner& RtlFmRunner::getInstance()
 /**
  * Appends to updatableMessage the list of valid user supplied commands which
  * are in use for the current rtl_fm/aplay execution.
+ * This also includes the current system volume, although it's not normally
+ * saved in the user entered params list (this is somewhat hacky).
  */
 void RtlFmRunner::getUserProvidedCommandsInUse(const std::string& UNUSED, std::string* updatableMessage)
 {
@@ -359,7 +363,13 @@ void RtlFmRunner::getUserProvidedCommandsInUse(const std::string& UNUSED, std::s
     for (std::string userCmd : userProvidedParamStringsInUse)
     {
         updatableMessage->append("\n");
-    	updatableMessage->append(userCmd);
+        updatableMessage->append(userCmd);
     }
+
+    // Get the current system volume and append it to the list
+    updatableMessage->append("\n");
+    updatableMessage->append(SystemUtils::VOLUME_SETTER_COMMAND + "=");
+    updatableMessage->append(std::to_string(SystemUtils::getInstance().getVolume()));
+
 }
 

@@ -15,6 +15,7 @@
 
 // Project Includes
 #include "SystemUtils.hpp"
+#include "TcpServer.hpp"
 
 // Static Initialization
 
@@ -23,14 +24,21 @@
 const char SystemUtils::VOLUME_SETTER_FORMAT[] = "amixer set %s %u%% -M";
 
 // Use "Master" as the default control
-const char * SystemUtils::audioControlName = "Master";
+const char * SystemUtils::DEFAULT_AUDIO_CONTROL_NAME = "Master";
+
+// The user specifies "VOLUME=newvol" to set the volume
+const std::string SystemUtils::VOLUME_SETTER_COMMAND = "VOLUME";
 
 /**
  * Sets the system volume to the percentage specified by the volume parameter.
  * std::system_error is thrown if an error occurred.
+ * systemVolume member is updated if the volume is set properly.
+ * Concurrent access to this function is protected using the volumeSetterMutex.
  */
 void SystemUtils::setVolume(const uint8_t vol)
 {
+    std::lock_guard<std::mutex> volumeSetterGuard{volumeSetterMutex};
+
     if (vol > 100)
     {
         throw std::out_of_range("System volume cannot be greater than 100%");
@@ -51,40 +59,71 @@ void SystemUtils::setVolume(const uint8_t vol)
         throw std::system_error(systemRetVal, std::generic_category(),
                 "Error when setting system volume using system()");
     }
+
+    // Update the sysVol variable to refect the new system volume settings
+    systemVolume = vol;
 }
 
 /**
  * Wrapper for setVolume(). Intended to be called by the command interpreter.
  * The vol param should be a percentage representing the new system volume.
+ * After the volume is set, if there were no errors, all clients are informed
+ * of the state change. If there was an error, it's propagated to the caller.
  */
 void SystemUtils::setVolumeCommandHandler(const std::string& vol, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    setVolume(static_cast<uint8_t>(std::stoul(vol)));
+
+    try
+    {
+        setVolume(static_cast<uint8_t>(std::stoul(vol)));
+    }
+    // Allow the exception to be propagated up while ensuring that the clients
+    // aren't updated in this error case
+    catch (const std::system_error& err)
+    {
+        throw err;
+    }
+
+    // Inform all clients of a state change if the vol was set successfully
+    TcpServer::getInstance().informAllClientsOfStateChange();
 }
 
 /**
+ * Returns a reference to the singleton SystemUtils instance.
+ * The first call to this function must set the audio control name.
+ * The parameter is ignored in subsequent calls. The default parameter uses
+ * "Master" for the audio control.
+ */
+SystemUtils& SystemUtils::getInstance(const char * audioControlName)
+{
+    static SystemUtils instance{audioControlName};
+    return instance;
+}
+
+/*
+ * Constructs a SystemUtils
  * Sets the audio control name to be used when changing the output volume
  * through the daemon. Throws std::invalid_argument and doesn't change the
  * class's pointer value if the parameter is null.
+ * The systemVolume is initialized to 0, but isn't accurate until the user
+ * first sets it.
  */
-void SystemUtils::setAudioControlName(const char * audioControlName)
+SystemUtils::SystemUtils(const char * audioControlName):
+        audioControlName(audioControlName), systemVolume(0)
 {
     if (audioControlName == nullptr)
     {
         throw std::invalid_argument("ERROR! A null pointer has been provided"
                 "as the audio control name!");
     }
-
-    SystemUtils::audioControlName = audioControlName;
 }
 
 /**
- * Returns a reference to the singleton SystemUtils instance
+ * Gets the current system volume
  */
-SystemUtils& SystemUtils::getInstance()
+uint8_t SystemUtils::getVolume()
 {
-    static SystemUtils instance;
-    return instance;
+    return systemVolume;
 }
 
