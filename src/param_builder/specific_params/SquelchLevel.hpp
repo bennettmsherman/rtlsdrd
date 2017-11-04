@@ -34,7 +34,7 @@ private:
     // TODO find true min and max
     static const uint32_t MIN_VALID = 0;
 
-    static const uint32_t MAX_VALID = 100;
+    static const uint32_t MAX_VALID = UINT32_MAX;
 
     static const uint32_t DEFAULT_VALUE = 0;
 };
