@@ -17,6 +17,7 @@
 #include "CommandParser.hpp"
 #include "DeviceIndex.hpp"
 #include "EnableOption.hpp"
+#include "FirSize.hpp"
 #include "Frequency.hpp"
 #include "ModulationMode.hpp"
 #include "Oversampling.hpp"
@@ -30,15 +31,16 @@
 #include "SquelchLevel.hpp"
 #include "SystemUtils.hpp"
 #include "SystemUtils.hpp"
-#include "TunerGain.hpp"
 #include "TcpServer.hpp"
+#include "TunerGain.hpp"
 
 // Static initialization
 const Command<RtlFmParameterBuilder> CommandParser::RTL_FM_PARAMETER_BUILDER_CMDS[]
 {
     Command<RtlFmParameterBuilder> { DeviceIndex::COMMAND, &RtlFmParameterBuilder::setDeviceIndex, "Sets the index of the RTL_SDR dongle to use"},
     Command<RtlFmParameterBuilder> { EnableOption::COMMAND, &RtlFmParameterBuilder::setEnableOption, "Enables extra options"},
-    Command<RtlFmParameterBuilder> { Frequency::COMMAND, &RtlFmParameterBuilder::setFrequency, "Sets the frequency to tune"},
+    Command<RtlFmParameterBuilder> { FirSize::COMMAND, &RtlFmParameterBuilder::setFirSize, "Sets the high quality FIR downsampler. -1 = off, 0 or 9 enable it"},
+	Command<RtlFmParameterBuilder> { Frequency::COMMAND, &RtlFmParameterBuilder::setFrequency, "Sets the frequency to tune"},
     Command<RtlFmParameterBuilder> { ModulationMode::COMMAND, &RtlFmParameterBuilder::setModulationMode, "Sets the modulation mode to use"},
     Command<RtlFmParameterBuilder> { Oversampling::COMMAND, &RtlFmParameterBuilder::setOversampling, "Sets the oversampling level"},
     Command<RtlFmParameterBuilder> { PpmError::COMMAND, &RtlFmParameterBuilder::setPpmError, "Sets the ppm level"},

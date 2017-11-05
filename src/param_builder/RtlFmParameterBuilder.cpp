@@ -15,6 +15,7 @@
 #include "AtanMath.hpp"
 #include "DeviceIndex.hpp"
 #include "EnableOption.hpp"
+#include "FirSize.hpp"
 #include "Frequency.hpp"
 #include "ModulationMode.hpp"
 #include "NumericParameter.hpp"
@@ -148,6 +149,12 @@ void RtlFmParameterBuilder::setEnableOption(const std::string& enableOption, std
 {
     (void) updatableMessage;
     stringParams.push_back(EnableOption::create(enableOption));
+}
+
+void RtlFmParameterBuilder::setFirSize(const std::string& firSize, std::string* updatableMessage)
+{
+    (void) updatableMessage;
+    stringParams.push_back(FirSize::create(firSize));
 }
 
 void RtlFmParameterBuilder::setFrequency(const std::string& frequency, std::string* updatableMessage)

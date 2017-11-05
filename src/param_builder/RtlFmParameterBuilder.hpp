@@ -25,6 +25,7 @@ public:
     // Parameter setting commands
     void setDeviceIndex(const std::string& deviceIndex, std::string* updatableMessage=nullptr);
     void setEnableOption(const std::string& enableOption, std::string* updatableMessage=nullptr);
+    void setFirSize(const std::string& firSize, std::string* updatableMessage);
     void setFrequency(const std::string& frequency, std::string* updatableMessage=nullptr);
     void setModulationMode(const std::string& modulationMode, std::string* updatableMessage=nullptr);
     void setOversampling(const std::string& oversampling, std::string* updatableMessage=nullptr);

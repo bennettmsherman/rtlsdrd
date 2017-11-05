@@ -7,6 +7,7 @@ CPP_SRCS += \
 ../src/param_builder/specific_params/AtanMath.cpp \
 ../src/param_builder/specific_params/DeviceIndex.cpp \
 ../src/param_builder/specific_params/EnableOption.cpp \
+../src/param_builder/specific_params/FirSize.cpp \
 ../src/param_builder/specific_params/Frequency.cpp \
 ../src/param_builder/specific_params/ModulationMode.cpp \
 ../src/param_builder/specific_params/Oversampling.cpp \
@@ -22,6 +23,7 @@ OBJS += \
 ./src/param_builder/specific_params/AtanMath.o \
 ./src/param_builder/specific_params/DeviceIndex.o \
 ./src/param_builder/specific_params/EnableOption.o \
+./src/param_builder/specific_params/FirSize.o \
 ./src/param_builder/specific_params/Frequency.o \
 ./src/param_builder/specific_params/ModulationMode.o \
 ./src/param_builder/specific_params/Oversampling.o \
@@ -37,6 +39,7 @@ CPP_DEPS += \
 ./src/param_builder/specific_params/AtanMath.d \
 ./src/param_builder/specific_params/DeviceIndex.d \
 ./src/param_builder/specific_params/EnableOption.d \
+./src/param_builder/specific_params/FirSize.d \
 ./src/param_builder/specific_params/Frequency.d \
 ./src/param_builder/specific_params/ModulationMode.d \
 ./src/param_builder/specific_params/Oversampling.d \
