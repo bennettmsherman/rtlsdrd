@@ -165,25 +165,15 @@ void RtlFmParameterBuilder::setFrequency(const std::string& frequency, std::stri
 
 /**
  * "-M wbfm" actually translates to "-M fm -s 170k -A fast -r 32k -l 0 -E deemp"
- * which sounds terrible. As such, we'll make our own version of wbfm
- * which translates to "-M fm -s 2.4M -A fast -r 44.1k -l 0 -E deemp"
+ * which sounds terrible. I removed these params from rtl_fm. To ensure that the
+ * GUI is consistent, I'll require that the user specify fast atan math and
+ * deemphasis, rather than setting them internally. Otherwise, it'll be the case
+ * that the GUI doesn't truly reflect the state of the radio.
  */
 void RtlFmParameterBuilder::setModulationMode(const std::string& modulationMode, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    if (!modulationMode.compare("wbfm"))
-    {
-        stringParams.push_back(ModulationMode::create("fm"));
-        unsignedParams.push_back(SampleRate::create(2400000));
-        unsignedParams.push_back(ResampleRate::create(44100));
-        unsignedParams.push_back(SquelchLevel::create(0));
-        stringParams.push_back(EnableOption::create("deemp"));
-        stringParams.push_back(AtanMath::create("fast"));
-    }
-    else
-    {
-        stringParams.push_back(ModulationMode::create(modulationMode));
-    }
+    stringParams.push_back(ModulationMode::create(modulationMode));
 }
 
 void RtlFmParameterBuilder::setOversampling(const std::string& oversampling, std::string* updatableMessage)
@@ -238,17 +228,15 @@ void RtlFmParameterBuilder::setTunerGain(const std::string& tunerGain, std::stri
  * Convenience function which takes a broadcast AM station's frequency (in kHz)
  * as a parameter, and sets the:
  * - Frequency
- * - Sample rate (to 2.4M)
+ * - Sample rate (to 20k)
  * - Modulation mode (to AM)
  * - Direct sampling (enabled)
- * - Resample rate (to 44.1k)
  */
 void RtlFmParameterBuilder::broadcastAmStationMacro(const std::string& amFreqInKilohertz, std::string* updatableMessage)
 {
     (void) updatableMessage;
     unsignedParams.push_back(Frequency::create(ParamBuilderUtils::broadcastAmKilohertzToHertz(amFreqInKilohertz)));
-    unsignedParams.push_back(SampleRate::create(2400000));
-    unsignedParams.push_back(ResampleRate::create(44100));
+    unsignedParams.push_back(SampleRate::create(20000));
     stringParams.push_back(ModulationMode::create("am"));
     stringParams.push_back(EnableOption::create("direct"));
 }
@@ -257,12 +245,20 @@ void RtlFmParameterBuilder::broadcastAmStationMacro(const std::string& amFreqInK
  * Convenience function which takes a broadcast FM station's frequency (in MHz)
  * as a parameter, and sets the:
  * - Frequency
+ * - Sample rate - 200 kHz
+ * - Resample rate - 48 kHz
+ * - atanMath = fast
+ * - deemphasis filter
  * - Modulation mode (to wbfm)
  */
 void RtlFmParameterBuilder::broadcastFmStationMacro(const std::string& fmFreqInMegahertz, std::string* updatableMessage)
 {
     (void) updatableMessage;
     unsignedParams.push_back(Frequency::create(ParamBuilderUtils::broadcastFmMegahertzToHertz(fmFreqInMegahertz)));
+    unsignedParams.push_back(SampleRate::create(200000));
+    unsignedParams.push_back(ResampleRate::create(48000));
+    stringParams.push_back(AtanMath::create("fast"));
+    stringParams.push_back(EnableOption::create("deemp"));
     setModulationMode("wbfm");
 }
 
