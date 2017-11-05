@@ -246,20 +246,18 @@ void RtlFmParameterBuilder::broadcastAmStationMacro(const std::string& amFreqInK
  * as a parameter, and sets the:
  * - Frequency
  * - Sample rate - 200 kHz
- * - Resample rate - 48 kHz
+ * - Resample rate - 44.1 kHz
  * - atanMath = fast
- * - deemphasis filter
- * - Modulation mode (to wbfm)
+ * - Modulation mode (to fm)
  */
 void RtlFmParameterBuilder::broadcastFmStationMacro(const std::string& fmFreqInMegahertz, std::string* updatableMessage)
 {
     (void) updatableMessage;
     unsignedParams.push_back(Frequency::create(ParamBuilderUtils::broadcastFmMegahertzToHertz(fmFreqInMegahertz)));
     unsignedParams.push_back(SampleRate::create(200000));
-    unsignedParams.push_back(ResampleRate::create(48000));
-    stringParams.push_back(AtanMath::create("fast"));
+    unsignedParams.push_back(ResampleRate::create(44100));
     stringParams.push_back(EnableOption::create("deemp"));
-    setModulationMode("wbfm");
+    setModulationMode("fm");
 }
 
 void RtlFmParameterBuilder::setScannableFrequency(const std::string& scannableFrequency, std::string* updatableMessage)
