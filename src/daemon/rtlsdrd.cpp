@@ -37,11 +37,21 @@ int main(int argc, char *argv[])
     signal(SIGINT, terminationSignalHandler);
     signal(SIGKILL, terminationSignalHandler);
 
-    // If argc == 2, use the second argument as the audio device to be
-    // controlled. Then, set the system volume to 0.
-    if (argc == 2)
+    // If argc >= 2, use the second argument as the control name used for
+    // volume control.
+    if (argc >= 2)
     {
-        SystemUtils::getInstance(argv[1]).setVolume(0);
+        SystemUtils::getInstance(argv[1]);
+    }
+
+    SystemUtils::getInstance().setVolume(0);
+
+    // If argc >= 3, use the third argument as the audio device to output to.
+    // This differs from argv[2] in that argv[2] is the simple volume control
+    // name, whereas argv[3] is the hardware device name to stream the audio to.
+    if (argc >= 3)
+    {
+        RtlFmParameterBuilder::setAudioOutputDeviceName(argv[2]);
     }
 
     // Have the server wait for, accept, and process connections

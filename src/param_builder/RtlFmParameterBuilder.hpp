@@ -11,6 +11,7 @@
 // System Includes
 #include <stdint.h>
 #include <vector>
+#include <string>
 
 // Project Includes
 #include "BaseParameter.hpp"
@@ -21,6 +22,9 @@
 class RtlFmParameterBuilder
 {
 public:
+
+    // Constructor
+    RtlFmParameterBuilder();
 
     // Parameter setting commands
     void setDeviceIndex(const std::string& deviceIndex, std::string* updatableMessage=nullptr);
@@ -47,6 +51,8 @@ public:
 
     // Commands not callable by the interepreter
     void storeUserEnteredCommand(const std::string& function, const std::string& separator, const std::string& param);
+    static void setAudioOutputDeviceName(const std::string& deviceName);
+
 private:
     uint32_t getNumberOfStoredParameters();
     void setAplaySampleRate();
@@ -73,13 +79,23 @@ private:
 
     // Strings needed for rtl_fm and aplay
     static const char* const RTL_FM_EXECUTABLE_PATH;
-    static const char* APLAY_ARGV[];
+    static const std::vector<const char*> BASE_APLAY_ARGV;
+
+    // Local copy of BASE_APLAY_ARGV whose aplay sample rate will be set
+    // dynamically
+    std::vector<const char*> aplayArgs;
 
     // Since aplay's sample rate is dependent on this the sample/resample rate of rtl_fm,
-    // use this offset into APLAY_ARGV[] to set it
+    // use this offset into aplayArgs[] to set it
     static const uint32_t APLAY_SAMPLE_RATE_ARG_IDX = 2;
+
+    // The name of the soundcard device specifier/alias for the aplay output
+    static std::string audioOutputDeviceName;
+    static const char* const DEFAULT_AUDIO_OUTPUT_DEVICE_NAME;
+
+    // The index inside APLAY_ARGV containing the audio output device name,
+    // which is to be set at startup.
+    static const uint32_t APLAY_OUTPUT_DEVICE_NAME_ARG_IDX = 10;
 };
-
-
 
 #endif /* RTLFMWRAPPER_HPP_ */

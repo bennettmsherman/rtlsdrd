@@ -10,6 +10,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <cstdlib>
+#include <stdexcept>
 
 // Project Includes
 #include "AtanMath.hpp"
@@ -35,9 +36,22 @@
 
 // Static Initialization
 const char* const RtlFmParameterBuilder::RTL_FM_EXECUTABLE_PATH = "/usr/local/bin/rtl_fm";
+const char* const RtlFmParameterBuilder::DEFAULT_AUDIO_OUTPUT_DEVICE_NAME = "hw:0,0";
+std::string RtlFmParameterBuilder::audioOutputDeviceName = DEFAULT_AUDIO_OUTPUT_DEVICE_NAME;
 
-// Note that APLAY_ARGV[2], the aplay sample rate, is modified at execution time
-const char* RtlFmParameterBuilder::APLAY_ARGV[] = {"/usr/bin/aplay", "-r", "24000", "-f", "S16_LE", "-t", "raw", "-c", "1", static_cast<char *>(NULL)};
+const std::vector<const char*> RtlFmParameterBuilder::BASE_APLAY_ARGV {"/usr/bin/aplay", "-r",
+        "24000", "-f", "S16_LE", "-t", "raw", "-c", "1", "-D",
+        nullptr /*output device name*/, static_cast<char *>(NULL)};
+
+/**
+ * Instantiates an RtlFmParameterBuilder. aplayArgs is initialized to
+ * BASE_APLAY_ARGV, and the audio output device name within aplayArgs is set to
+ * the value stored in the audioOutputDeviceName
+ */
+RtlFmParameterBuilder::RtlFmParameterBuilder(): aplayArgs(BASE_APLAY_ARGV)
+{
+    aplayArgs[APLAY_OUTPUT_DEVICE_NAME_ARG_IDX] = audioOutputDeviceName.c_str();
+}
 
 /**
  * Iterates over each option in the vector parameter places each option's
@@ -54,7 +68,7 @@ void RtlFmParameterBuilder::appendEntriesToCommand(const char* cmdList[], uint32
 }
 
 /**
- * Updates APLAY_ARGV[APLAY_SAMPLE_RATE_ARG_IDX] with the value
+ * Updates aplayArgs[APLAY_SAMPLE_RATE_ARG_IDX] with the value
  * of the first detected ResampleRate type parameter found in unsignedParams.
  * If no ResampleRate is found in unsignedParams, the LAST SampleRate
  * param found in unsignedParams's value is used as the aplay sample rate.
@@ -72,11 +86,11 @@ void RtlFmParameterBuilder::setAplaySampleRate()
     {
         if (unsignedParam.getOption() == SampleRate::getOption())
         {
-            APLAY_ARGV[APLAY_SAMPLE_RATE_ARG_IDX] = unsignedParam.getValueCharPtr();
+            aplayArgs[APLAY_SAMPLE_RATE_ARG_IDX] = unsignedParam.getValueCharPtr();
         }
         else if (unsignedParam.getOption() == ResampleRate::getOption())
         {
-            APLAY_ARGV[APLAY_SAMPLE_RATE_ARG_IDX] = unsignedParam.getValueCharPtr();
+            aplayArgs[APLAY_SAMPLE_RATE_ARG_IDX] = unsignedParam.getValueCharPtr();
             break;
         }
     }
@@ -137,7 +151,7 @@ void RtlFmParameterBuilder::executeCommand(const std::string& UNUSED, std::strin
     appendEntriesToCommand<int32_t, NumericParameter<int32_t>>(rtlFmCmdList, insertionIdx, signedParams);
     appendEntriesToCommand<std::string, StringParameter>(rtlFmCmdList, insertionIdx, stringParams);
 
-    RtlFmRunner::getInstance().execRtlFmCommand(rtlFmCmdList, APLAY_ARGV, userProvidedCommands);
+    RtlFmRunner::getInstance().execRtlFmCommand(rtlFmCmdList, &aplayArgs[0], userProvidedCommands);
 
     clearParamLists(UNUSED);
 
@@ -293,4 +307,22 @@ void RtlFmParameterBuilder::getUserProvidedCommands(const std::string& UNUSED, s
     }
 }
 
+/**
+ * Sets the hasDeviceNameBeenSet member. This function should only be called
+ * once at startup. If it's called a second time, an std::invalid_argument
+ * exception is thrown.
+ */
+void RtlFmParameterBuilder::setAudioOutputDeviceName(const std::string& deviceName)
+{
+    static bool hasDeviceNameBeenSet = false;
+    if (!hasDeviceNameBeenSet)
+    {
+        audioOutputDeviceName = deviceName;
+        hasDeviceNameBeenSet = true;
+    }
+    else
+    {
+        throw std::invalid_argument("The audio output device name can only be set once");
+    }
+}
 
