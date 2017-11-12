@@ -69,18 +69,21 @@ void RtlFmParameterBuilder::appendEntriesToCommand(const char* cmdList[], uint32
 
 /**
  * Updates aplayArgs[APLAY_SAMPLE_RATE_ARG_IDX] with the value
- * of the first detected ResampleRate type parameter found in unsignedParams.
- * If no ResampleRate is found in unsignedParams, the LAST SampleRate
- * param found in unsignedParams's value is used as the aplay sample rate.
+ * of the first detected ResampleRate type parameter found in unsignedParams
+ * whose value is greater than zero.
+ * If no positive (> 0) ResampleRate is found in unsignedParams, the LAST
+ * SampleRate param found in unsignedParams's value is used as the aplay sample
+ * rate.
  */
 void RtlFmParameterBuilder::setAplaySampleRate()
 {
     /**
      * For each SampleRate parameter detected, the aplay argument will be updated, but the search
-     * will continue. If a ResampleRate is detected, the aplay argument will be updated
-     * and the search will exit. The idea here is that resample rate gets higher preference.
-     * Use an auto reference so that the c_str() pointer is tied to the unsignedParam instance
-     * inside the vector
+     * will continue. If a POSITIVE ResampleRate is detected, the aplay argument will be updated
+     * and the search will exit. If a nonpositive (<= 0) ResampleRate is
+     * detected, the search continues. The idea here is that resample rate gets
+     * higher preference. Use an auto reference so that the c_str() pointer is
+     * tied to the unsignedParam instance inside the vector
      */
     for (auto& unsignedParam : unsignedParams)
     {
@@ -88,7 +91,8 @@ void RtlFmParameterBuilder::setAplaySampleRate()
         {
             aplayArgs[APLAY_SAMPLE_RATE_ARG_IDX] = unsignedParam.getValueCharPtr();
         }
-        else if (unsignedParam.getOption() == ResampleRate::getOption())
+        else if ((unsignedParam.getOption() == ResampleRate::getOption()) &&
+                    (unsignedParam.getValue() != "0"))
         {
             aplayArgs[APLAY_SAMPLE_RATE_ARG_IDX] = unsignedParam.getValueCharPtr();
             break;
