@@ -52,6 +52,7 @@ public:
     // Commands not callable by the interepreter
     void storeUserEnteredCommand(const std::string& function, const std::string& separator, const std::string& param);
     static void setAudioOutputDeviceName(const std::string& deviceName);
+    static bool isDefaultSpecifier(const std::string& param);
 
 private:
     uint32_t getNumberOfStoredParameters();
@@ -96,6 +97,9 @@ private:
     // The index inside APLAY_ARGV containing the audio output device name,
     // which is to be set at startup.
     static const uint32_t APLAY_OUTPUT_DEVICE_NAME_ARG_IDX = 10;
+
+    // When this string is specified as a parameter, perform some default action
+    static const std::string DEFAULT_PARAMETER_SPECIFIER;
 };
 
 #endif /* RTLFMWRAPPER_HPP_ */

@@ -38,6 +38,7 @@
 const char* const RtlFmParameterBuilder::RTL_FM_EXECUTABLE_PATH = "/usr/local/bin/rtl_fm";
 const char* const RtlFmParameterBuilder::DEFAULT_AUDIO_OUTPUT_DEVICE_NAME = "hw:0,0";
 std::string RtlFmParameterBuilder::audioOutputDeviceName = DEFAULT_AUDIO_OUTPUT_DEVICE_NAME;
+const std::string RtlFmParameterBuilder::DEFAULT_PARAMETER_SPECIFIER = "default";
 
 const std::vector<const char*> RtlFmParameterBuilder::BASE_APLAY_ARGV {"/usr/bin/aplay", "-r",
         "24000", "-f", "S16_LE", "-t", "raw", "-c", "1", "-D",
@@ -100,10 +101,17 @@ void RtlFmParameterBuilder::setAplaySampleRate()
     }
 }
 
+/**
+ * If "default" is specified, don't provide this param to rtl_fm
+ */
 void RtlFmParameterBuilder::setDeviceIndex(const std::string& deviceIndex, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    unsignedParams.push_back(DeviceIndex::create(std::stoul(deviceIndex)));
+
+    if (!isDefaultSpecifier(deviceIndex))
+    {
+        unsignedParams.push_back(DeviceIndex::create(deviceIndex));
+    }
 }
 
 /**
@@ -163,22 +171,47 @@ void RtlFmParameterBuilder::executeCommand(const std::string& UNUSED, std::strin
     TcpServer::getInstance().informAllClientsOfStateChange();
 }
 
+/**
+ * If "default" is specified, don't provide this param to rtl_fm
+ */
 void RtlFmParameterBuilder::setEnableOption(const std::string& enableOption, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    stringParams.push_back(EnableOption::create(enableOption));
+
+    if (!isDefaultSpecifier(enableOption))
+    {
+        stringParams.push_back(EnableOption::create(enableOption));
+    }
 }
 
+/**
+ * If "default" is specified, don't provide this param to rtl_fm
+ */
 void RtlFmParameterBuilder::setFirSize(const std::string& firSize, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    stringParams.push_back(FirSize::create(firSize));
+
+    if (!isDefaultSpecifier(firSize))
+    {
+        stringParams.push_back(FirSize::create(firSize));
+    }
 }
 
+/**
+ * If "default" is specified, use the default frequency contained in the
+ * Frequency class
+ */
 void RtlFmParameterBuilder::setFrequency(const std::string& frequency, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    unsignedParams.push_back(Frequency::create(frequency));
+    if (isDefaultSpecifier(frequency))
+    {
+        unsignedParams.push_back(Frequency::create());
+    }
+    else
+    {
+        unsignedParams.push_back(Frequency::create(frequency));
+    }
 }
 
 /**
@@ -187,59 +220,131 @@ void RtlFmParameterBuilder::setFrequency(const std::string& frequency, std::stri
  * GUI is consistent, I'll require that the user specify fast atan math and
  * deemphasis, rather than setting them internally. Otherwise, it'll be the case
  * that the GUI doesn't truly reflect the state of the radio.
+ *
+ * If "default" is specified, use the default contained in the ModulationMode
+ * class.
  */
 void RtlFmParameterBuilder::setModulationMode(const std::string& modulationMode, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    stringParams.push_back(ModulationMode::create(modulationMode));
+
+    if (isDefaultSpecifier(modulationMode))
+    {
+        stringParams.push_back(ModulationMode::create());
+    }
+    else
+    {
+        stringParams.push_back(ModulationMode::create(modulationMode));
+    }
 }
 
+/**
+ * If "default" is specified, don't provide this param to rtl_fm
+ */
 void RtlFmParameterBuilder::setOversampling(const std::string& oversampling, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    unsignedParams.push_back(Oversampling::create(oversampling));
+
+    if (!isDefaultSpecifier(oversampling))
+    {
+        unsignedParams.push_back(Oversampling::create(oversampling));
+    }
 }
 
+/**
+ * If "default" is specified, don't provide this param to rtl_fm
+ */
 void RtlFmParameterBuilder::setPpmError(const std::string& ppmError, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    unsignedParams.push_back(PpmError::create(ppmError));
+
+    if (!isDefaultSpecifier(ppmError))
+    {
+        unsignedParams.push_back(PpmError::create(ppmError));
+    }
 }
 
+/**
+ * If "default" is specified, utilize the default value stored in the
+ * SampleRate class
+ */
 void RtlFmParameterBuilder::setSampleRate(const std::string& sampleRate, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    unsignedParams.push_back(SampleRate::create(sampleRate));
+
+    if (isDefaultSpecifier(sampleRate))
+    {
+        unsignedParams.push_back(SampleRate::create());
+    }
+    else
+    {
+        unsignedParams.push_back(SampleRate::create(sampleRate));
+    }
 }
 
+/**
+ * If "default" is specified, don't provide this param to rtl_fm
+ */
 void RtlFmParameterBuilder::setSquelchDelay(const std::string& squelchDelay, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    signedParams.push_back(SquelchDelay::create(squelchDelay));
+
+    if (!isDefaultSpecifier(squelchDelay))
+    {
+        signedParams.push_back(SquelchDelay::create(squelchDelay));
+    }
 }
 
+/**
+ * If "default" is specified, don't provide this param to rtl_fm
+ */
 void RtlFmParameterBuilder::setSquelchLevel(const std::string& squelchLevel, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    unsignedParams.push_back(SquelchLevel::create(squelchLevel));
+
+    if (!isDefaultSpecifier(squelchLevel))
+    {
+        unsignedParams.push_back(SquelchLevel::create(squelchLevel));
+    }
 }
 
+/**
+ * If "default" is specified, don't provide this param to rtl_fm
+ */
 void RtlFmParameterBuilder::setResampleRate(const std::string& resampleRate, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    unsignedParams.push_back(ResampleRate::create(resampleRate));
+
+    if (!isDefaultSpecifier(resampleRate))
+    {
+        unsignedParams.push_back(ResampleRate::create(resampleRate));
+    }
 }
 
+/**
+ * If "default" is specified, don't provide this param to rtl_fm
+ */
 void RtlFmParameterBuilder::setAtanMath(const std::string& atanMath, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    stringParams.push_back(AtanMath::create(atanMath));
+
+    if (!isDefaultSpecifier(atanMath))
+    {
+        stringParams.push_back(AtanMath::create(atanMath));
+    }
 }
 
+/**
+ * If "default" is specified, don't provide this param to rtl_fm
+ */
 void RtlFmParameterBuilder::setTunerGain(const std::string& tunerGain, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    signedParams.push_back(TunerGain::create(tunerGain));
+
+    if (!isDefaultSpecifier(tunerGain))
+    {
+        signedParams.push_back(TunerGain::create(tunerGain));
+    }
 }
 
 /**
@@ -328,5 +433,13 @@ void RtlFmParameterBuilder::setAudioOutputDeviceName(const std::string& deviceNa
     {
         throw std::invalid_argument("The audio output device name can only be set once");
     }
+}
+
+/**
+ * Returns true of param == DEFAULT_PARAM_SPECIFIER, false otherwise
+ */
+bool RtlFmParameterBuilder::isDefaultSpecifier(const std::string& param)
+{
+    return (param == DEFAULT_PARAMETER_SPECIFIER);
 }
 

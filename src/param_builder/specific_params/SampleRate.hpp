@@ -38,8 +38,8 @@ private:
     // 3.2 MS/s
     static const uint32_t MAX_VALID = 3200000;
 
-    // 24 kS/s
-    static const uint32_t DEFAULT_VALUE = 24000;
+    // 192 kS/s (aplay's max)
+    static const uint32_t DEFAULT_VALUE = 192000;
 };
 
 #endif /* WRAPPER_SAMPLERATE_HPP_ */
