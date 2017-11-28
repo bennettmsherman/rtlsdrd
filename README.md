@@ -36,18 +36,41 @@ make clean
 
 ## To run:
 The first parameter of rtlsdrd is the name of the audio control which the VOLUME command will control.
-If no parameter is specified "Master" is used.
-### With "Master" as the audio control controled by VOLUME:
+If no parameter is specified "Master" is used. The second parameter specifies the audio output device, which is used when executing aplay. 
+### With "Master" as the audio control controled by VOLUME and "hw:0,0" (Pi headphone output) as the output device:
 ```bash
 (Build first)
 ./rtlsdrd
 ```
 
 ### With a specified audio control to be controlled by VOLUME:
+* "hw:0,0" will be used as the default output device in this usage
 ```bash
 (Build first)
 ./rtlsdrd <audio control name>
 ```
+
+### With a specified audio control to be controlled by VOLUME and output device:
+```bash
+(Build first)
+./rtlsdrd <audio control name> <device name>
+```
+
+The valid values which can be provided as the audio control name can be found by executing ```aplay```; the output will show a list of controls, such as 
+```bash
+bensherman@Pi3-Raspbian:~ $ amixer
+Simple mixer control 'Master',0
+  Capabilities: pvolume pswitch pswitch-joined
+  Playback channels: Front Left - Front Right
+  Limits: Playback 0 - 65536
+  Mono:
+  Front Left: Playback 1107 [2%] [on]
+  Front Right: Playback 1107 [2%] [on]
+```
+The control names to provide to rtlsdrd follow "Simple mixer control".
+
+For values which can be provided as the output device, execute ```aplay -L``` and ```aplay -l```. See [this page](https://en.wikibooks.org/wiki/Configuring_Sound_on_Linux/HW_Address) and [this page](https://superuser.com/questions/53957/what-do-alsa-devices-like-hw0-0-mean-how-do-i-figure-out-which-to-use) for more information. You can also configure pulse audio as an output source if you'd like to use bluetooth streaming.
+
 ## To connect to the daemon
 ### If the daemon is running on the same machine
 Run:
