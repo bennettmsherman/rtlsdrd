@@ -56,18 +56,13 @@ If no parameter is specified "Master" is used. The second parameter specifies th
 ./rtlsdrd <audio control name> <device name>
 ```
 
-The valid values which can be provided as the audio control name can be found by executing ```aplay```; the output will show a list of controls, such as 
+The valid values which can be provided as the audio control name can be found by executing ```amixer scontrols```; the output will show a list of controls, such as 
 ```bash
-bensherman@Pi3-Raspbian:~ $ amixer
+bensherman@Pi3-Raspbian:~ $ amixer scontrols
 Simple mixer control 'Master',0
-  Capabilities: pvolume pswitch pswitch-joined
-  Playback channels: Front Left - Front Right
-  Limits: Playback 0 - 65536
-  Mono:
-  Front Left: Playback 1107 [2%] [on]
-  Front Right: Playback 1107 [2%] [on]
+Simple mixer control 'Capture',0
 ```
-The control names to provide to rtlsdrd follow "Simple mixer control".
+The control names to provide to rtlsdrd follow "simple mixer control".
 
 For values which can be provided as the output device, execute ```aplay -L``` and ```aplay -l```. See [this page](https://en.wikibooks.org/wiki/Configuring_Sound_on_Linux/HW_Address) and [this page](https://superuser.com/questions/53957/what-do-alsa-devices-like-hw0-0-mean-how-do-i-figure-out-which-to-use) for more information. You can also configure pulse audio as an output source if you'd like to use bluetooth streaming.
 
