@@ -33,7 +33,7 @@ private:
     static const char* const OPTION;
 
     // TODO find true min and max
-    static const uint32_t MIN_VALID = 0;
+    static const uint32_t MIN_VALID = 2000;
 
     // 3.2 MS/s
     static const uint32_t MAX_VALID = 3200000;
