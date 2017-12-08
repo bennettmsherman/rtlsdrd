@@ -36,7 +36,7 @@
 
 // Static Initialization
 const char* const RtlFmParameterBuilder::RTL_FM_EXECUTABLE_PATH = "/usr/local/bin/rtl_fm";
-const char* const RtlFmParameterBuilder::DEFAULT_AUDIO_OUTPUT_DEVICE_NAME = "hw:0,0";
+const char* const RtlFmParameterBuilder::DEFAULT_AUDIO_OUTPUT_DEVICE_NAME = "plughw:0,0";
 std::string RtlFmParameterBuilder::audioOutputDeviceName = DEFAULT_AUDIO_OUTPUT_DEVICE_NAME;
 const std::string RtlFmParameterBuilder::DEFAULT_PARAMETER_SPECIFIER = "default";
 

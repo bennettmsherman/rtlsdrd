@@ -37,14 +37,14 @@ make clean
 ## To run:
 The first parameter of rtlsdrd is the name of the audio control which the VOLUME command will control.
 If no parameter is specified "Master" is used. The second parameter specifies the audio output device, which is used when executing aplay. 
-### With "Master" as the audio control controled by VOLUME and "hw:0,0" (Pi headphone output) as the output device:
+### With "Master" as the audio control controled by VOLUME and "plughw:0,0" (Pi headphone output) as the output device:
 ```bash
 (Build first)
 ./rtlsdrd
 ```
 
 ### With a specified audio control to be controlled by VOLUME:
-* "hw:0,0" will be used as the default output device in this usage
+* "plughw:0,0" will be used as the default output device in this usage
 ```bash
 (Build first)
 ./rtlsdrd <audio control name>
