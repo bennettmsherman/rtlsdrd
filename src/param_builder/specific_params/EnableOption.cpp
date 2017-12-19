@@ -16,7 +16,8 @@
 // Static Initialization
 // TODO is none okay?
 const char* const EnableOption::OPTION = "-E";
-const std::vector<std::string> EnableOption::VALID_VALUES {"none", "edge", "dc", "deemp", "direct", "offset"};
+const std::vector<std::string> EnableOption::VALID_VALUES { "none", "edge",
+        "dc", "deemp", "direct", "offset"};
 const std::string EnableOption::DEFAULT_VALUE = "none";
 const std::string EnableOption::COMMAND = "ENABLE_OPTION";
 
@@ -34,11 +35,13 @@ bool EnableOption::isValid(const std::string& value)
  * Throws a std::invalid_argument if the parameter is invalid.
  */
 
-EnableOption::EnableOption(const std::string& value) : StringParameter(value, OPTION)
+EnableOption::EnableOption(const std::string& value) :
+        StringParameter(value, OPTION)
 {
     if (!isValid(value))
     {
-        throw std::invalid_argument(StringParameter::getInvalidArgExceptionMessage(value));
+        throw std::invalid_argument(
+                StringParameter::getInvalidArgExceptionMessage(value));
     }
 }
 

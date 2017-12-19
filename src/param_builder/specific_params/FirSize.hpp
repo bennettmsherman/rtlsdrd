@@ -18,7 +18,7 @@
 class FirSize : public StringParameter
 {
 public:
-    FirSize(const std::string& value=DEFAULT_VALUE);
+    FirSize(const std::string& value = DEFAULT_VALUE);
 
     static bool isValid(const std::string& value);
     const std::string getCommand();

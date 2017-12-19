@@ -14,8 +14,9 @@
 #include "ModulationMode.hpp"
 
 // Static Initialization
-const char* const ModulationMode::OPTION ="-M";
-const std::vector<std::string> ModulationMode::VALID_VALUES {"fm", "wbfm", "raw", "am", "usb", "lsb"};
+const char* const ModulationMode::OPTION = "-M";
+const std::vector<std::string> ModulationMode::VALID_VALUES { "fm", "wbfm",
+        "raw", "am", "usb", "lsb"};
 const std::string ModulationMode::DEFAULT_VALUE = "fm";
 const std::string ModulationMode::COMMAND = "MODULATION_MODE";
 
@@ -33,11 +34,12 @@ bool ModulationMode::isValid(const std::string& value)
  * Throws a std::invalid_argument if the parameter is invalid.
  */
 ModulationMode::ModulationMode(const std::string& value) :
-    StringParameter(value, OPTION)
+        StringParameter(value, OPTION)
 {
     if (!isValid(value))
     {
-        throw std::invalid_argument(StringParameter::getInvalidArgExceptionMessage(value));
+        throw std::invalid_argument(
+                StringParameter::getInvalidArgExceptionMessage(value));
     }
 }
 

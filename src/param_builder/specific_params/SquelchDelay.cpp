@@ -30,11 +30,14 @@ bool SquelchDelay::isValid(const int32_t value)
  * Constructs a new SquelchDelay instance if the parameter is valid.
  * Throws a std::out_of_range if the parameter is invalid.
  */
-SquelchDelay::SquelchDelay(int32_t value) : NumericParameter(value, OPTION)
+SquelchDelay::SquelchDelay(int32_t value) :
+        NumericParameter(value, OPTION)
 {
     if (!isValid(value))
     {
-        throw std::out_of_range(NumericParameter<int32_t>::getOutOfRangeParamExceptionMessage(value, MIN_VALID, MAX_VALID));
+        throw std::out_of_range(
+                NumericParameter<int32_t>::getOutOfRangeParamExceptionMessage(
+                        value, MIN_VALID, MAX_VALID));
     }
 }
 

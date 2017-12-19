@@ -18,8 +18,12 @@
 class PpmError : public NumericParameter<uint32_t>
 {
 public:
-    PpmError(uint32_t value=DEFAULT_VALUE);
-    PpmError(const std::string& value) : PpmError(stringToInt(value)) {};
+    PpmError(uint32_t value = DEFAULT_VALUE);
+    PpmError(const std::string& value) :
+            PpmError(stringToInt(value))
+    {
+    }
+    ;
 
     static bool isValid(const uint32_t value);
     const std::string getCommand();

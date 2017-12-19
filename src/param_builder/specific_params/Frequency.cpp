@@ -30,11 +30,14 @@ bool Frequency::isValid(const uint32_t value)
  * Constructs a new Frequency instance if the parameter is valid.
  * Throws a std::out_of_range if the parameter is invalid.
  */
-Frequency::Frequency(uint32_t value) : NumericParameter(value, OPTION)
+Frequency::Frequency(uint32_t value) :
+        NumericParameter(value, OPTION)
 {
     if (!isValid(value))
     {
-        throw std::out_of_range(NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(value, MIN_VALID, MAX_VALID));
+        throw std::out_of_range(
+                NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(
+                        value, MIN_VALID, MAX_VALID));
     }
 }
 

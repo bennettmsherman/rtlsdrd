@@ -18,7 +18,7 @@
 class AtanMath : public StringParameter
 {
 public:
-    AtanMath(const std::string& value=DEFAULT_VALUE);
+    AtanMath(const std::string& value = DEFAULT_VALUE);
 
     static bool isValid(const std::string& value);
     const std::string getCommand();

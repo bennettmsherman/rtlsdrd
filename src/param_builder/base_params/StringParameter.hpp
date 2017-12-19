@@ -20,14 +20,22 @@
 class StringParameter : public BaseParameter<std::string>
 {
 public:
-    virtual ~StringParameter() {};
+    virtual ~StringParameter()
+    {
+    }
+    ;
 
 protected:
     StringParameter(const std::string& value, const char* const option) :
-        BaseParameter(value, option) {};
+            BaseParameter(value, option)
+    {
+    }
+    ;
 
-    static bool isValid(const std::string& value, const std::vector<std::string>& validValues);
-    static bool isValid(const std::string& value, const std::regex& validFormat);
+    static bool isValid(const std::string& value,
+            const std::vector<std::string>& validValues);
+    static bool isValid(const std::string& value,
+            const std::regex& validFormat);
 
     static std::string getInvalidArgExceptionMessage(const std::string& value);
 

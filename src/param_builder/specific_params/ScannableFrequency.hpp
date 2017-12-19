@@ -18,7 +18,7 @@
 class ScannableFrequency : public StringParameter
 {
 public:
-    ScannableFrequency(const std::string& value=DEFAULT_VALUE);
+    ScannableFrequency(const std::string& value = DEFAULT_VALUE);
 
     static bool isValid(const std::string& value);
     const std::string getCommand();

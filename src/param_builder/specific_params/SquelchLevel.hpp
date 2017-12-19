@@ -18,8 +18,12 @@
 class SquelchLevel : public NumericParameter<uint32_t>
 {
 public:
-    SquelchLevel(uint32_t value=DEFAULT_VALUE);
-    SquelchLevel(const std::string& value) : SquelchLevel(stringToInt(value)) {};
+    SquelchLevel(uint32_t value = DEFAULT_VALUE);
+    SquelchLevel(const std::string& value) :
+            SquelchLevel(stringToInt(value))
+    {
+    }
+    ;
 
     static bool isValid(const uint32_t value);
     const std::string getCommand();

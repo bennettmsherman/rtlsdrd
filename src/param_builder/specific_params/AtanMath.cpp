@@ -16,7 +16,7 @@
 // Static Initialization
 // TODO is none okay?
 const char* const AtanMath::OPTION = "-A";
-const std::vector<std::string> AtanMath::VALID_VALUES {"std", "fast", "lut"};
+const std::vector<std::string> AtanMath::VALID_VALUES { "std", "fast", "lut"};
 const std::string AtanMath::DEFAULT_VALUE = "std";
 const std::string AtanMath::COMMAND = "ATAN_MATH";
 
@@ -42,11 +42,13 @@ const std::string AtanMath::getCommand()
  * Constructs a new AtanMath instance if the parameter is valid.
  * Throws a std::invalid_argument if the parameter is invalid.
  */
-AtanMath::AtanMath(const std::string& value) : StringParameter(value, OPTION)
+AtanMath::AtanMath(const std::string& value) :
+        StringParameter(value, OPTION)
 {
     if (!isValid(value))
     {
-        throw std::invalid_argument(StringParameter::getInvalidArgExceptionMessage(value));
+        throw std::invalid_argument(
+                StringParameter::getInvalidArgExceptionMessage(value));
     }
 }
 

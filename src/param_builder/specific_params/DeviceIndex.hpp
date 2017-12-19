@@ -18,8 +18,12 @@
 class DeviceIndex : public NumericParameter<uint32_t>
 {
 public:
-    DeviceIndex(uint32_t value=DEFAULT_VALUE);
-    DeviceIndex(const std::string& value) :DeviceIndex(stringToInt(value)) {};
+    DeviceIndex(uint32_t value = DEFAULT_VALUE);
+    DeviceIndex(const std::string& value) :
+            DeviceIndex(stringToInt(value))
+    {
+    }
+    ;
 
     static bool isValid(const uint32_t value);
     const std::string getCommand();

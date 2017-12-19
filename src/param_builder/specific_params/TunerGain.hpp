@@ -18,8 +18,12 @@
 class TunerGain : public NumericParameter<int32_t>
 {
 public:
-    TunerGain(int32_t value=DEFAULT_VALUE);
-    TunerGain(const std::string& value) : TunerGain(stringToInt(value)) {};
+    TunerGain(int32_t value = DEFAULT_VALUE);
+    TunerGain(const std::string& value) :
+            TunerGain(stringToInt(value))
+    {
+    }
+    ;
 
     static bool isValid(const int32_t value);
     const std::string getCommand();

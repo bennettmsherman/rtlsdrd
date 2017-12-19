@@ -18,8 +18,12 @@
 class SampleRate : public NumericParameter<uint32_t>
 {
 public:
-    SampleRate(uint32_t value=DEFAULT_VALUE);
-    SampleRate(const std::string& value) : SampleRate(stringToInt(value)) {};
+    SampleRate(uint32_t value = DEFAULT_VALUE);
+    SampleRate(const std::string& value) :
+            SampleRate(stringToInt(value))
+    {
+    }
+    ;
 
     static bool isValid(const uint32_t value);
     static const char* getOption();

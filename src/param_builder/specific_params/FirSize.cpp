@@ -15,7 +15,7 @@
 
 // Static Initialization
 const char* const FirSize::OPTION = "-F";
-const std::vector<std::string> FirSize::VALID_VALUES {"-1", "0", "9"};
+const std::vector<std::string> FirSize::VALID_VALUES { "-1", "0", "9"};
 const std::string FirSize::DEFAULT_VALUE = "-1";
 const std::string FirSize::COMMAND = "FIR_SIZE";
 
@@ -33,11 +33,13 @@ bool FirSize::isValid(const std::string& value)
  * Throws a std::invalid_argument if the parameter is invalid.
  */
 
-FirSize::FirSize(const std::string& value) : StringParameter(value, OPTION)
+FirSize::FirSize(const std::string& value) :
+        StringParameter(value, OPTION)
 {
     if (!isValid(value))
     {
-        throw std::invalid_argument(StringParameter::getInvalidArgExceptionMessage(value));
+        throw std::invalid_argument(
+                StringParameter::getInvalidArgExceptionMessage(value));
     }
 }
 

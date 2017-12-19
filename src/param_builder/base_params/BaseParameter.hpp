@@ -21,7 +21,10 @@ public:
     /**
      * Returns the value assigned to this parameter.
      */
-    const std::string& getValue() const { return value; }
+    const std::string& getValue() const
+    {
+        return value;
+    }
 
     /**
      * Returns value.c_str(). Note that this pointer is only
@@ -29,12 +32,18 @@ public:
      * and when no non-const member functions have been called
      * since calling this function
      */
-    const char* getValueCharPtr() const { return value.c_str(); }
+    const char* getValueCharPtr() const
+    {
+        return value.c_str();
+    }
 
     /**
      * Gets the option representing this parameter.
      */
-    const char* getOption() const { return option; }
+    const char* getOption() const
+    {
+        return option;
+    }
 
     /**
      * Returns the command-line form of this parameter.
@@ -47,13 +56,23 @@ public:
      * For example, to set the frequency through the daemon,
      * "FREQUENCY" is used to create a new Frequency parameter.
      */
-    virtual const std::string getCommand() {return std::string("IMPLEMENT_IN_DERIVED"); }
+    virtual const std::string getCommand()
+    {
+        return std::string("IMPLEMENT_IN_DERIVED");
+    }
 
-    virtual ~BaseParameter() {};
+    virtual ~BaseParameter()
+    {
+    }
+    ;
 
 protected:
 
-    BaseParameter(const std::string& value, const char* const option) : value(value), option(option) {};
+    BaseParameter(const std::string& value, const char* const option) :
+            value(value), option(option)
+    {
+    }
+    ;
 
 private:
     const std::string value;

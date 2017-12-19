@@ -16,10 +16,11 @@
 #include "StringParameter.hpp"
 
 // Static Initialization
-const char* const ScannableFrequency::OPTION ="-f";
+const char* const ScannableFrequency::OPTION = "-f";
 const std::string ScannableFrequency::DEFAULT_VALUE = "91100000:104300000:200k";
 const std::string ScannableFrequency::COMMAND = "SCANNABLE_FREQUENCY";
-const std::regex ScannableFrequency::VALID_PARAM_REGEX {"^[0-9]+:[0-9]+:[0-9]+?"};
+const std::regex ScannableFrequency::VALID_PARAM_REGEX {
+        "^[0-9]+:[0-9]+:[0-9]+?"};
 
 /**
  * Returns true if value represents a valid parameter, false otherwise
@@ -38,7 +39,8 @@ ScannableFrequency::ScannableFrequency(const std::string& value) :
 {
     if (!isValid(value))
     {
-        throw std::invalid_argument(StringParameter::getInvalidArgExceptionMessage(value));
+        throw std::invalid_argument(
+                StringParameter::getInvalidArgExceptionMessage(value));
     }
 }
 

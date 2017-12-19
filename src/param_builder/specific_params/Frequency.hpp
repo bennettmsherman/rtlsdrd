@@ -18,8 +18,12 @@
 class Frequency : public NumericParameter<uint32_t>
 {
 public:
-    Frequency(uint32_t value=DEFAULT_VALUE);
-    Frequency(const std::string& value) : Frequency(stringToInt(value)) {};
+    Frequency(uint32_t value = DEFAULT_VALUE);
+    Frequency(const std::string& value) :
+            Frequency(stringToInt(value))
+    {
+    }
+    ;
 
     static bool isValid(const uint32_t value);
     const std::string getCommand();

@@ -30,11 +30,14 @@ bool SampleRate::isValid(const uint32_t value)
  * Constructs a new SampleRate instance if the parameter is valid.
  * Throws a std::out_of_range if the parameter is invalid.
  */
-SampleRate::SampleRate(uint32_t value) : NumericParameter(value, OPTION)
+SampleRate::SampleRate(uint32_t value) :
+        NumericParameter(value, OPTION)
 {
     if (!isValid(value))
     {
-        throw std::out_of_range(NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(value, MIN_VALID, MAX_VALID));
+        throw std::out_of_range(
+                NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(
+                        value, MIN_VALID, MAX_VALID));
     }
 }
 

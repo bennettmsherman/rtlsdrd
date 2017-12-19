@@ -13,9 +13,9 @@
 #include "BaseParameter.hpp"
 
 // Explicit template instantiation
-template class BaseParameter<int32_t>;
-template class BaseParameter<uint32_t>;
-template class BaseParameter<std::string>;
+template class BaseParameter<int32_t> ;
+template class BaseParameter<uint32_t> ;
+template class BaseParameter<std::string> ;
 
 /**
  * Returns the command-line form of this parameter.

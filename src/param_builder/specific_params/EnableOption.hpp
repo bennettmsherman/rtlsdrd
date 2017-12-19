@@ -18,7 +18,7 @@
 class EnableOption : public StringParameter
 {
 public:
-    EnableOption(const std::string& value=DEFAULT_VALUE);
+    EnableOption(const std::string& value = DEFAULT_VALUE);
 
     static bool isValid(const std::string& value);
     const std::string getCommand();
