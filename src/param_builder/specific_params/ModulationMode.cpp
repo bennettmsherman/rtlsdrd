@@ -29,18 +29,15 @@ bool ModulationMode::isValid(const std::string& value)
 }
 
 /**
- * Returns a new ModulationMode instance if the parameter is valid. Throws a std::invalid_argument
- * if the parameter is invalid.
+ * Constructs a new ModulationMode instance if the parameter is valid.
+ * Throws a std::invalid_argument if the parameter is invalid.
  */
-const ModulationMode ModulationMode::create(const std::string& value)
+ModulationMode::ModulationMode(const std::string& value) :
+    StringParameter(value, OPTION)
 {
     if (!isValid(value))
     {
         throw std::invalid_argument(StringParameter::getInvalidArgExceptionMessage(value));
-    }
-    else
-    {
-        return ModulationMode(value);
     }
 }
 

@@ -30,18 +30,15 @@ bool EnableOption::isValid(const std::string& value)
 }
 
 /**
- * Returns a new EnableOption instance if the parameter is valid. Throws a std::invalid_argument
- * if the parameter is invalid.
+ * Constructs a new EnableOption instance if the parameter is valid.
+ * Throws a std::invalid_argument if the parameter is invalid.
  */
-const EnableOption EnableOption::create(const std::string& value)
+
+EnableOption::EnableOption(const std::string& value) : StringParameter(value, OPTION)
 {
     if (!isValid(value))
     {
         throw std::invalid_argument(StringParameter::getInvalidArgExceptionMessage(value));
-    }
-    else
-    {
-        return EnableOption(value);
     }
 }
 

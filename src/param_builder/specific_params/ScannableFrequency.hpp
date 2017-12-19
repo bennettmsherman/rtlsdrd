@@ -18,14 +18,12 @@
 class ScannableFrequency : public StringParameter
 {
 public:
+    ScannableFrequency(const std::string& value=DEFAULT_VALUE);
+
     static bool isValid(const std::string& value);
-    static const ScannableFrequency create(const std::string& value=DEFAULT_VALUE);
     const std::string getCommand();
 
     static const std::string COMMAND;
-
-protected:
-    ScannableFrequency(const std::string& value) : StringParameter(value, OPTION) {};
 
 private:
     static const std::regex VALID_PARAM_REGEX;

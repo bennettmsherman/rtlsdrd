@@ -18,14 +18,13 @@
 class Oversampling : public NumericParameter<uint32_t>
 {
 public:
+    Oversampling(uint32_t value=DEFAULT_VALUE);
+    Oversampling(const std::string& value) : Oversampling(stringToInt(value)) {};
+
     static bool isValid(const uint32_t value);
-    static const Oversampling create(const uint32_t value=DEFAULT_VALUE);
-    static const Oversampling create(const std::string& value);
     const std::string getCommand();
 
     static const std::string COMMAND;
-protected:
-    Oversampling(uint32_t value) : NumericParameter(value, OPTION, MIN_VALID, MAX_VALID) {};
 
 private:
     static const char* const OPTION;

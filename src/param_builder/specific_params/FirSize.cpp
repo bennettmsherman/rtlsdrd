@@ -29,18 +29,15 @@ bool FirSize::isValid(const std::string& value)
 }
 
 /**
- * Returns a new FirSize instance if the parameter is valid. Throws a std::invalid_argument
- * if the parameter is invalid.
+ * Constructs a new FirSize instance if the parameter is valid.
+ * Throws a std::invalid_argument if the parameter is invalid.
  */
-const FirSize FirSize::create(const std::string& value)
+
+FirSize::FirSize(const std::string& value) : StringParameter(value, OPTION)
 {
     if (!isValid(value))
     {
         throw std::invalid_argument(StringParameter::getInvalidArgExceptionMessage(value));
-    }
-    else
-    {
-        return FirSize(value);
     }
 }
 

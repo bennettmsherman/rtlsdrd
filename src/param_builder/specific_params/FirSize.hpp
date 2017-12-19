@@ -18,16 +18,12 @@
 class FirSize : public StringParameter
 {
 public:
+    FirSize(const std::string& value=DEFAULT_VALUE);
+
     static bool isValid(const std::string& value);
-
-    static const FirSize create(const std::string& value=DEFAULT_VALUE);
-
     const std::string getCommand();
 
     static const std::string COMMAND;
-
-protected:
-    FirSize(const std::string& value) : StringParameter(value, OPTION) {};
 
 private:
     static const char* const OPTION;

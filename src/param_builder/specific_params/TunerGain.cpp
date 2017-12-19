@@ -27,24 +27,15 @@ bool TunerGain::isValid(const int32_t value)
 }
 
 /**
- * Returns a new TunerGain instance if the parameter is valid. Throws a std::out_of_range
- * if the parameter is invalid.
+ * Constructs a new TunerGain instance if the parameter is valid.
+ * Throws a std::out_of_range if the parameter is invalid.
  */
-const TunerGain TunerGain::create(const int32_t value)
+TunerGain::TunerGain(int32_t value) : NumericParameter(value, OPTION)
 {
     if (!isValid(value))
     {
         throw std::out_of_range(NumericParameter<int32_t>::getOutOfRangeParamExceptionMessage(value, MIN_VALID, MAX_VALID));
     }
-    else
-    {
-        return TunerGain(value);
-    }
-}
-
-const TunerGain TunerGain::create(const std::string& value)
-{
-    return create(stringToInt(value));
 }
 
 /**

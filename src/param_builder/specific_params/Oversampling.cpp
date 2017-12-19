@@ -27,24 +27,15 @@ bool Oversampling::isValid(const uint32_t value)
 }
 
 /**
- * Returns a new Oversampling instance if the parameter is valid. Throws a std::out_of_range
- * if the parameter is invalid.
+ * Constructs a new Oversampling instance if the parameter is valid.
+ * Throws a std::out_of_range if the parameter is invalid.
  */
-const Oversampling Oversampling::create(const uint32_t value)
+Oversampling::Oversampling(uint32_t value) : NumericParameter(value, OPTION)
 {
     if (!isValid(value))
     {
         throw std::out_of_range(NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(value, MIN_VALID, MAX_VALID));
     }
-    else
-    {
-        return Oversampling(value);
-    }
-}
-
-const Oversampling Oversampling::create(const std::string& value)
-{
-    return create(stringToInt(value));
 }
 
 /**

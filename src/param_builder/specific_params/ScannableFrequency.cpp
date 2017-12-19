@@ -30,18 +30,15 @@ bool ScannableFrequency::isValid(const std::string& value)
 }
 
 /**
- * Returns a new ScannableFrequency instance if the parameter is valid. Throws a std::invalid_argument
- * if the parameter is invalid.
+ * Constructs a new ScannableFrequency instance if the parameter is valid.
+ * Throws a std::invalid_argument if the parameter is invalid.
  */
-const ScannableFrequency ScannableFrequency::create(const std::string& value)
+ScannableFrequency::ScannableFrequency(const std::string& value) :
+        StringParameter(value, OPTION)
 {
     if (!isValid(value))
     {
         throw std::invalid_argument(StringParameter::getInvalidArgExceptionMessage(value));
-    }
-    else
-    {
-        return ScannableFrequency(value);
     }
 }
 

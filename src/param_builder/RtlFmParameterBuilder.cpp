@@ -110,7 +110,7 @@ void RtlFmParameterBuilder::setDeviceIndex(const std::string& deviceIndex, std::
 
     if (!isDefaultSpecifier(deviceIndex))
     {
-        unsignedParams.push_back(DeviceIndex::create(deviceIndex));
+        unsignedParams.push_back(DeviceIndex(deviceIndex));
     }
 }
 
@@ -180,7 +180,7 @@ void RtlFmParameterBuilder::setEnableOption(const std::string& enableOption, std
 
     if (!isDefaultSpecifier(enableOption))
     {
-        stringParams.push_back(EnableOption::create(enableOption));
+        stringParams.push_back(EnableOption(enableOption));
     }
 }
 
@@ -193,7 +193,7 @@ void RtlFmParameterBuilder::setFirSize(const std::string& firSize, std::string* 
 
     if (!isDefaultSpecifier(firSize))
     {
-        stringParams.push_back(FirSize::create(firSize));
+        stringParams.push_back(FirSize(firSize));
     }
 }
 
@@ -206,11 +206,11 @@ void RtlFmParameterBuilder::setFrequency(const std::string& frequency, std::stri
     (void) updatableMessage;
     if (isDefaultSpecifier(frequency))
     {
-        unsignedParams.push_back(Frequency::create());
+        unsignedParams.push_back(Frequency());
     }
     else
     {
-        unsignedParams.push_back(Frequency::create(frequency));
+        unsignedParams.push_back(Frequency(frequency));
     }
 }
 
@@ -230,11 +230,11 @@ void RtlFmParameterBuilder::setModulationMode(const std::string& modulationMode,
 
     if (isDefaultSpecifier(modulationMode))
     {
-        stringParams.push_back(ModulationMode::create());
+        stringParams.push_back(ModulationMode());
     }
     else
     {
-        stringParams.push_back(ModulationMode::create(modulationMode));
+        stringParams.push_back(ModulationMode(modulationMode));
     }
 }
 
@@ -247,7 +247,7 @@ void RtlFmParameterBuilder::setOversampling(const std::string& oversampling, std
 
     if (!isDefaultSpecifier(oversampling))
     {
-        unsignedParams.push_back(Oversampling::create(oversampling));
+        unsignedParams.push_back(Oversampling(oversampling));
     }
 }
 
@@ -260,7 +260,7 @@ void RtlFmParameterBuilder::setPpmError(const std::string& ppmError, std::string
 
     if (!isDefaultSpecifier(ppmError))
     {
-        unsignedParams.push_back(PpmError::create(ppmError));
+        unsignedParams.push_back(PpmError(ppmError));
     }
 }
 
@@ -274,11 +274,11 @@ void RtlFmParameterBuilder::setSampleRate(const std::string& sampleRate, std::st
 
     if (isDefaultSpecifier(sampleRate))
     {
-        unsignedParams.push_back(SampleRate::create());
+        unsignedParams.push_back(SampleRate());
     }
     else
     {
-        unsignedParams.push_back(SampleRate::create(sampleRate));
+        unsignedParams.push_back(SampleRate(sampleRate));
     }
 }
 
@@ -291,7 +291,7 @@ void RtlFmParameterBuilder::setSquelchDelay(const std::string& squelchDelay, std
 
     if (!isDefaultSpecifier(squelchDelay))
     {
-        signedParams.push_back(SquelchDelay::create(squelchDelay));
+        signedParams.push_back(SquelchDelay(squelchDelay));
     }
 }
 
@@ -304,7 +304,7 @@ void RtlFmParameterBuilder::setSquelchLevel(const std::string& squelchLevel, std
 
     if (!isDefaultSpecifier(squelchLevel))
     {
-        unsignedParams.push_back(SquelchLevel::create(squelchLevel));
+        unsignedParams.push_back(SquelchLevel(squelchLevel));
     }
 }
 
@@ -317,7 +317,7 @@ void RtlFmParameterBuilder::setResampleRate(const std::string& resampleRate, std
 
     if (!isDefaultSpecifier(resampleRate))
     {
-        unsignedParams.push_back(ResampleRate::create(resampleRate));
+        unsignedParams.push_back(ResampleRate(resampleRate));
     }
 }
 
@@ -330,7 +330,7 @@ void RtlFmParameterBuilder::setAtanMath(const std::string& atanMath, std::string
 
     if (!isDefaultSpecifier(atanMath))
     {
-        stringParams.push_back(AtanMath::create(atanMath));
+        stringParams.push_back(AtanMath(atanMath));
     }
 }
 
@@ -343,7 +343,7 @@ void RtlFmParameterBuilder::setTunerGain(const std::string& tunerGain, std::stri
 
     if (!isDefaultSpecifier(tunerGain))
     {
-        signedParams.push_back(TunerGain::create(tunerGain));
+        signedParams.push_back(TunerGain(tunerGain));
     }
 }
 
@@ -358,10 +358,10 @@ void RtlFmParameterBuilder::setTunerGain(const std::string& tunerGain, std::stri
 void RtlFmParameterBuilder::broadcastAmStationMacro(const std::string& amFreqInKilohertz, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    unsignedParams.push_back(Frequency::create(ParamBuilderUtils::broadcastAmKilohertzToHertz(amFreqInKilohertz)));
-    unsignedParams.push_back(SampleRate::create(20000));
-    stringParams.push_back(ModulationMode::create("am"));
-    stringParams.push_back(EnableOption::create("direct"));
+    unsignedParams.push_back(Frequency(ParamBuilderUtils::broadcastAmKilohertzToHertz(amFreqInKilohertz)));
+    unsignedParams.push_back(SampleRate(20000));
+    stringParams.push_back(ModulationMode("am"));
+    stringParams.push_back(EnableOption("direct"));
 }
 
 /**
@@ -376,17 +376,17 @@ void RtlFmParameterBuilder::broadcastAmStationMacro(const std::string& amFreqInK
 void RtlFmParameterBuilder::broadcastFmStationMacro(const std::string& fmFreqInMegahertz, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    unsignedParams.push_back(Frequency::create(ParamBuilderUtils::broadcastFmMegahertzToHertz(fmFreqInMegahertz)));
-    unsignedParams.push_back(SampleRate::create(200000));
-    unsignedParams.push_back(ResampleRate::create(44100));
-    stringParams.push_back(EnableOption::create("deemp"));
+    unsignedParams.push_back(Frequency(ParamBuilderUtils::broadcastFmMegahertzToHertz(fmFreqInMegahertz)));
+    unsignedParams.push_back(SampleRate(200000));
+    unsignedParams.push_back(ResampleRate(44100));
+    stringParams.push_back(EnableOption("deemp"));
     setModulationMode("fm");
 }
 
 void RtlFmParameterBuilder::setScannableFrequency(const std::string& scannableFrequency, std::string* updatableMessage)
 {
     (void) updatableMessage;
-    stringParams.push_back(ScannableFrequency::create(scannableFrequency));
+    stringParams.push_back(ScannableFrequency(scannableFrequency));
 }
 
 /**
@@ -409,6 +409,8 @@ void RtlFmParameterBuilder::storeUserEnteredCommand(const std::string& function,
 void RtlFmParameterBuilder::getUserProvidedCommands(const std::string& UNUSED, std::string* updatableMessage)
 {
     (void) UNUSED;
+
+    updatableMessage->append("\n");
     for (std::string userCmd : userProvidedCommands)
     {
         updatableMessage->append(userCmd);

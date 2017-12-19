@@ -18,15 +18,13 @@
 class Frequency : public NumericParameter<uint32_t>
 {
 public:
+    Frequency(uint32_t value=DEFAULT_VALUE);
+    Frequency(const std::string& value) : Frequency(stringToInt(value)) {};
+
     static bool isValid(const uint32_t value);
-    static const Frequency create(const uint32_t value=DEFAULT_VALUE);
-    static const Frequency create(const std::string& value);
     const std::string getCommand();
 
     static const std::string COMMAND;
-
-protected:
-    Frequency(uint32_t value) : NumericParameter(value, OPTION, MIN_VALID, MAX_VALID) {};
 
 private:
     static const char* const OPTION;

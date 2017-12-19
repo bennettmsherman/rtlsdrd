@@ -30,22 +30,6 @@ bool AtanMath::isValid(const std::string& value)
 }
 
 /**
- * Returns a new AtanMath instance if the parameter is valid. Throws a std::invalid_argument
- * if the parameter is invalid.
- */
-const AtanMath AtanMath::create(const std::string& value)
-{
-    if (!isValid(value))
-    {
-        throw std::invalid_argument(StringParameter::getInvalidArgExceptionMessage(value));
-    }
-    else
-    {
-        return AtanMath(value);
-    }
-}
-
-/**
  * Gets the string passed to the daemon which is used to indicate
  * that a new parameter of this type should be created.
  */
@@ -53,3 +37,16 @@ const std::string AtanMath::getCommand()
 {
     return COMMAND;
 }
+
+/*
+ * Constructs a new AtanMath instance if the parameter is valid.
+ * Throws a std::invalid_argument if the parameter is invalid.
+ */
+AtanMath::AtanMath(const std::string& value) : StringParameter(value, OPTION)
+{
+    if (!isValid(value))
+    {
+        throw std::invalid_argument(StringParameter::getInvalidArgExceptionMessage(value));
+    }
+}
+

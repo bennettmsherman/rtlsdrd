@@ -18,15 +18,12 @@
 class AtanMath : public StringParameter
 {
 public:
+    AtanMath(const std::string& value=DEFAULT_VALUE);
+
     static bool isValid(const std::string& value);
-    static const AtanMath create(const std::string& value=DEFAULT_VALUE);
     const std::string getCommand();
 
     static const std::string COMMAND;
-
-protected:
-    AtanMath(const std::string& value) : StringParameter(value, OPTION) {};
-
 private:
     static const char* const OPTION;
 

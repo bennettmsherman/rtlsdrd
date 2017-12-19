@@ -27,18 +27,14 @@ bool PpmError::isValid(const uint32_t value)
 }
 
 /**
- * Returns a new PpmError instance if the parameter is valid. Throws a std::invalid_argument
- * if the parameter is invalid.
+ * Constructs a new PpmError instance if the parameter is valid.
+ * Throws a std::invalid_argument if the parameter is invalid.
  */
-const PpmError PpmError::create(const uint32_t value)
+PpmError::PpmError(uint32_t value) : NumericParameter(value, OPTION)
 {
     if (!isValid(value))
     {
         throw std::invalid_argument(NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(value, MIN_VALID, MAX_VALID));
-    }
-    else
-    {
-        return PpmError(value);
     }
 }
 
@@ -49,9 +45,4 @@ const PpmError PpmError::create(const uint32_t value)
 const std::string PpmError::getCommand()
 {
     return COMMAND;
-}
-
-const PpmError PpmError::create(const std::string& value)
-{
-    return create(stringToInt(value));
 }

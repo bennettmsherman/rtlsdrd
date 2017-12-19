@@ -18,15 +18,13 @@
 class SquelchDelay : public NumericParameter<int32_t>
 {
 public:
+    SquelchDelay(int32_t value=DEFAULT_VALUE);
+    SquelchDelay(const std::string& value) : SquelchDelay(stringToInt(value)) {};
+
     static bool isValid(const int32_t value);
-    static const SquelchDelay create(const int32_t value=DEFAULT_VALUE);
-    static const SquelchDelay create(const std::string& value);
     const std::string getCommand();
 
     static const std::string COMMAND;
-
-protected:
-    SquelchDelay(int32_t value) : NumericParameter(value, OPTION, MIN_VALID, MAX_VALID) {};
 
 private:
     static const char* const OPTION;

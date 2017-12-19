@@ -18,15 +18,13 @@
 class PpmError : public NumericParameter<uint32_t>
 {
 public:
+    PpmError(uint32_t value=DEFAULT_VALUE);
+    PpmError(const std::string& value) : PpmError(stringToInt(value)) {};
+
     static bool isValid(const uint32_t value);
-    static const PpmError create(const uint32_t value=DEFAULT_VALUE);
-    static const PpmError create(const std::string& value);
     const std::string getCommand();
 
     static const std::string COMMAND;
-
-protected:
-    PpmError(uint32_t value) : NumericParameter(value, OPTION, MIN_VALID, MAX_VALID) {};
 
 private:
     static const char* const OPTION;

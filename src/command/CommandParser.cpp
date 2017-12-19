@@ -92,7 +92,7 @@ const std::string CommandParser::INVALID_SYNTAX_STRING {"~INVALID COMMAND SYNTAX
 const std::string CommandParser::NO_SUCH_COMMAND_EXISTS_STRING {"~NO SUCH COMMAND EXISTS"};
 const std::string CommandParser::INVALID_PARAMETER_STRING {"~INVALID PARAMETER"};
 const std::string CommandParser::EXECUTION_OK_STRING {"~OK"};
-const std::string CommandParser::UNUSED_PARAM_VALUE = " ";
+const std::string CommandParser::UNUSED_PARAM_VALUE = "default";
 
 /**
  * The command specified by LIST_CMDS_COMMAND_STRING will result in a list of supported

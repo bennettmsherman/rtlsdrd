@@ -27,24 +27,15 @@ bool SquelchLevel::isValid(const uint32_t value)
 }
 
 /**
- * Returns a new SquelchLevel instance if the parameter is valid. Throws a std::out_of_range
- * if the parameter is invalid.
+ * Constructs a new SquelchLevel instance if the parameter is valid.
+ * Throws a std::out_of_range if the parameter is invalid.
  */
-const SquelchLevel SquelchLevel::create(const uint32_t value)
+SquelchLevel::SquelchLevel(uint32_t value) : NumericParameter(value, OPTION)
 {
     if (!isValid(value))
     {
         throw std::out_of_range(NumericParameter<uint32_t>::getOutOfRangeParamExceptionMessage(value, MIN_VALID, MAX_VALID));
     }
-    else
-    {
-        return SquelchLevel(value);
-    }
-}
-
-const SquelchLevel SquelchLevel::create(const std::string& value)
-{
-    return create(stringToInt(value));
 }
 
 /**

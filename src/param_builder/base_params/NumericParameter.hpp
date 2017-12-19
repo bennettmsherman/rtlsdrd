@@ -23,8 +23,8 @@ public:
     virtual ~NumericParameter() {};
 
 protected:
-    NumericParameter(T value, const char* const option, T minValid, T maxValid) :
-        BaseParameter<T>(std::to_string(value), option), minValid(minValid), maxValid(maxValid) {};
+    NumericParameter(T value, const char* const option) :
+        BaseParameter<T>(std::to_string(value), option) {};
 
     static bool isValid(const T value, const T min, const T max);
 
@@ -33,11 +33,6 @@ protected:
     static T stringToInt(const std::string& str);
 
 private:
-    // maxValid and minValid represent the maximum and minimum allowable values
-    // for this parameter, respectively, inclusive.
-    T minValid;
-    T maxValid;
-
     static std::string getNonNumericCharacterInParamExceptionMessage(const char badChar, const size_t index);
 
     static const char OUT_OF_RANGE_EXCEPTION_MSG_FORMAT_STRING[];

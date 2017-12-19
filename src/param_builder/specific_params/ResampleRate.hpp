@@ -18,16 +18,14 @@
 class ResampleRate : public NumericParameter<uint32_t>
 {
 public:
+    ResampleRate(uint32_t value=DEFAULT_VALUE);
+    ResampleRate(const std::string& value) : ResampleRate(stringToInt(value)) {};
+
     static bool isValid(const uint32_t value);
-    static const ResampleRate create(const uint32_t value=DEFAULT_VALUE);
-    static const ResampleRate create(const std::string& value);
     static const char* getOption();
     const std::string getCommand();
 
     static const std::string COMMAND;
-
-protected:
-    ResampleRate(uint32_t value) : NumericParameter(value, OPTION, MIN_VALID, MAX_VALID) {};
 
 private:
     static const char* const OPTION;
