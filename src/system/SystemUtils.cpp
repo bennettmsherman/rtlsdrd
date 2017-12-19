@@ -60,7 +60,7 @@ void SystemUtils::setVolume(const uint8_t vol)
                 "Error when setting system volume using system()");
     }
 
-    // Update the sysVol variable to refect the new system volume settings
+    // Update the sysVol variable to reflect the new system volume settings
     systemVolume = vol;
 }
 
