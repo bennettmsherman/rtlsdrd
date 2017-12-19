@@ -16,6 +16,7 @@
 // Typedef/using statements for convenience
 using TcpSocketSharedPtr = std::shared_ptr<boost::asio::ip::tcp::socket>;
 using TcpSocket = boost::asio::ip::tcp::socket;
+using BoostStreamBuff = boost::asio::streambuf;
 
 class SocketWrapper
 {
@@ -29,6 +30,13 @@ public:
     std::mutex& getWriteMutex();
     const std::string& getIpAddress();
     uint16_t getPortNumber();
+
+    // Functions for I/O on the socketPtr
+    size_t sendData(const std::string& dataToSend);
+    static void sendDataVoidReturn(SocketWrapper& sockWrap,
+            const std::string& dataToSend);
+    size_t receiveData(std::string& receivedData, BoostStreamBuff& readBuff,
+            const std::string& charToReadUntil);
 
 private:
     TcpSocketSharedPtr socketPtr;

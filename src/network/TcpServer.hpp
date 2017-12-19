@@ -21,7 +21,6 @@
 // Using statements
 using BoostTcp = boost::asio::ip::tcp;
 using BoostIoService = boost::asio::io_service;
-using BoostStreamBuff = boost::asio::streambuf;
 
 class TcpServer
 {
@@ -50,11 +49,6 @@ private:
     std::string getServerInfo();
     std::vector<std::string> getLocalIpAddresses();
 
-    // Socket interface functions
-    static size_t sendData(SocketWrapper& sockWrap, const std::string& dataToSend);
-    size_t receiveData(TcpSocket& sock, std::string& receivedData, BoostStreamBuff& readBuff);
-    static void sendDataVoidReturn(SocketWrapper& sockWrap, const std::string& dataToSend);
-
     // Thread to be executed for each client
     void connectionHandler(SocketWrapper& sockWrap);
 
@@ -78,7 +72,7 @@ private:
 
     static const std::string UPDATED_PARAMETERS_AVAILABLE_STRING;
     static const std::string END_OF_RESPONSE_STRING;
-    static const char SOCKET_READ_UNTIL_END_SPECIFIER;
+    static const std::string SOCKET_READ_UNTIL_END_SPECIFIER;
     static const uint16_t DEFAULT_PORT = 2832;
 };
 

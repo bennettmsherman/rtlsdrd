@@ -47,7 +47,7 @@ const std::string TcpServer::END_OF_RESPONSE_STRING = "~EOR";
 /**
  * Each socket read operation will read up to the newline specifier
  */
-const char TcpServer::SOCKET_READ_UNTIL_END_SPECIFIER = '\n';
+const std::string TcpServer::SOCKET_READ_UNTIL_END_SPECIFIER = "\n";
 
 TcpServer::TcpServer(const uint16_t port) : port(port), ioService(),
             acceptor(ioService, BoostTcp::endpoint(BoostTcp::v4(), port), true)
@@ -173,8 +173,9 @@ void TcpServer::connectionHandler(SocketWrapper& sockWrap)
       {
           // Receive data from the client
           std::string receivedData;
-          uint32_t bytesReceived = receiveData(sockWrap.getSocket(), receivedData,
-                                      socketReadStreamBuff);
+          uint32_t bytesReceived = sockWrap.receiveData(receivedData,
+                                      socketReadStreamBuff,
+                                      SOCKET_READ_UNTIL_END_SPECIFIER);
 
           std::cout << "Received " << bytesReceived << " bytes from: "
                   << clientIp << ":" << clientPort
@@ -185,7 +186,7 @@ void TcpServer::connectionHandler(SocketWrapper& sockWrap)
           parseResult.append("\n" + END_OF_RESPONSE_STRING + "\n");
 
           // Send the data back to the client
-          size_t bytesSent = sendData(sockWrap, parseResult);
+          size_t bytesSent = sockWrap.sendData(parseResult);
 
           std::cout << "Wrote " << bytesSent << " bytes to: "
                   << clientIp << ":" << clientPort
@@ -204,46 +205,7 @@ void TcpServer::connectionHandler(SocketWrapper& sockWrap)
 
 }
 
-/**
- * Sends the data stored in dataToSend to the client associated with socket
- * specified by sockWrap. The call to write() is guarded with the mutex
- * stored in sockWrap.
- */
-size_t TcpServer::sendData(SocketWrapper& sockWrap, const std::string& dataToSend)
-{
-    // Lock the write operation
-    std::lock_guard<std::mutex> writeLock{sockWrap.getWriteMutex()};
 
-    return boost::asio::write(sockWrap.getSocket(), boost::asio::buffer(dataToSend));
-}
-
-/**
- * Reads data from the socket until a newline (\n) character, specified by
- * SOCKET_READ_UNTIL_END_SPECIFIER, is read, and stores the data in readBuff.
- * Note that during the read_until() call, it's possible that more characters
- * than just up to and including the newline will be received and stored in
- * readBuff. In such a case, bytesReceived contains only the number of bytes
- * read in the data up to and including the newline, although the excess data
- * will remain in the buffer. When this function is called, if readBuff
- * contains <some data>\n, it will return immediately.
- * The data up to and including the newline is then stored in receivedData
- * and removed from readBuff, and this number of bytes is returned.
- */
-size_t TcpServer::receiveData(TcpSocket& sock, std::string& receivedData,
-        BoostStreamBuff& readBuff)
-{
-    // Read until a newline has been reached
-    size_t bytesReceived = boost::asio::read_until(sock, readBuff, SOCKET_READ_UNTIL_END_SPECIFIER);
-
-    // Create a stream to read data out of the buffer
-    std::istream readBuffInputStream(&readBuff);
-
-    // Pull the newlined message out of the buffer and store it in receivedData
-    // (including the newline)
-    std::getline(readBuffInputStream, receivedData);
-
-    return bytesReceived;
-}
 
 /**
  * Allows this server to receive connections. All new connections execute
@@ -320,20 +282,6 @@ void TcpServer::removeFromSocketWrappersInUse(const SocketWrapper& socketWrapper
 }
 
 /**
- * Wrapper to call sendData() which doesn't return the number of bytes sent.
- * Instead, this function will throw a std::runtime_exception if
- * dataToSend.size() bytes weren't sent.
- */
-void TcpServer::sendDataVoidReturn(SocketWrapper& sockWrap, const std::string& dataToSend)
-{
-    auto bytesActuallySent = sendData(sockWrap, dataToSend);
-    if (bytesActuallySent != dataToSend.size())
-    {
-        throw std::runtime_error("Not all data written to socket");
-    }
-}
-
-/**
  * Iterates over the socketWrappersInUse list and writes the string contained
  * in UPDATED_PARAMETERS_AVAILABLE_STRING, with an additional timestamp, to the
  * socket corresponding to each element in the list. Each socket's write
@@ -344,13 +292,13 @@ void TcpServer::informAllClientsOfStateChange()
     std::time_t currTime = std::time(nullptr);
 
     // Send out the update message string + a timestamp
-    std::string updateMsg = UPDATED_PARAMETERS_AVAILABLE_STRING +
+    const std::string updateMsg = UPDATED_PARAMETERS_AVAILABLE_STRING +
             std::asctime(std::localtime(&currTime));
 
     for (SocketWrapper& socketWrapper : socketWrappersInUse)
     {
-        boost::thread sendMsgThread(&sendDataVoidReturn,std::ref(socketWrapper),
-                updateMsg);
+        boost::thread sendMsgThread(SocketWrapper::sendDataVoidReturn,
+                boost::ref(socketWrapper), updateMsg);
     }
 }
 
