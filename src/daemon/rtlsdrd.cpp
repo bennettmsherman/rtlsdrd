@@ -9,8 +9,11 @@
 #include <string>
 #include <iostream>
 #include <csignal>
+#include <string.h>
+#include <stdexcept>
 
 // Project Includes
+#include "ArgParser.hpp"
 #include "CommandParser.hpp"
 #include "RtlFmParameterBuilder.hpp"
 #include "SystemUtils.hpp"
@@ -18,17 +21,35 @@
 
 void terminationSignalHandler(int sigNum)
 {
-    std::cout << "Received signal: " << sigNum << std::endl;
+    std::cout << "Received signal: " << strsignal(sigNum) << "(#" << sigNum <<
+              ")" << std::endl;
+
     std::cout << "Attempting to kill aplay and rtl_fm" << std::endl;
     RtlFmRunner::getInstance().killAplayAndRtlFm();
 
-    TcpServer::getInstance().terminate();
+    // If exceptions aren't caught when killing the server, std::terminate()
+    // will get called recursively.
+    try
+    {
+        TcpServer::getInstance().terminate();
+    }
+    // We expect an invalid_argument to be thrown when calling getInstance() in
+    // the event that the server wasn't instantiated prior. We want to ignore
+    // such errors.
+    catch (std::invalid_argument& invalidArgErr)
+    {
+    }
+    catch (std::exception& genErr)
+    {
+        std::cerr << "Caught exception when trying to kill TcpServer; Message: "
+                  << genErr.what() << std::endl;
+    }
 
     std::cout << "Exiting!" << std::endl;
     exit(EXIT_SUCCESS);
 }
 
-int main(int argc, char *argv[])
+int main(int argc, const char *argv[])
 {
     // Execute terminationSignalHandler() in the event that any of the signals
     // below are caught
@@ -37,22 +58,11 @@ int main(int argc, char *argv[])
     signal(SIGINT, terminationSignalHandler);
     signal(SIGKILL, terminationSignalHandler);
 
-    // If argc >= 2, use the second argument as the control name used for
-    // volume control.
-    if (argc >= 2)
-    {
-        SystemUtils::getInstance(argv[1]);
-    }
+    // Parse and apply the command line arguments
+    ArgParser::parse(argc, argv);
 
+    // Initially set the volume to 0%
     SystemUtils::getInstance().setVolume(0);
-
-    // If argc >= 3, use the third argument as the audio device to output to.
-    // This differs from argv[2] in that argv[2] is the simple volume control
-    // name, whereas argv[3] is the hardware device name to stream the audio to.
-    if (argc >= 3)
-    {
-        RtlFmParameterBuilder::setAudioOutputDeviceName(argv[2]);
-    }
 
     // Have the server wait for, accept, and process connections
     TcpServer::getInstance().run();

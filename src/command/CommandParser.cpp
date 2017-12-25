@@ -76,7 +76,7 @@ const Command<SystemUtils> CommandParser::SYSTEM_UTILS_CMDS[]
 
 const Command<TcpServer> CommandParser::SERVER_CMDS[]
 {
-    Command<TcpServer> { "SVR_ADDR", &TcpServer::getAddressInfoHandler, "Gets the server's networking information"},
+    Command<TcpServer> { "SVR_INFO", &TcpServer::getAddressInfoHandler, "Gets the server's networking information"},
     Command<TcpServer> { "CLIENTS_INFO", &TcpServer::getClientsInfoHandler, "Gets the IP and port #s of connected clients"}
 };
 

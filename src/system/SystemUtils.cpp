@@ -45,10 +45,10 @@ void SystemUtils::setVolume(const uint8_t vol)
     }
 
     // The 3 accounts for the int value to be substituted
-    static char volumeSetCommandBuff[sizeof(VOLUME_SETTER_FORMAT) + sizeof(audioControlName) + 3] = {};
+    static char * volumeSetCommandBuff = new char[sizeof(VOLUME_SETTER_FORMAT) + audioControlName.length() + 3];
 
     // Substitute the new volume into the volume set command
-    (void) std::sprintf(volumeSetCommandBuff, VOLUME_SETTER_FORMAT, audioControlName, vol);
+    (void) std::sprintf(volumeSetCommandBuff, VOLUME_SETTER_FORMAT, audioControlName.c_str(), vol);
 
     std::cout << "Executing volume set command: " << volumeSetCommandBuff << std::endl;
 
