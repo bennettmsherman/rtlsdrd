@@ -21,8 +21,8 @@
  */
 SocketWrapper::SocketWrapper(TcpSocketSharedPtr& socketPtr) :
         socketPtr(socketPtr),
-        ipAddr(this->socketPtr->remote_endpoint().address().to_string()),
-        portNum(this->socketPtr->remote_endpoint().port())
+        ipAddr(socketPtr->remote_endpoint().address().to_string()),
+        portNum(socketPtr->remote_endpoint().port())
 {
 }
 
@@ -147,17 +147,27 @@ size_t SocketWrapper::receiveData(std::string& receivedData,
     return bytesReceived;
 }
 
-/**
+/*
  * Wrapper to call sendData() which doesn't return the number of bytes sent.
  * Instead, this function will throw a std::runtime_exception if
  * dataToSend.size() bytes weren't sent.
  */
-void SocketWrapper::sendDataVoidReturn(SocketWrapper& sockWrap,
-        const std::string& dataToSend)
+void SocketWrapper::sendDataVoidReturn(const std::string& dataToSend)
 {
-    auto bytesActuallySent = sockWrap.sendData(dataToSend);
+    auto bytesActuallySent = sendData(dataToSend);
     if (bytesActuallySent != dataToSend.size())
     {
         throw std::runtime_error("Not all data written to socket");
     }
+}
+
+/**
+ * Returns the client's IP address and port number in the form
+ * <IP Addr>:<Port>
+ */
+const std::string SocketWrapper::getIpAddressAndPort()
+{
+    std::string ipAndPort = "";
+    ipAndPort += ipAddr + ":" + std::to_string(portNum);
+    return ipAndPort;
 }

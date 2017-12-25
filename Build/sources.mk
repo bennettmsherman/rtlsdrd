@@ -24,6 +24,7 @@ C_DEPS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 src/command \
+src/daemon/arg_parser \
 src/daemon \
 src/network \
 src/param_builder \

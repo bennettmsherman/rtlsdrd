@@ -14,6 +14,7 @@ RM := rm -rf
 -include src/param_builder/base_params/subdir.mk
 -include src/param_builder/subdir.mk
 -include src/network/subdir.mk
+-include src/daemon/arg_parser/subdir.mk
 -include src/daemon/subdir.mk
 -include src/command/subdir.mk
 -include subdir.mk

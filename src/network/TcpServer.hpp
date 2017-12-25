@@ -25,7 +25,7 @@ using BoostIoService = boost::asio::io_service;
 class TcpServer
 {
 public:
-    static TcpServer& getInstance(uint16_t port=2832);
+    static TcpServer& getInstance(uint16_t port=DEFAULT_PORT, const char * const password=DEFAULT_PASSWORD);
 
     void informAllClientsOfStateChange();
     void run();
@@ -37,7 +37,7 @@ public:
 
 private:
     // A private constructor is required for the singleton pattern
-    TcpServer(const uint16_t port=DEFAULT_PORT);
+    TcpServer(const uint16_t port=DEFAULT_PORT, const char * const password=DEFAULT_PASSWORD);
 
     // Delete the default copy constructor
     TcpServer(const TcpServer&) = delete;
@@ -56,8 +56,14 @@ private:
     SocketWrapper& appendToSocketWrappersInUse(TcpSocketSharedPtr& newSocket);
     void removeFromSocketWrappersInUse(const SocketWrapper& sockWrapper);
 
+    // Authentication of clients which are trying to connect
+    bool authenticate(SocketWrapper& socketWrap, BoostStreamBuff& socketReadStreamBuff);
+
     // The port which this server is associated with
     uint16_t port;
+
+    // The password for this server
+    const std::string password;
 
     BoostIoService ioService;
 
@@ -70,10 +76,15 @@ private:
     // on the socketWrappersInUse vector
     std::mutex socketWrappersInUseMutex;
 
-    static const std::string UPDATED_PARAMETERS_AVAILABLE_STRING;
+    static const std::string UPDATED_PARAMETERS_AVAILABLE_STRING_PREFIX;
+    static const std::string REQUESTING_PASSWORD_STRING_PREFIX;
     static const std::string END_OF_RESPONSE_STRING;
     static const std::string SOCKET_READ_UNTIL_END_SPECIFIER;
     static const uint16_t DEFAULT_PORT = 2832;
+    static const char * const DEFAULT_PASSWORD;
+    static const std::string AUTH_SUCCESSFUL_STRING;
+    static const std::string AUTH_FAILED_STRING;
+
 };
 
 #endif /* NETWORK_TCPSERVER_HPP_ */

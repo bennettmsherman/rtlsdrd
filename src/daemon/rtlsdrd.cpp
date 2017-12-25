@@ -15,6 +15,7 @@
 #include "RtlFmParameterBuilder.hpp"
 #include "SystemUtils.hpp"
 #include "TcpServer.hpp"
+#include "ArgParser.hpp"
 
 void terminationSignalHandler(int sigNum)
 {
@@ -28,7 +29,7 @@ void terminationSignalHandler(int sigNum)
     exit(EXIT_SUCCESS);
 }
 
-int main(int argc, char *argv[])
+int main(int argc, const char *argv[])
 {
     // Execute terminationSignalHandler() in the event that any of the signals
     // below are caught
@@ -37,23 +38,26 @@ int main(int argc, char *argv[])
     signal(SIGINT, terminationSignalHandler);
     signal(SIGKILL, terminationSignalHandler);
 
-    // If argc >= 2, use the second argument as the control name used for
-    // volume control.
-    if (argc >= 2)
-    {
-        SystemUtils::getInstance(argv[1]);
-    }
-
+    // Parse and apply the command line arguments
+    ArgParser::parse(argc, argv);
+//
+//    // If argc >= 2, use the second argument as the control name used for
+//    // volume control.
+//    if (argc >= 2)
+//    {
+//        SystemUtils::getInstance(argv[1]);
+//    }
+//
     SystemUtils::getInstance().setVolume(0);
-
-    // If argc >= 3, use the third argument as the audio device to output to.
-    // This differs from argv[2] in that argv[2] is the simple volume control
-    // name, whereas argv[3] is the hardware device name to stream the audio to.
-    if (argc >= 3)
-    {
-        RtlFmParameterBuilder::setAudioOutputDeviceName(argv[2]);
-    }
-
+//
+//    // If argc >= 3, use the third argument as the audio device to output to.
+//    // This differs from argv[2] in that argv[2] is the simple volume control
+//    // name, whereas argv[3] is the hardware device name to stream the audio to.
+//    if (argc >= 3)
+//    {
+//        RtlFmParameterBuilder::setAudioOutputDeviceName(argv[2]);
+//    }
+//
     // Have the server wait for, accept, and process connections
     TcpServer::getInstance().run();
 }

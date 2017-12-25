@@ -37,7 +37,7 @@
  * When a client has run EXECUTE, this string followed by a datestamp will be
  * sent to the client
  */
-const std::string TcpServer::UPDATED_PARAMETERS_AVAILABLE_STRING = "~UPDATE_AVAILABLE: ";
+const std::string TcpServer::UPDATED_PARAMETERS_AVAILABLE_STRING_PREFIX = "~UPDATE_AVAILABLE: ";
 
 /**
  * All responses sent from the server end with this string
@@ -45,12 +45,33 @@ const std::string TcpServer::UPDATED_PARAMETERS_AVAILABLE_STRING = "~UPDATE_AVAI
 const std::string TcpServer::END_OF_RESPONSE_STRING = "~EOR";
 
 /**
+ * Default on-connect password for this client
+ */
+const char * const TcpServer::DEFAULT_PASSWORD = "rtlsdrd";
+
+/**
  * Each socket read operation will read up to the newline specifier
  */
 const std::string TcpServer::SOCKET_READ_UNTIL_END_SPECIFIER = "\n";
 
-TcpServer::TcpServer(const uint16_t port) : port(port), ioService(),
-            acceptor(ioService, BoostTcp::endpoint(BoostTcp::v4(), port), true)
+/**
+ * Sent when the password is first requested
+ */
+const std::string TcpServer::REQUESTING_PASSWORD_STRING_PREFIX = "~PASSWORD_REQ";
+
+/**
+ * Tells the client their password was correct
+ */
+const std::string TcpServer::AUTH_SUCCESSFUL_STRING = "~AUTH_SUCCESSFUL";
+
+/**
+ * Tells the client their password was invalid
+ */
+const std::string TcpServer::AUTH_FAILED_STRING = "~AUTH_FAILED";
+
+TcpServer::TcpServer(const uint16_t port, const char * const password) :
+        port(port), password(password), ioService(),
+        acceptor(ioService, BoostTcp::endpoint(BoostTcp::v4(), port), true)
 {
 };
 
@@ -69,6 +90,7 @@ std::string TcpServer::getServerInfo()
     }
     netInfo.append("\nHost: "  + boost::asio::ip::host_name());
     netInfo.append("\nPort: " + std::to_string(port));
+    netInfo.append("\nPassword: " + password);
 
     return netInfo;
 }
@@ -146,6 +168,40 @@ std::vector<std::string> TcpServer::getLocalIpAddresses()
 }
 
 /**
+ * Performs authentication for new clients. This function requests a password
+ * from the client, and if the proper password is provided, true is returned.
+ * If an invalid password is provided, false is returned.
+ */
+bool TcpServer::authenticate(SocketWrapper& socketWrap, BoostStreamBuff& socketReadStreamBuff)
+{
+    socketWrap.sendData(REQUESTING_PASSWORD_STRING_PREFIX +
+            ": Provide the password to access this server\n" +
+            END_OF_RESPONSE_STRING + "\n");
+
+    std::string receivedData;
+
+    // Get the password supplied by the client
+    socketWrap.receiveData(receivedData, socketReadStreamBuff, SOCKET_READ_UNTIL_END_SPECIFIER);
+
+    std::cout << socketWrap.getIpAddressAndPort() <<
+            " responded to password prompt with: " << receivedData << std::endl;
+
+    // The substring gets rid of the trailing newline in the from-socket data
+    if (password.compare(receivedData.substr(0, receivedData.size()-1)) == 0)
+    {
+        std::cout << socketWrap.getIpAddressAndPort() << " authenticated successfully" << std::endl;
+        socketWrap.sendData(AUTH_SUCCESSFUL_STRING + "\n" + END_OF_RESPONSE_STRING + "\n");
+        return true;
+    }
+    else
+    {
+        std::cout << socketWrap.getIpAddressAndPort() << " provided the wrong password" << std::endl;
+        socketWrap.sendData(AUTH_FAILED_STRING + "\n" + END_OF_RESPONSE_STRING + "\n");
+        return false;
+    }
+}
+
+/**
  * Interacts with a connected client. This function represents is executed by
  * a thread which is dedicated to a single client. It will receive and parse
  * strings from the client, and will return status information to it.
@@ -156,19 +212,26 @@ void TcpServer::connectionHandler(SocketWrapper& sockWrap)
 {
     const std::string& clientIp = sockWrap.getIpAddress();
     uint16_t clientPort = sockWrap.getPortNumber();
-
     std::cout << "New client: " << clientIp << ":" << clientPort << std::endl;
-
-    // The parameter builder and parser are used for parsing and executing
-    // commands sent by the client
-    RtlFmParameterBuilder rtlFmWrapper;
-    const CommandParser& parser = CommandParser::getInstance();
-
-    // Used by receivedData to buffer data from the socket
-    BoostStreamBuff socketReadStreamBuff;
 
     try
     {
+        // Used by receivedData to buffer data from the socket
+        BoostStreamBuff socketReadStreamBuff;
+
+        // Request a password from the client, kill the connection
+        // if their response is invalid
+        if (!authenticate(sockWrap, socketReadStreamBuff))
+        {
+            removeFromSocketWrappersInUse(sockWrap);
+            return;
+        }
+
+        // The parameter builder and parser are used for parsing and executing
+        // commands sent by the client
+        RtlFmParameterBuilder rtlFmWrapper;
+        const CommandParser& parser = CommandParser::getInstance();
+
       while (true)
       {
           // Receive data from the client
@@ -197,15 +260,9 @@ void TcpServer::connectionHandler(SocketWrapper& sockWrap)
     {
         std::cout << "Client: " << clientIp << ":" << clientPort
                 << "-> Exception: " << exception.what() << std::endl;
-
-        removeFromSocketWrappersInUse(sockWrap);
     }
-    // Execution should never get here since an exception is thrown by asio
-    // to indicate that the client has disconnected
-
+    removeFromSocketWrappersInUse(sockWrap);
 }
-
-
 
 /**
  * Allows this server to receive connections. All new connections execute
@@ -292,13 +349,13 @@ void TcpServer::informAllClientsOfStateChange()
     std::time_t currTime = std::time(nullptr);
 
     // Send out the update message string + a timestamp
-    const std::string updateMsg = UPDATED_PARAMETERS_AVAILABLE_STRING +
+    const std::string updateMsg = UPDATED_PARAMETERS_AVAILABLE_STRING_PREFIX +
             std::asctime(std::localtime(&currTime));
 
     for (SocketWrapper& socketWrapper : socketWrappersInUse)
     {
-        boost::thread sendMsgThread(SocketWrapper::sendDataVoidReturn,
-                boost::ref(socketWrapper), updateMsg);
+        boost::thread sendMsgThread(&SocketWrapper::sendDataVoidReturn,
+                socketWrapper, updateMsg);
     }
 }
 
@@ -308,9 +365,9 @@ void TcpServer::informAllClientsOfStateChange()
  * All subsequent calls to this function will return a reference to the
  * original instance, AND WILL IGNORE the contents of the port parameter.
  */
-TcpServer& TcpServer::getInstance(uint16_t port)
+TcpServer& TcpServer::getInstance(uint16_t port, const char* const password)
 {
-    static TcpServer server(port);
+    static TcpServer server(port, password);
     return server;
 }
 

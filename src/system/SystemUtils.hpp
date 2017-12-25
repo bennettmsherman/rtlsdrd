@@ -54,7 +54,7 @@ private:
     static const char* DEFAULT_AUDIO_CONTROL_NAME;
 
     // The name of the audio control to be used when changing the volume
-    const char * const audioControlName;
+    const std::string audioControlName;
 
     // The system volume. Uninitialized to a valid value until the first call
     // to setVolume()
