@@ -11,6 +11,14 @@
 // System Includes
 #include <string>
 
+/**
+ * A command line option's representation. A short specifier is one which
+ * is prefixed with "-". An extended specifier is prefixed with "--". Each
+ * function is associated with a pointer to a function which takes a const
+ * std::string& as its parameter, with a void return. Furthermore, each
+ * ArgParserFunction has a description as a well as a boolean specifying
+ * whether or not it accepts a parameter.
+ */
 class ArgParserFunction
 {
 public:
@@ -22,9 +30,10 @@ public:
     ////////////////////////////////
     ArgParserFunction(char shortSpecifier,
             std::string extendedSpecifier,
-            ArgParserFunc argParserFunc, std::string descriptionParam);
+            ArgParserFunc argParserFunc,
+            bool requiresArg, std::string descriptionParam);
 
-    void exec(std::string funcParam) const;
+    void exec(std::string funcParam = "") const;
 
     std::string getCommandDescription() const;
 
@@ -32,19 +41,26 @@ public:
 
     std::string getExtendedSpecifier() const;
 
+    bool doesRequireParameter() const;
+
     // Class members
     static const std::string SHORT_SPECIFIER_IDENTIFIER;
     static const std::string EXTENDED_SPECIFIER_IDENTIFIER;
 
 private:
-
     // A single-character parameter specifier which will follow '-'
     const char shortSpecifier;
 
     // A more descriptive parameter specifier which will follow "--"
     const std::string extendedSpecifier;
 
+    // Pointer to the function which will be called by exec()
     const ArgParserFunc parserFunction;
+
+    // Specifies if this command line arg takes a parameter
+    const bool requiresParameter;
+
+    // Description of the purpose of this argument
     const std::string description;
 };
 

@@ -20,10 +20,12 @@ const std::string ArgParserFunction::EXTENDED_SPECIFIER_IDENTIFIER = "--";
  */
 ArgParserFunction::ArgParserFunction(char shortSpecifier,
         std::string extendedSpecifier,
-        ArgParserFunc argParserFunc, std::string descriptionParam) :
+        ArgParserFunc argParserFunc,
+        bool requiresArg, std::string descriptionParam) :
         shortSpecifier(shortSpecifier),
         extendedSpecifier(extendedSpecifier),
         parserFunction(argParserFunc),
+        requiresParameter(requiresArg),
         description(descriptionParam)
 {
 };
@@ -36,7 +38,6 @@ void ArgParserFunction::exec(std::string funcParam) const
 {
     (*parserFunction)(funcParam);
 }
-
 
 std::string ArgParserFunction::getCommandDescription() const
 {
@@ -51,5 +52,10 @@ char ArgParserFunction::getShortSpecifier() const
 std::string ArgParserFunction::getExtendedSpecifier() const
 {
     return extendedSpecifier;
+}
+
+bool ArgParserFunction::doesRequireParameter() const
+{
+    return requiresParameter;
 }
 

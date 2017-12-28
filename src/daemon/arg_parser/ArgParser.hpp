@@ -22,18 +22,18 @@ public:
 
 private:
 
-    enum class ArgType {SHORT, EXTENDED, INVALID};
+    enum class ArgType {SHORT, EXTENDED, PARAM, INVALID};
 
     // Functions which handle their associated arguments
     static void setAudioControlName(const std::string& audioControlName);
     static void setAudioOutputDevice(const std::string& audioOutputDevice);
     static void printHelp(const std::string& UNUSED);
 
-    //
+    static ArgType determineArgType(const std::string& strToCheck);
+    static void incrementArgIdx(const ArgParserFunction * const func, int& argIdx);
+
     static const ArgParserFunction* findByShortSpecifier(const std::string& shortSpecifierWithIdentifier);
     static const ArgParserFunction* findByExtendedSpecifier(const std::string& extendedSpecifierWithIdentifier);
-
-    static ArgType determineArgType(const std::string& strToCheck);
 
     // Class variables
     static const ArgParserFunction ARG_PARSER_FUNCTIONS[];
