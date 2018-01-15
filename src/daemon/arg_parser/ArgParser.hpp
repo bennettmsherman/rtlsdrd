@@ -22,6 +22,23 @@ public:
 
 private:
 
+    // Private constructor
+    ArgParser();
+
+    // Delete the default copy constructor
+    ArgParser(const ArgParser&) = delete;
+
+    // Delete the default assignment operator
+    ArgParser& operator=(const ArgParser&) = delete;
+
+    /* Describes the type of a detected argument.
+     * SHORT refers to arguments preceded by "-"
+     * EXTENDED refers to arguments preceded by "--"
+     * PARAM refers to parameters to an argument
+     * INVALID indicates that the character/string is incorrect
+     * In "--a 10 -p pass", "--a" = EXTENDED, "10" = PARAM, "-p" = SHORT, and
+     * "pass" = PARAM
+     */
     enum class ArgType {SHORT, EXTENDED, PARAM, INVALID};
 
     // Functions which handle their associated arguments

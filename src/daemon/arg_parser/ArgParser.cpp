@@ -111,8 +111,8 @@ void ArgParser::parse(int argc, const char *argv[])
                 if (nextArgType != ArgType::PARAM)
                 {
                     throw std::invalid_argument("Argument: " + argAsStr + " "
-                            "requires param, but the following element in argv("
-                            + nextArg + ") is not a param type");
+                            "requires a param, but the following element in"
+                            "argv(" + nextArg + ") is not a param type");
                 }
                 else
                 {

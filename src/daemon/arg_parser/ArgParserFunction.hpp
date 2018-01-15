@@ -31,7 +31,7 @@ public:
     ArgParserFunction(char shortSpecifier,
             std::string extendedSpecifier,
             ArgParserFunc argParserFunc,
-            bool requiresArg, std::string descriptionParam);
+            bool requiresParaeter, std::string descriptionParam);
 
     void exec(std::string funcParam = "") const;
 

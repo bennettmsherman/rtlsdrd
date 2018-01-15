@@ -21,11 +21,11 @@ const std::string ArgParserFunction::EXTENDED_SPECIFIER_IDENTIFIER = "--";
 ArgParserFunction::ArgParserFunction(char shortSpecifier,
         std::string extendedSpecifier,
         ArgParserFunc argParserFunc,
-        bool requiresArg, std::string descriptionParam) :
+        bool requiresParameter, std::string descriptionParam) :
         shortSpecifier(shortSpecifier),
         extendedSpecifier(extendedSpecifier),
         parserFunction(argParserFunc),
-        requiresParameter(requiresArg),
+        requiresParameter(requiresParameter),
         description(descriptionParam)
 {
 };

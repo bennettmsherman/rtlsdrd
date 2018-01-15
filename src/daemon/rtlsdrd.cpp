@@ -9,6 +9,7 @@
 #include <string>
 #include <iostream>
 #include <csignal>
+#include <string.h>
 
 // Project Includes
 #include "CommandParser.hpp"
@@ -19,7 +20,8 @@
 
 void terminationSignalHandler(int sigNum)
 {
-    std::cout << "Received signal: " << sigNum << std::endl;
+    std::cout << "Received signal: " << strsignal(sigNum) << "(#" << sigNum <<
+            ")" << std::endl;
     std::cout << "Attempting to kill aplay and rtl_fm" << std::endl;
     RtlFmRunner::getInstance().killAplayAndRtlFm();
 
