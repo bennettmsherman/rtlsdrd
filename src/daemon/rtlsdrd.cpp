@@ -13,11 +13,11 @@
 #include <stdexcept>
 
 // Project Includes
+#include "ArgParser.hpp"
 #include "CommandParser.hpp"
 #include "RtlFmParameterBuilder.hpp"
 #include "SystemUtils.hpp"
 #include "TcpServer.hpp"
-#include "ArgParser.hpp"
 
 void terminationSignalHandler(int sigNum)
 {

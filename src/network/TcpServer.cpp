@@ -398,7 +398,7 @@ TcpServer& TcpServer::getInstance(const TcpServerBuilder* tcpServerBuilder)
 }
 
 /**
- * Fors the SVR_ADDR command, retrieve a list of this server's NICs (and their
+ * For the SVR_ADDR command, retrieve a list of this server's NICs (and their
  * IPs), hostname, and port, and append them to clientReturnableInfo
  */
 void TcpServer::getAddressInfoHandler(const std::string& UNUSED, std::string* clientReturnableInfo)

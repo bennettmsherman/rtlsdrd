@@ -32,8 +32,8 @@
 									<listOptionValue builtIn="false" value="../src/param_builder/base_params"/>
 									<listOptionValue builtIn="false" value="../src/param_builder"/>
 									<listOptionValue builtIn="false" value="../src/command"/>
-									<listOptionValue builtIn="false" value="../src/daemon"/>
 									<listOptionValue builtIn="false" value="../src/daemon/arg_parser"/>
+									<listOptionValue builtIn="false" value="../src/daemon"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.dialect.std.1223828559" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.cpp.compiler.dialect.default" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.warnings.extrawarn.585683036" name="Extra warnings (-Wextra)" superClass="gnu.cpp.compiler.option.warnings.extrawarn" useByScannerDiscovery="false" value="true" valueType="boolean"/>
