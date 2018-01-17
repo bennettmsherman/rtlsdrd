@@ -18,14 +18,42 @@
 // Project Includes
 #include "SocketWrapper.hpp"
 
+// Forward declarations
+class TcpServer;
+
 // Using statements
 using BoostTcp = boost::asio::ip::tcp;
 using BoostIoService = boost::asio::io_service;
+using TcpServerUniquePtr = std::unique_ptr<TcpServer>;
 
 class TcpServer
 {
 public:
-    static TcpServer& getInstance(uint16_t port=DEFAULT_PORT, const char * const password=DEFAULT_PASSWORD);
+
+    // This unusual forward declaration is required to permit the friend func
+    // declaration within TcpServerBuilder
+    class TcpServerBuilder;
+    static TcpServer& getInstance(const TcpServerBuilder* tcpServerBuilder = nullptr);
+
+    class TcpServerBuilder
+    {
+    // This allows TcpServer::getInstance to call TcpServerBuilder.build()
+    friend TcpServer& TcpServer::getInstance(const TcpServerBuilder* tcpServerBuilder = nullptr);
+    public:
+        TcpServerBuilder() : port(DEFAULT_PORT), usePassword(false),
+                             password(DEFAULT_PASSWORD) {};
+
+        TcpServerBuilder& withPort(uint16_t port);
+        TcpServerBuilder& withPassword(const std::string& password);
+        TcpServerBuilder& withoutPassword();
+
+    private:
+        TcpServerUniquePtr build() const;
+
+        uint16_t port;
+        bool usePassword;
+        std::string password;
+    };
 
     void informAllClientsOfStateChange();
     void run();
@@ -61,6 +89,9 @@ private:
 
     // The port which this server is associated with
     uint16_t port;
+
+    // Whether or not a password is to be used for this server
+    const bool requirePassword;
 
     // The password for this server
     const std::string password;

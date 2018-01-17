@@ -54,7 +54,11 @@ std::string ArgParserFunction::getExtendedSpecifier() const
     return extendedSpecifier;
 }
 
-bool ArgParserFunction::doesRequireParameter() const
+/**
+ * Returns true if the command line argument addressed by this instance
+ * requires a parameter. If no argument is required, false is returned.
+ */
+bool ArgParserFunction::isParameterRequired() const
 {
     return requiresParameter;
 }

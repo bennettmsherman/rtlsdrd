@@ -31,7 +31,7 @@ public:
     ArgParserFunction(char shortSpecifier,
             std::string extendedSpecifier,
             ArgParserFunc argParserFunc,
-            bool requiresParaeter, std::string descriptionParam);
+            bool requiresParameter, std::string descriptionParam);
 
     void exec(std::string funcParam = "") const;
 
@@ -41,7 +41,7 @@ public:
 
     std::string getExtendedSpecifier() const;
 
-    bool doesRequireParameter() const;
+    bool isParameterRequired() const;
 
     // Class members
     static const std::string SHORT_SPECIFIER_IDENTIFIER;

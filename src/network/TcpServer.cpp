@@ -69,8 +69,17 @@ const std::string TcpServer::AUTH_SUCCESSFUL_STRING = "~AUTH_SUCCESSFUL";
  */
 const std::string TcpServer::AUTH_FAILED_STRING = "~AUTH_FAILED";
 
+/**
+ * Constructs a new TcpServer instance. If nullptr is specified as the
+ * password parameter, then clients won't need to provide a password to
+ * interact with this server. If the password parameter is a nonnull string,
+ * then the user will be required to provide a password in order to interact
+ * with this server.
+ */
 TcpServer::TcpServer(const uint16_t port, const char * const password) :
-        port(port), password(password), ioService(),
+        port(port), requirePassword(password ? true : false),
+        password(password ? password : ""),
+        ioService(),
         acceptor(ioService, BoostTcp::endpoint(BoostTcp::v4(), port), true)
 {
 };
@@ -90,7 +99,11 @@ std::string TcpServer::getServerInfo()
     }
     netInfo.append("\nHost: "  + boost::asio::ip::host_name());
     netInfo.append("\nPort: " + std::to_string(port));
-    netInfo.append("\nPassword: " + password);
+
+    if (requirePassword)
+    {
+        netInfo.append("\nPassword: " + password);
+    }
 
     return netInfo;
 }
@@ -219,9 +232,9 @@ void TcpServer::connectionHandler(SocketWrapper& sockWrap)
         // Used by receivedData to buffer data from the socket
         BoostStreamBuff socketReadStreamBuff;
 
-        // Request a password from the client, kill the connection
-        // if their response is invalid
-        if (!authenticate(sockWrap, socketReadStreamBuff))
+        // Request a password from the client if this instance of rtlsdrd
+        // requires a password, kill the connection if their response is invalid
+        if (requirePassword && !authenticate(sockWrap, socketReadStreamBuff))
         {
             removeFromSocketWrappersInUse(sockWrap);
             return;
@@ -232,29 +245,29 @@ void TcpServer::connectionHandler(SocketWrapper& sockWrap)
         RtlFmParameterBuilder rtlFmWrapper;
         const CommandParser& parser = CommandParser::getInstance();
 
-      while (true)
-      {
-          // Receive data from the client
-          std::string receivedData;
-          uint32_t bytesReceived = sockWrap.receiveData(receivedData,
-                                      socketReadStreamBuff,
-                                      SOCKET_READ_UNTIL_END_SPECIFIER);
+        while (true)
+        {
+            // Receive data from the client
+            std::string receivedData;
+            uint32_t bytesReceived = sockWrap.receiveData(receivedData,
+                                         socketReadStreamBuff,
+                                         SOCKET_READ_UNTIL_END_SPECIFIER);
 
-          std::cout << "Received " << bytesReceived << " bytes from: "
-                  << clientIp << ":" << clientPort
-                  << "\n\tcontent: " << receivedData << std::endl;
+            std::cout << "Received " << bytesReceived << " bytes from: "
+                      << clientIp << ":" << clientPort
+                      << "\n\tcontent: " << receivedData << std::endl;
 
-          // Parse and execute the command/data from the client
-          std::string parseResult = parser.execute(receivedData, rtlFmWrapper);
-          parseResult.append("\n" + END_OF_RESPONSE_STRING + "\n");
+            // Parse and execute the command/data from the client
+            std::string parseResult = parser.execute(receivedData, rtlFmWrapper);
+            parseResult.append("\n" + END_OF_RESPONSE_STRING + "\n");
 
-          // Send the data back to the client
-          size_t bytesSent = sockWrap.sendData(parseResult);
+            // Send the data back to the client
+            size_t bytesSent = sockWrap.sendData(parseResult);
 
-          std::cout << "Wrote " << bytesSent << " bytes to: "
-                  << clientIp << ":" << clientPort
-                  << "\n\tcontent: " << parseResult << std::endl;
-      }
+            std::cout << "Wrote " << bytesSent << " bytes to: "
+                      << clientIp << ":" << clientPort
+                      << "\n\tcontent: " << parseResult << std::endl;
+        }
     }
     catch (std::exception& exception)
     {
@@ -363,16 +376,29 @@ void TcpServer::informAllClientsOfStateChange()
  * Used to instantiate and access the TcpServer singleton. When this function
  * is first executed, a new TcpServer is created using the specified port.
  * All subsequent calls to this function will return a reference to the
- * original instance, AND WILL IGNORE the contents of the port parameter.
+ * original instance, AND WILL IGNORE the contents of the parameter.
+ *
+ * If this function is called for the first time with nullptr as the parameter,
+ * a std::invalid_argument is thrown.
  */
-TcpServer& TcpServer::getInstance(uint16_t port, const char* const password)
+TcpServer& TcpServer::getInstance(const TcpServerBuilder* tcpServerBuilder)
 {
-    static TcpServer server(port, password);
-    return server;
+    static TcpServerUniquePtr server = nullptr;
+
+    if (!server && !tcpServerBuilder)
+    {
+        throw std::invalid_argument("Attempted to construct TcpServer using"
+                " nullptr");
+    }
+    else if (!server)
+    {
+        server = tcpServerBuilder->build();
+    }
+    return *server;
 }
 
 /**
- * For the SVR_ADDR command, retrieve a list of this server's NICs (and their
+ * Fors the SVR_ADDR command, retrieve a list of this server's NICs (and their
  * IPs), hostname, and port, and append them to clientReturnableInfo
  */
 void TcpServer::getAddressInfoHandler(const std::string& UNUSED, std::string* clientReturnableInfo)
@@ -402,4 +428,49 @@ void TcpServer::getClientsInfoHandler(const std::string& UNUSED,
     }
 }
 
+/**
+ * Specifies the TCP port number which this rtlsdrd instance will communicate
+ * through
+ */
+TcpServer::TcpServerBuilder& TcpServer::TcpServerBuilder::withPort(uint16_t port)
+{
+    this->port = port;
+    return *this;
+}
 
+/**
+ * Specifies the password which this rtlsdrd instance will require clients to
+ * provide before they can gain control access
+ */
+TcpServer::TcpServerBuilder& TcpServer::TcpServerBuilder::withPassword(const std::string& password)
+{
+    usePassword = true;
+    this->password = password;
+    return *this;
+}
+
+/**
+ * Dynamically allocates a new TcpServer instance, containing it within a
+ * std::unique_ptr, which is returned
+ */
+TcpServerUniquePtr TcpServer::TcpServerBuilder::build() const
+{
+    if (usePassword)
+    {
+        return TcpServerUniquePtr(new TcpServer(port, password.c_str()));
+    }
+    else
+    {
+        return TcpServerUniquePtr(new TcpServer(port, nullptr));
+    }
+}
+
+/**
+ * Specifies that users connecting to rtlsdrd will not need to provide a
+ * password
+ */
+TcpServer::TcpServerBuilder& TcpServer::TcpServerBuilder::withoutPassword()
+{
+    usePassword = false;
+    return *this;
+}

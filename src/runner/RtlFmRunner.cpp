@@ -81,7 +81,7 @@ void RtlFmRunner::closeRunnerPipeEnds()
 /**
  * Attempts to kill aplay if aplayPid is nonzero. Then, waits for the process
  * to terminate.
- * std::system_error is thrown if there was an error killing aplay or waitinf
+ * std::system_error is thrown if there was an error killing aplay or waiting
  * for it to terminate AND allowThrow is true.
  * If allowThrow is false and an error occurs, the exception message is printed
  * but no exception is thrown.
@@ -314,7 +314,7 @@ void RtlFmRunner::stopCommandHandler(const std::string& UNUSED, std::string* upd
 /**
  * Kills aplay and rtl_fm. This is intended to be used as a public function
  * to be called when the main daemon is terminated. If an error occurs,
- * no exceptions are thrown, but the exception messages are displayed to srderr.
+ * no exceptions are thrown, but the exception messages are displayed to stderr.
  * This execution is MT protected using runnerMutex.
  */
 void RtlFmRunner::killAplayAndRtlFm()
